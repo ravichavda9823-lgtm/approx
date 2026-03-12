@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
+import Header from "../common/Header";
 
 function ViewFeedback() {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -107,6 +108,7 @@ function ViewFeedback() {
 
   return (
     <div className="page-wrapper bg-light">
+      <Header/>
       <div className="page-content container-fluid py-4">
 
         <div className="row mb-4 align-items-center">

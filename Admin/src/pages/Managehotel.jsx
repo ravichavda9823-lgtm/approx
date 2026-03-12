@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
+import Header from "../common/Header";
 
 function ManageHotel() {
   const [hotel, setHotel] = useState([]);
@@ -138,6 +139,7 @@ function ManageHotel() {
 
   return (
     <div className="page-wrapper">
+      <Header/>
       <div className="page-content">
         <div className="container-fluid mt-4">
           <div className="row mb-4 align-items-center">

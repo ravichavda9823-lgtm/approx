@@ -1,10 +1,12 @@
 import React from "react";
 import Footer from "../common/Footer";
+import Header from "../common/Header";
 
 function Notification() {
   return (
     <>
       <div className="page-wrapper">
+        <Header/>
         {/* Page Content*/}
         <div className="page-content">
           <div className="container-fluid">

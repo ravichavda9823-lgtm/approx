@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
+import Header from "../common/Header";
 
 function Managevenue() {
   const [venue, setVenue] = useState([]);
@@ -141,6 +142,7 @@ function Managevenue() {
 
   return (
     <div className="page-wrapper">
+      <Header/>
       <div className="page-content">
         <div className="container-fluid mt-4">
 

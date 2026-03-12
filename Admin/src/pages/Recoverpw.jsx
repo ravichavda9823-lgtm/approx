@@ -1,9 +1,11 @@
 import React from "react";
+import Header from "../common/Header";
 
 function Recoverpw() {
   return (
     <>
       <div className="container-xxl">
+        <Header/>
         <div className="row vh-100 d-flex justify-content-center">
           <div className="col-12 align-self-center">
             <div className="card-body">

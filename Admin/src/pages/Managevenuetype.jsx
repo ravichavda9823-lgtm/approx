@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/AxiosConfig";
 import Footer from "../common/Footer";
+import Header from "../common/Header";
 
 function ManageVenueType() {
   /* ================= STATE ================= */
@@ -66,6 +67,7 @@ function ManageVenueType() {
   /* ================= UI ================= */
   return (
     <div className="page-wrapper bg-light min-vh-100">
+      <Header/>
       <div className="page-content container-fluid py-4">
         {/* HEADER */}
         <div className="row mb-4 align-items-center">

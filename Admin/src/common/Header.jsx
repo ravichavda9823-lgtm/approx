@@ -1293,7 +1293,7 @@ function Header() {
                         </li>
 
                         <li className="nav-item">
-                          <Link className="nav-link" to="notification">
+                          <Link className="nav-link" to="/notification">
                             Notifications
                           </Link>
                         </li>
@@ -1343,59 +1343,7 @@ function Header() {
                     </div>
                   </li>
 
-                  <li className="nav-item">
-                    <a
-                      className="nav-link"
-                      href="#sidebarAuthentication"
-                      data-bs-toggle="collapse"
-                      role="button"
-                      aria-expanded="false"
-                      aria-controls="sidebarAuthentication"
-                    >
-                      <i className="iconoir-fingerprint-lock-circle menu-icon" />
-                      <span>Authentication</span>
-                    </a>
-                    <div className="collapse " id="sidebarAuthentication">
-                      <ul className="nav flex-column">
-                        {/*end nav-item*/}
-
-                        {/*end nav-item*/}
-                        <li className="nav-item">
-                          <Link className="nav-link" to="/recoverpw">
-                            Re-Password
-                          </Link>
-                        </li>
-                        {/*end nav-item*/}
-                        <li className="nav-item">
-                          <Link className="nav-link" to="/lockscreen">
-                            Lock-screeen
-                          </Link>
-                        </li>
-
-                        {/*end nav-item*/}
-                        <li className="nav-item">
-                          <Link className="nav-link" to="/maintenance">
-                            Maintenance
-                          </Link>
-                        </li>
-                        {/*end nav-item*/}
-                        <li className="nav-item">
-                          <Link className="nav-link" to="error">
-                            Error 404
-                          </Link>
-                        </li>
-                        {/*end nav-item*/}
-                        <li className="nav-item">
-                          <Link className="nav-link" to="errors">
-                            Error 500
-                          </Link>
-                        </li>
-                        {/*end nav-item*/}
-                      </ul>
-                      {/*end nav*/}
-                    </div>
-                    {/*end startbarAuthentication*/}
-                  </li>
+                 
                   {/*end nav-item*/}
 
                   <li className="nav-item">
