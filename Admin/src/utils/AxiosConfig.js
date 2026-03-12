@@ -3,7 +3,7 @@ import CheckToken from "./CheckToken";
 import { LogoutwithoutNotification } from "./Logout";
 
 let api = axios.create({
-    baseURL:"https://approx.onrender.com/api",
+    baseURL:"http://localhost:8000/api",
 });
 
 api.interceptors.request.use((config)=>{
