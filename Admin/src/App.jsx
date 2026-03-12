@@ -95,7 +95,7 @@ import ManageVenueType from "./pages/Managevenuetype";
 import ManageCity from "./pages/Managecity";
 import Managevenue from "./pages/Managevenue";
 import ManageInquiry from "./pages/Manageinquiry";
-import ProtectetPage from "./utils/ProtectPage";
+import ProtectPages from "./utils/ProtectPage";
 
 
 function App() {
@@ -107,9 +107,9 @@ function App() {
           <Route
             path="/"
             element={
-              <ProtectetPage>
+              <ProtectPages>
                 <Home />
-                </ProtectetPage>
+                </ProtectPages>
                 
             
             }
