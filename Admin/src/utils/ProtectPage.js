@@ -1,11 +1,13 @@
-import CheckToken from "./CheckToken";
+import { Navigate } from "react-router-dom";
 
-function ProtectetPage({ children }){
-    if(!CheckToken()){
-        alert("Kindely Login First")
-        window.location.href = "/login"
-    }
-    return children;
-}
+const ProtectPages = ({ children }) => {
+  const token = localStorage.getItem("token");
 
-export default ProtectetPage;
+  if (!token) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
+};
+
+export default ProtectPages;
