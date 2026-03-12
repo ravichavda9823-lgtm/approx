@@ -2,7 +2,7 @@ import {} from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
 import Header from "./common/Header";
 import Home from "./pages/Home";
 import Animation from "./pages/Animation";
@@ -95,20 +95,20 @@ import ManageVenueType from "./pages/Managevenuetype";
 import ManageCity from "./pages/Managecity";
 import Managevenue from "./pages/Managevenue";
 import ManageInquiry from "./pages/Manageinquiry";
-import ProtectetPage from "./utils/ProtectPage";
+
 
 function App() {
   return (
     <>
-      <BrowserRouter>
+      <HashRouter>
         <Header />
         <Routes>
           <Route
             path="/"
             element={
-              <ProtectetPage>
+              
                 <Home />
-                </ProtectetPage>
+                
             
             }
           />
@@ -206,7 +206,7 @@ function App() {
              <Route path="/manageinquiry" element={< ManageInquiry/>} />
           <Route path="/login" element={<Login />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }
