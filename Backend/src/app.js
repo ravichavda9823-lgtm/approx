@@ -13,7 +13,7 @@ let VenuetypeRouteUser = require("./rotues/User/venuetype.route");
 let HotelRouteUser = require("./rotues/User/hotel.route");
 let UserFeedback = require("./rotues/User/feedback.route");
 let VenueRouteUser = require("./rotues/User/venue.route");
-let BookingRouteUser = require("./rotues/User/booking.route");      
+let BookingRouteUser = require("./rotues/User/booking.route");
 let PaymentRoute = require("./rotues/User/payment.route");
 let ForgotPassword = require("./rotues/User/password.route");
 let InquiryRouteUser = require("./rotues/User/inquiry.route");
@@ -27,7 +27,7 @@ let OccasionRouteAdmin = require("./rotues/Admin/occasion.route");
 let AdminFeedback = require("./rotues/Admin/feedback.route");
 let VenueRouteAdmin = require("./rotues/Admin/venue.route");
 let BookingRouteAdmin = require("./rotues/Admin/booking.route");
-let InquiryRouteAdmin = require("./rotues/Admin/inquiry.route");    
+let InquiryRouteAdmin = require("./rotues/Admin/inquiry.route");
 
 // Mananger
 
@@ -39,19 +39,14 @@ let VenuetypeRouteManager = require("./rotues/Manager/venuetype.route");
 let VenueRouteManager = require("./rotues/Manager/venue.route");
 let BookingRouteManager = require("./rotues/Manager/booking.route");
 
-
-
 //middlware
 app.use(express.json());
 
 app.use(
   cors({
-    origin: [
-      "https://approx.onrender.com",
-     
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allow specific methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
+    origin: ["https://approx.onrender.com"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
 );
@@ -92,6 +87,5 @@ app.use("/api/manager/city", CityRouteManager);
 app.use("/api/manager/venuetype", VenuetypeRouteManager);
 app.use("/api/manager/venue", VenueRouteManager);
 app.use("/api/manager/booking", BookingRouteManager);
-
 
 module.exports = app;

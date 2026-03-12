@@ -4,7 +4,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 
 function Login() {
-
   const [showPassword, setShowPassword] = useState(false);
 
   let [admin, setAdmin] = useState({
@@ -23,29 +22,24 @@ function Login() {
 
   async function handelSubmit(e) {
     e.preventDefault();
-
     try {
-      let response = await axios.post("https://approx.onrender.com/auth/Signin", admin);
+      let response = await axios.post(
+        "https://approx.onrender.com/api/auth/Signin",
+        admin,
+      );
+
+      console.log(response.data); // important
 
       if (response.data.token) {
-        cookie.set("token", response.data.token);
-
-        setAdmin({
-          email: "",
-          password: "",
-        });
+        localStorage.setItem("token", response.data.token);
 
         alert("Login Successfully..");
         window.location.href = "/";
       }
-    } catch (e) {
-      setAdmin({
-        email: "",
-        password: "",
-      });
+    } catch (error) {
+      console.log(error.response);
 
       alert("Invalid Details");
-      window.location.href = "/login";
     }
   }
 
@@ -57,9 +51,7 @@ function Login() {
             <div className="card-body">
               <div className="row">
                 <div className="col-lg-4 mx-auto">
-
                   <div className="card">
-
                     <div className="card-body p-0 bg-black auth-header-box rounded-top">
                       <div className="text-center p-3">
                         <h4 className="mt-3 mb-1 fw-semibold text-white fs-18">
@@ -72,9 +64,7 @@ function Login() {
                     </div>
 
                     <div className="card-body pt-0">
-
                       <form onSubmit={handelSubmit} className="my-4">
-
                         {/* Email */}
                         <div className="form-group mb-2">
                           <label className="form-label">Email</label>
@@ -107,9 +97,7 @@ function Login() {
                           />
 
                           <span
-                            onClick={() =>
-                              setShowPassword(!showPassword)
-                            }
+                            onClick={() => setShowPassword(!showPassword)}
                             style={{
                               position: "absolute",
                               right: "12px",
@@ -118,11 +106,7 @@ function Login() {
                               color: "#666",
                             }}
                           >
-                            {showPassword ? (
-                              <FaEyeSlash />
-                            ) : (
-                              <FaEye />
-                            )}
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
                           </span>
                         </div>
 
@@ -140,10 +124,7 @@ function Login() {
                           </div>
 
                           <div className="col-sm-6 text-end">
-                            <a
-                              href="#"
-                              className="text-muted font-13"
-                            >
+                            <a href="#" className="text-muted font-13">
                               Forgot password?
                             </a>
                           </div>
@@ -152,22 +133,15 @@ function Login() {
                         <div className="form-group mb-0 row">
                           <div className="col-12">
                             <div className="d-grid mt-3">
-                              <button
-                                className="btn btn-primary"
-                                type="submit"
-                              >
+                              <button className="btn btn-primary" type="submit">
                                 Log In
                               </button>
                             </div>
                           </div>
                         </div>
-
                       </form>
-
                     </div>
-
                   </div>
-
                 </div>
               </div>
             </div>
