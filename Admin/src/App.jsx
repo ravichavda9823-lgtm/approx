@@ -100,7 +100,7 @@ import ManageInquiry from "./pages/Manageinquiry";
 function App() {
   return (
     <>
-      <HashRouter>
+      <BrowserRouter>
         <Header />
         <Routes>
           <Route
@@ -206,7 +206,7 @@ function App() {
              <Route path="/manageinquiry" element={< ManageInquiry/>} />
           <Route path="/login" element={<Login />} />
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </>
   );
 }
