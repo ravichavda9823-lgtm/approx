@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import cookie from "js-cookie";
-import api from "../utils/AxiosConfig";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import axios from "axios";
 
 function Login() {
 
@@ -25,7 +25,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      let response = await api.post("/auth/Signin", admin);
+      let response = await axios.post("https://approx.onrender.com/auth/Signin", admin);
 
       if (response.data.token) {
         cookie.set("token", response.data.token);
