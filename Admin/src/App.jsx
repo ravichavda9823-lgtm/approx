@@ -95,8 +95,7 @@ import ManageVenueType from "./pages/Managevenuetype";
 import ManageCity from "./pages/Managecity";
 import Managevenue from "./pages/Managevenue";
 import ManageInquiry from "./pages/Manageinquiry";
-import ProtectPages from "./utils/ProtectPage";
-
+import ProtectPages from "./utils/ProtectedPages";
 
 function App() {
   return (
@@ -109,9 +108,7 @@ function App() {
             element={
               <ProtectPages>
                 <Home />
-                </ProtectPages>
-                
-            
+              </ProtectPages>
             }
           />
           <Route path="/animation" element={<Animation />} />
@@ -205,7 +202,7 @@ function App() {
             element={<ManageBookingHistory />}
           />
           <Route path="/viewfeedback" element={<ViewFeedback />} />
-             <Route path="/manageinquiry" element={< ManageInquiry/>} />
+          <Route path="/manageinquiry" element={<ManageInquiry />} />
           <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
