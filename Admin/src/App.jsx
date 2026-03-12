@@ -84,7 +84,6 @@ import Users from "./pages/Users";
 import Sweetalerts from "./pages/Sweetalerts";
 import Formsupload from "./pages/Formsupload";
 import Vector from "./pages/Vector";
-import ProtectetPage from "./utils/ProtectPage";
 import ManageOccasion from "./pages/Manageoccastion";
 import ManageUser from "./pages/Manageuser";
 import ManageVenueBooking from "./pages/Managebookingvenue";
@@ -106,9 +105,9 @@ function App() {
           <Route
             path="/"
             element={
-              <ProtectetPage>
+              
                 <Home />
-              </ProtectetPage>
+            
             }
           />
           <Route path="/animation" element={<Animation />} />
