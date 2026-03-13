@@ -27,8 +27,7 @@ function Login() {
         "https://approx.onrender.com/api/auth/Signin",
         admin,
       );
-
-      console.log(response.data); // important
+      console.log(response.data); 
 
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
@@ -38,7 +37,6 @@ function Login() {
       }
     } catch (error) {
       console.log(error.response);
-
       alert("Invalid Details");
     }
   }
