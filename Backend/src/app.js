@@ -1,6 +1,7 @@
 let express = require("express");
 let app = express();
 let cors = require("cors");
+const cookieParser = require('cookie-parser');
 
 //common
 let AuthRotue = require("./rotues/auth.route");
@@ -40,11 +41,12 @@ let VenueRouteManager = require("./rotues/Manager/venue.route");
 let BookingRouteManager = require("./rotues/Manager/booking.route");
 
 //middlware
+app.use( cookieParser())
 app.use(express.json());
 
 app.use(
   cors({
-    origin: ["https://approx.onrender.com"],
+    origin: ["https://approx.onrender.com", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
