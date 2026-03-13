@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
+import Header from "../common/Header";
 
 function Home() {
 
@@ -25,6 +26,7 @@ function Home() {
   return (
     <>
       <div className="page-wrapper">
+         <Head/>
         {/* Page Content*/}
         <div className="page-content">
           <div className="container-fluid">

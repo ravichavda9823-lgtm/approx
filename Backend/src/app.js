@@ -41,7 +41,7 @@ let VenueRouteManager = require("./rotues/Manager/venue.route");
 let BookingRouteManager = require("./rotues/Manager/booking.route");
 
 //middlware
-app.use( cookieParser())
+app.use(cookieParser())
 app.use(express.json());
 
 app.use(
