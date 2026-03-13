@@ -26,7 +26,7 @@ function Home() {
   return (
     <>
       <div className="page-wrapper">
-         <Head/>
+         <Header/>
         {/* Page Content*/}
         <div className="page-content">
           <div className="container-fluid">
