@@ -51,9 +51,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-
           <Route path="/error" element={<Error />} />
-
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registartion" element={<Register />} />
@@ -67,16 +65,11 @@ function App() {
           />
           <Route path="/bookinghistory" element={<BookingHistory />} />
           <Route path="/bookingdetails" element={<BookingDetailsUser />} />
-
           <Route path="/profile" element={<Profile />} />
-
           <Route path="/selectoccasion" element={<SelectOccasion />} />
-
           <Route path="/viewhotels" element={<ViewHotels />} />
           <Route path="/hoteldetails/:id" element={<Hoteldetails />} />
-
           <Route path="/feedback" element={<Feedback />} />
-
           <Route path="/manageroccasion" element={<SelectOccasionManager />} />
           <Route path="/managerbooking" element={<ManageBookingsManager />} />
           <Route path="/managerviewpayment" element={<ViewPaymentsManager />} />
@@ -86,7 +79,6 @@ function App() {
             path="/managerhoteldetails/:id"
             element={<ManagerHotelDetails />}
           />
-
           <Route path="/editoccasion/:id" element={<EditOccasion />} />
           <Route path="/edithotel/:id" element={<EditHotel />} />
           <Route path="/addoccasion" element={<AddOccasion />} />
