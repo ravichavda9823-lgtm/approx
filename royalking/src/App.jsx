@@ -20,7 +20,6 @@ import ViewHotels from "./pages/Viewhotel";
 import Feedback from "./pages/Feadback";
 import BookingHistory from "./pages/BookingHistory";
 import SelectOccasion from "./pages/Selectoccuation";
-import ProtectetPage from "./utils/ProtectedPage";
 import SelectOccasionManager from "./pages/Manageroccasion";
 import ManageBookingsManager from "./pages/Managebookingmanager";
 import ViewPaymentsManager from "./pages/Managerviewpayment";
@@ -42,6 +41,7 @@ import EditProfile from "./pages/Editprofile";
 import ForgotPassword from "./pages/Forgetpassword";
 import ResetPassword from "./pages/Resetpassword";
 import Hoteldetails from "./pages/Hoteldetails";
+import ProtectPages from "./utils/ProtectedPage";
 
 function App() {
   return (
@@ -60,9 +60,9 @@ function App() {
           <Route
             path="/booking/:id"
             element={
-              <ProtectetPage>
+              <ProtectPages>
                 <Booking />
-              </ProtectetPage>
+              </ProtectPages>
             }
           />
           <Route path="/bookinghistory" element={<BookingHistory />} />

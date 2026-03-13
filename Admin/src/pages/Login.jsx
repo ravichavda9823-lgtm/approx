@@ -35,6 +35,7 @@ function Login() {
     } catch (error) {
       console.log(error.response);
       alert("Invalid Details");
+      
     }
   }
 

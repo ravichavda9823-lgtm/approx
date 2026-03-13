@@ -1,11 +1,14 @@
-import CheckToken from "./CheckToken";
+import { Navigate } from "react-router-dom";
+import cookie from "js-cookie"
 
-function ProtectetPage({ children }){
-    if(!CheckToken()){
-        alert("Kindly Login First")
-        window.location.href = "/login"
-    }
-    return children;
-}
+const ProtectPages = ({ children }) => {
+  const token = cookie.get("token");
 
-export default ProtectetPage;
+  if (!token) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
+};
+
+export default ProtectPages;

@@ -102,7 +102,7 @@ function Register() {
     if (!ValidateForm()) return;
 
     const response = await axios.post(
-      "http://localhost:8000/api/auth/Signup",
+      "https://backend-t1tu.onrender.com/api/auth/Signup",
       user
     );
 

@@ -27,8 +27,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      let response = await api.post("/auth/Signin", user);
-
+      let response = await axios.post("https://backend-t1tu.onrender.com/api/auth/Signin", user);
       if (response.data.token) {
         cookie.set("token", response.data.token);
         cookie.set("role", response.data.role);
