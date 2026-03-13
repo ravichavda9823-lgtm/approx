@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import cookie from "js-cookie";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
+import api from "../utils/AxiosConfig";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,15 +24,11 @@ function Login() {
   async function handelSubmit(e) {
     e.preventDefault();
     try {
-      let response = await axios.post(
-        "https://approx.onrender.com/api/auth/Signin",
-        admin,
-      );
+      let response = await api.post("/api/auth/Signin",admin,);
       console.log(response.data); 
 
       if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
-
+        cookie.set("token", response.data.token);
         alert("Login Successfully..");
         window.location.href = "/";
       }
