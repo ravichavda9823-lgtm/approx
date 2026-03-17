@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useNavigate} from "react";
 import cookie from "js-cookie";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
@@ -6,6 +6,7 @@ import api from "../utils/AxiosConfig";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  let navigate = useNavigate()
 
   let [admin, setAdmin] = useState({
     email: "",
@@ -34,7 +35,7 @@ function Login() {
       if (response.data.token) {
         cookie.set("token", response.data.token);
         alert("Login Successfully..");
-        window.location.href = "/";
+        navigate("/");
       }
     } catch (error) {
       console.log(error.response);
