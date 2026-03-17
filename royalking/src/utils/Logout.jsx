@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 function Logout(navigate) {
   try {
-    cookie.remove("token");
+    cookie.remove("token", { path: "/" });
     alert("Logout Succesfully");
     navigate("/login");
   } catch (e) {
@@ -12,7 +12,7 @@ function Logout(navigate) {
 }
 function LogoutwithoutNotification(navigate) {
   try {
-    cookie.remove("token");
+ cookie.remove("token", { path: "/" });
     navigate("/login");
   } catch (E) {
     console.log(E);
