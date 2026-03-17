@@ -1,8 +1,7 @@
 import cookie from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
-function Logout() {
-   let navigate = useNavigate()
+function Logout(navigate) {
   try {
     cookie.remove("token");
     alert("Logout Succesfully");
@@ -11,7 +10,7 @@ function Logout() {
     console.log(e);
   }
 }
-function LogoutwithoutNotification() {
+function LogoutwithoutNotification(navigate) {
   try {
     cookie.remove("token");
     navigate("/login");

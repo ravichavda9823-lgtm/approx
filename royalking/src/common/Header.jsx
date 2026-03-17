@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CheckToken from "../utils/CheckToken";
 import Logout from "../utils/Logout";
 import CheckRole from "../utils/CheckRole";
 
 function Header() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const navigate = useNavigate();
 
   const [openDropdown, setOpenDropdown] = useState(null);
 
@@ -205,7 +206,7 @@ function Header() {
                             <li>
                               <Link
                                 onClick={() => {
-                                  Logout();
+                                  Logout(navigate);
                                 }}
                               >
                                 Logout
