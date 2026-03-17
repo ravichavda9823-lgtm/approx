@@ -24,8 +24,12 @@ function Login() {
   async function handelSubmit(e) {
     e.preventDefault();
     try {
-      let response = await axios.post("https://backend-t1tu.onrender.com/api/auth/Signin",admin);
-      console.log(response.data); 
+      let response = await axios.post(
+        "https://backend-t1tu.onrender.com/api/auth/Signin",
+        admin,
+      );
+
+      console.log(response.data);
 
       if (response.data.token) {
         cookie.set("token", response.data.token);
@@ -35,7 +39,6 @@ function Login() {
     } catch (error) {
       console.log(error.response);
       alert("Invalid Details");
-      
     }
   }
 
@@ -119,11 +122,11 @@ function Login() {
                             </div>
                           </div>
 
-                          <div className="col-sm-6 text-end">
+                          {/* <div className="col-sm-6 text-end">
                             <a href="#" className="text-muted font-13">
                               Forgot password?
                             </a>
-                          </div>
+                          </div> */}
                         </div>
 
                         <div className="form-group mb-0 row">

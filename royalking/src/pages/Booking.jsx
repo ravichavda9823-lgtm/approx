@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import CheckRole from "../utils/CheckRole";
 import { LogoutwithoutNotification } from "../utils/Logout";
 
 function Booking() {
- 
-   const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().split("T")[0];
   const { id } = useParams();
   const [userProfile, setUserProfile] = useState({});
 
@@ -16,6 +15,7 @@ function Booking() {
 
   const [totalDays, setTotalDays] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
+  let navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     hotelId: id,
@@ -83,7 +83,7 @@ function Booking() {
 
   const handlePayment = async (e) => {
     e.preventDefault();
-    
+
     try {
       const response = await api.post("/user/payment/createorder", {
         amount: totalAmount,
@@ -101,11 +101,11 @@ function Booking() {
         order_id: order_id,
         handler: async (response) => {
           try {
-            const response = await api.post(
-              "/user/booking/booking",
-             {...formData,totalDays,
-              totalAmount}
-            );
+            const response = await api.post("/user/booking/booking", {
+              ...formData,
+              totalDays,
+              totalAmount,
+            });
             console.log(response.data);
             alert("Booking Successfully... ");
             setFormData({
@@ -115,8 +115,7 @@ function Booking() {
               checkout: "",
               message: "",
             });
-
-            window.location.href = "/bookinghistory";
+            navigate("/bookinghistory");
           } catch (error) {
             console.log(error);
           }
@@ -139,7 +138,6 @@ function Booking() {
   };
 
   console.log(formData);
-
 
   return (
     <>
@@ -189,7 +187,9 @@ function Booking() {
                       </h2>
                     </div>
 
-                     <h5 className="mb-4">Hotel Price Per Day: ₹ {hotelPrice}</h5>
+                    <h5 className="mb-4">
+                      Hotel Price Per Day: ₹ {hotelPrice}
+                    </h5>
 
                     <div className="form-group col-md-12">
                       <label className="fw-bold text-dark mb-2 d-block">
@@ -198,7 +198,7 @@ function Booking() {
 
                       <input
                         type="date"
-                         min={today}
+                        min={today}
                         name="checkin"
                         value={formData.checkin}
                         onChange={handleChange}
