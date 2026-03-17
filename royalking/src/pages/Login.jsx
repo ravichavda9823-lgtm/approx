@@ -1,12 +1,12 @@
 import axios from "axios";
 import cookie from "js-cookie";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login() {
-
   const [showPassword, setShowPassword] = useState(false);
+  let navigate = useNavigate();
 
   const [user, setUser] = useState({
     email: "",
@@ -26,7 +26,10 @@ function Login() {
     e.preventDefault();
 
     try {
-      let response = await axios.post("https://backend-t1tu.onrender.com/api/auth/Signin", user);
+      let response = await axios.post(
+        "https://backend-t1tu.onrender.com/api/auth/Signin",
+        user,
+      );
       if (response.data.token) {
         cookie.set("token", response.data.token);
         cookie.set("role", response.data.role);
@@ -37,7 +40,7 @@ function Login() {
         });
 
         alert("Login Successfully..");
-        window.location.href = "/";
+        navigate("/");
       }
     } catch (e) {
       setUser({
@@ -46,14 +49,13 @@ function Login() {
       });
 
       alert("Invalid Details");
-      window.location.href = "/login";
+      navigate("/login");
     }
   }
 
   return (
     <>
       <div>
-
         {/* Page Title */}
         <div
           className="page-title"
@@ -86,12 +88,9 @@ function Login() {
         <section className="section-padding">
           <div className="auto-container">
             <div className="row no-gutters justify-content-center">
-
               <div className="col-lg-5 col-md-8 col-sm-12">
                 <div className="form-alt form-alt3 with-shadow">
-
                   <form onSubmit={handelSubmit}>
-
                     <div className="section_heading mb_30 text-center">
                       <span className="section_heading_title_small">
                         Welcome Back
@@ -161,16 +160,12 @@ function Login() {
                         <Link to="/registartion">Register Now</Link>
                       </p>
                     </div>
-
                   </form>
-
                 </div>
               </div>
-
             </div>
           </div>
         </section>
-
       </div>
     </>
   );

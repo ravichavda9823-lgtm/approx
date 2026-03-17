@@ -1,6 +1,9 @@
 import cookie from "js-cookie";
+import { useState } from "react";
 
 function Logout() {
+
+   let navigate = ()
   try {
     cookie.remove("token");
     alert("Logout Succesfully");
