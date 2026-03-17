@@ -19,7 +19,7 @@ function Login() {
     setUser((prev) => ({
       ...prev,
       [name]: value,
-    }));
+    }));  
   }
 
   async function handelSubmit(e) {

@@ -6,7 +6,6 @@ import CheckRole from "../utils/CheckRole";
 
 function Header() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const navigate = useNavigate();
 
   const [openDropdown, setOpenDropdown] = useState(null);
 
@@ -206,7 +205,7 @@ function Header() {
                             <li>
                               <Link
                                 onClick={() => {
-                                  Logout(navigate);
+                                  Logout();
                                 }}
                               >
                                 Logout
