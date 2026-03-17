@@ -16,6 +16,9 @@ function Header() {
   function toggleNav() {
     setIsMobileOpen(!isMobileOpen);
   }
+  const handleLinkClick = () => {
+  setIsMobileOpen(false);
+};
 
   console.log(isMobileOpen);
 
@@ -45,7 +48,8 @@ function Header() {
               <div className="logo-box">
                 <div className="logo">
                   <Link to="/">
-                    <img style={{width:"240px", height:"60px"}}
+                    <img
+                      style={{ width: "240px", height: "60px" }}
                       src="\assets\images\logo5.png"
                       alt="Grand Hotel Logo"
                     />
@@ -240,21 +244,21 @@ function Header() {
                 <></>
               )}
               {role === "manager" && token ? (
-                  <>
-                    <div className="right-column d-flex align-items-center ms-3 ">
-                      <div className="header-link-btn">
-                        <Link
-                          to="/managervenue"
-                          className="btn-1 btn-small btn-alt "
-                        >
-                          Book Your Venue <span />
-                        </Link>
-                      </div>
+                <>
+                  <div className="right-column d-flex align-items-center ms-3 ">
+                    <div className="header-link-btn">
+                      <Link
+                        to="/managervenue"
+                        className="btn-1 btn-small btn-alt "
+                      >
+                        Book Your Venue <span />
+                      </Link>
                     </div>
-                  </>
-                ) : (
-                  <></>
-                )}
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </div>
@@ -263,9 +267,10 @@ function Header() {
             <div className="auto-container">
               <div className="inner-container d-flex align-items-center justify-content-between">
                 {/*Logo*/}
-                 <div className="logo">
+                <div className="logo">
                   <Link to="/">
-                    <img style={{width:"240px", height:"60px"}}
+                    <img
+                      style={{ width: "240px", height: "60px" }}
                       src="\assets\images\logo5.png"
                       alt="Grand Hotel Logo"
                     />
@@ -290,7 +295,6 @@ function Header() {
                           </li>
                           <li>
                             <Link to="/about">About</Link>
-                            
                           </li>
 
                           {role === "manager" && token ? (
@@ -340,7 +344,7 @@ function Header() {
                           ) : (
                             <></>
                           )}
-                        
+
                           <li>
                             <Link to="/selectoccasion">Occasion</Link>
                           </li>
@@ -354,11 +358,9 @@ function Header() {
                                       Booking History
                                     </Link>
                                   </li>
-                                   <li>
-                                  <Link to="/feedback">Feedback</Link>
-                                </li>
-
-                                 
+                                  <li>
+                                    <Link to="/feedback">Feedback</Link>
+                                  </li>
                                 </ul>
                               </li>
                             </>
@@ -448,240 +450,80 @@ function Header() {
 
           <nav className="menu-box">
             <div className="nav-logo mb-2">
-               <Link to="/">
-                    <img style={{width:"270px", height:"70px"}}
-                      src="\assets\images\logo5.png"
-                      alt="Grand Hotel Logo"
-                    />
-                  </Link>
+              <Link to="/" onClick={handleLinkClick}>
+                <img
+                  style={{ width: "270px", height: "70px" }}
+                  src="\assets\images\logo5.png"
+                  alt="Grand Hotel Logo"
+                />
+              </Link>
             </div>
+
             <div className="menu-outer mt-0">
               <ul className="navigation">
                 <li>
-                  <Link to="/">Home</Link>
+                  <Link to="/" onClick={handleLinkClick}>
+                    Home
+                  </Link>
                 </li>
-                <li>
-                  <Link to="/about">About</Link>
 
-                  {/* <ul>
-                    <li>
-                      <Link to="/about">About</Link>
-                    </li>
-                    <li>
-                      <Link to="/team">Team</Link>
-                    </li>
-                    <li>
-                      <Link to="/testimonials">Testimonials</Link>
-                    </li>
-                    <li>
-                      <Link to="/faq">Faq</Link>
-                    </li>
-                    <li>
-                      <Link to="/error">404 Error Page</Link>
-                    </li>
-                  </ul> */}
+                <li>
+                  <Link to="/about" onClick={handleLinkClick}>
+                    About
+                  </Link>
                 </li>
-                {/* {role === "user" && token ? (
-                  <>
-                    <li
-                      className={`dropdown ${
-                        openDropdown === "pages" ? "open" : ""
-                      }`}
-                    >
-                      <Link to="/bloggrid">Pages</Link>
 
-                      <ul>
-                        <li>
-                          <Link to="/menu">Menu</Link>
-                        </li>
-                        <li>
-                          <Link to="/gallery">Gallery</Link>
-                        </li>
-                        <li>
-                          <Link to="/spa">Spa &amp; Wellness</Link>
-                        </li>
-                        <li>
-                          <Link to="/amenities">Amenities</Link>
-                        </li>
-                        <li
-                          className={`dropdown ${
-                            openDropdown === "events" ? "open" : ""
-                          }`}
-                        >
-                          <Link to="#">Events</Link>
-
-                          <ul>
-                            <li>
-                              <Link to="/event">Events</Link>
-                            </li>
-                            <li>
-                              <Link to="/eventdetails">Event Details</Link>
-                            </li>
-                          </ul>
-
-                          <div
-                            className="dropdown-btn"
-                            onClick={() => toggleDropdown("events")}
-                          >
-                            <span className="fa fa-angle-right" />
-                          </div>
-                        </li>
-                        <li
-                          className={`dropdown ${
-                            openDropdown === "packages" ? "open" : ""
-                          }`}
-                        >
-                          <Link to="/package">Packages</Link>
-
-                          <ul>
-                            <li>
-                              <Link to="/package">Packages</Link>
-                            </li>
-                            <li>
-                              <Link to="/packagedetails">Package Details</Link>
-                            </li>
-                          </ul>
-
-                          <div
-                            className="dropdown-btn"
-                            onClick={() => toggleDropdown("packages")}
-                          >
-                            <span className="fa fa-angle-right" />
-                          </div>
-                        </li>{" "}
-                        <li
-                          className={`dropdown ${
-                            openDropdown === "page" ? "open" : ""
-                          }`}
-                        >
-                          <Link to="#">Page</Link>
-                          <ul>
-                            <li>
-                              <Link to="/selectcity">Select-City</Link>
-                            </li>
-                            <li>
-                              <Link to="/selecttype">Select-Type</Link>
-                            </li>
-                            <li>
-                              <Link to="/selectoccasion">Select-Occasion</Link>
-                            </li>
-                            <li>
-                              <Link to="/selectbooking">Select-Booking</Link>
-                            </li>
-                            <li>
-                              <Link to="/viewhotels">View Hotel</Link>
-                            </li>
-                            <li>
-                              <Link to="/viewvenue">View Venue Detials</Link>
-                            </li>
-                            <li>
-                              <Link to="/bookinghistory">Booking History</Link>
-                            </li>
-                            <li>
-                              <Link to="/feedback">FeedBack</Link>
-                            </li>
-                          </ul>
-                          <div
-                            className="dropdown-btn"
-                            onClick={() => toggleDropdown("page")}
-                          >
-                            <span className="fa fa-angle-right" />
-                          </div>
-                        </li>
-                      </ul>
-
-                      <div
-                        className="dropdown-btn"
-                        onClick={() => toggleDropdown("pages")}
-                      >
-                        <span className="fa fa-angle-right" />
-                      </div>
-                    </li>
-                  </>
-                ) : (
-                  <></>
-                )} */}
                 <li>
-                  <Link to="/selectoccasion">Occasion</Link>
-                </li>{" "}
-                {role === "user" && token ? (
-                  <>
+                  <Link to="/selectoccasion" onClick={handleLinkClick}>
+                    Occasion
+                  </Link>
+                </li>
 
-                    <li
-                      className={`dropdown ${
-                        openDropdown === "booking" ? "open" : ""
-                      }`}
+                {/* USER MENU */}
+                {role === "user" && token && (
+                  <li
+                    className={`dropdown ${openDropdown === "booking" ? "open" : ""}`}
+                  >
+                    <Link to="#">Booking</Link>
+                    <ul>
+                      <li>
+                        <Link to="/bookinghistory" onClick={handleLinkClick}>
+                          Booking History
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/feedback" onClick={handleLinkClick}>
+                          Feedback
+                        </Link>
+                      </li>
+                    </ul>
+
+                    <div
+                      className="dropdown-btn"
+                      onClick={() => toggleDropdown("booking")}
                     >
-                      <Link to="#">Booking</Link>
-                      <ul>
-                        <li>
-                          <Link to="/bookinghistory">Booking History</Link>
-                        </li>
-                         <li>
-                          <Link to="/feedback">Feedback</Link>
-                        </li>
-
-                      
-
-                      </ul>
-
-                      <div
-                        className="dropdown-btn"
-                        onClick={() => toggleDropdown("booking")}
-                      >
-                        <span className="fa fa-angle-right" />
-                      </div>
-                    </li>
-                  </>
-                ) : (
-                  <></>
+                      <span className="fa fa-angle-right" />
+                    </div>
+                  </li>
                 )}
-                {/* {role === "user" && token ? (
+
+                {/* MANAGER MENU */}
+                {role === "manager" && token && (
                   <>
                     <li
-                      className={`dropdown ${
-                        openDropdown === "occasion" ? "open" : ""
-                      }`}
-                    >
-                      <Link tp="#">Occasion</Link>
-                      <ul>
-                        <li>
-                          <Link to="/selectoccasion">Select-Occasion</Link>
-                        </li>
-
-                      
-
-                        <li>
-                          <Link to="/feedback">FeedBack</Link>
-                        </li>
-                      </ul>
-
-                      <div
-                        className="dropdown-btn"
-                        onClick={() => toggleDropdown("occasion")}
-                      >
-                        <span className="fa fa-angle-right" />
-                      </div>
-                    </li>
-                  </>
-                ) : (
-                  <></>
-                )} */}
-                {role === "manager" && token ? (
-                  <>
-                    <li
-                      className={`dropdown ${
-                        openDropdown === "occasion" ? "open" : ""
-                      }`}
+                      className={`dropdown ${openDropdown === "occasion" ? "open" : ""}`}
                     >
                       <Link to="#">Venue</Link>
                       <ul>
                         <li>
-                          <Link to="/managervenue">Venue</Link>
+                          <Link to="/managervenue" onClick={handleLinkClick}>
+                            Venue
+                          </Link>
                         </li>
-
                         <li>
-                          <Link to="/addvenue">Add Venue Form</Link>
+                          <Link to="/addvenue" onClick={handleLinkClick}>
+                            Add Venue Form
+                          </Link>
                         </li>
                       </ul>
                       <div
@@ -691,19 +533,24 @@ function Header() {
                         <span className="fa fa-angle-right" />
                       </div>
                     </li>
+
                     <li
-                      className={`dropdown ${
-                        openDropdown === "hotel" ? "open" : ""
-                      }`}
+                      className={`dropdown ${openDropdown === "hotel" ? "open" : ""}`}
                     >
                       <Link to="#">Hotel</Link>
                       <ul>
                         <li>
-                          <Link to="/managerviewhotel">Hotel</Link>
+                          <Link
+                            to="/managerviewhotel"
+                            onClick={handleLinkClick}
+                          >
+                            Hotel
+                          </Link>
                         </li>
-
                         <li>
-                          <Link to="/addhotel">Add Hotel</Link>
+                          <Link to="/addhotel" onClick={handleLinkClick}>
+                            Add Hotel
+                          </Link>
                         </li>
                       </ul>
                       <div
@@ -715,18 +562,22 @@ function Header() {
                     </li>
 
                     <li
-                      className={`dropdown ${
-                        openDropdown === "booking" ? "open" : ""
-                      }`}
+                      className={`dropdown ${openDropdown === "booking" ? "open" : ""}`}
                     >
-                      <Link tp="/about">Booking</Link>
+                      <Link to="#">Booking</Link> {/* FIXED */}
                       <ul>
                         <li>
-                          <Link to="/managerbooking">Manage Booking</Link>
+                          <Link to="/managerbooking" onClick={handleLinkClick}>
+                            Manage Booking
+                          </Link>
                         </li>
-
                         <li>
-                          <Link to="/managerviewpayment"> View Payment</Link>
+                          <Link
+                            to="/managerviewpayment"
+                            onClick={handleLinkClick}
+                          >
+                            View Payment
+                          </Link>
                         </li>
                       </ul>
                       <div
@@ -737,21 +588,27 @@ function Header() {
                       </div>
                     </li>
                   </>
-                ) : (
-                  <></>
                 )}
+
                 <li>
-                  <Link to="/contact">Contact</Link>
+                  <Link to="/contact" onClick={handleLinkClick}>
+                    Contact
+                  </Link>
                 </li>
+
+                {/* AUTH */}
                 {token ? (
                   <>
                     <li>
-                      <Link to="/profile">Profile</Link>
+                      <Link to="/profile" onClick={handleLinkClick}>
+                        Profile
+                      </Link>
                     </li>
                     <li>
                       <Link
                         onClick={() => {
                           Logout();
+                          handleLinkClick();
                         }}
                       >
                         Logout
@@ -761,16 +618,21 @@ function Header() {
                 ) : (
                   <>
                     <li>
-                      <Link to="/login">Login</Link>
+                      <Link to="/login" onClick={handleLinkClick}>
+                        Login
+                      </Link>
                     </li>
                     <li>
-                      <Link to="/registartion">Register</Link>
+                      <Link to="/registartion" onClick={handleLinkClick}>
+                        Register
+                      </Link>
                     </li>
                   </>
                 )}
               </ul>
             </div>
-            {/*Social Links*/}
+
+            {/* Social Links */}
             <div className="social-links">
               <ul className="clearfix">
                 <li>
