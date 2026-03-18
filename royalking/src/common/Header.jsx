@@ -175,7 +175,9 @@ function Header() {
                             </li>
                             <li>
                               <Link
-                                onClick={handleLogout}
+                                onClick={() => {
+                                  Logout();
+                                }}
                               >
                                 Logout
                               </Link>
