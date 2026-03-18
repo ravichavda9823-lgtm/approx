@@ -112,57 +112,6 @@ function Header() {
                         ) : (
                           <></>
                         )}
-
-                        {/* {role === "user" && token ? (
-                          <>
-                            <li className="dropdown">
-                              <Link to="#">Pages</Link>
-                              <ul>
-                                <li>
-                                  <Link to="/menu">Menu</Link>
-                                </li>
-                                <li>
-                                  <Link to="/gallery">Gallery</Link>
-                                </li>
-                                <li>
-                                  <Link to="/spa">Spa &amp; Wellness</Link>
-                                </li>
-                                <li>
-                                  <Link to="/amenities">Amenities</Link>
-                                </li>
-                                <li className="dropdown">
-                                  <Link to="#">Events</Link>
-                                  <ul>
-                                    <li>
-                                      <Link to="/event">Events</Link>
-                                    </li>
-                                    <li>
-                                      <Link to="/eventdetails">
-                                        Event Details
-                                      </Link>
-                                    </li>
-                                  </ul>
-                                </li>
-                                <li className="dropdown">
-                                  <Link to="/package">Packages</Link>
-                                  <ul>
-                                    <li>
-                                      <Link to="/package">Packages</Link>
-                                    </li>
-                                    <li>
-                                      <Link to="/packagedetails">
-                                        Package Details
-                                      </Link>
-                                    </li>
-                                  </ul>
-                                </li>
-                              </ul>
-                            </li>
-                          </>
-                        ) : (
-                          <></>
-                        )} */}
-
                         <li>
                           <Link to="/selectoccasion">Occasion</Link>
                           <ul>

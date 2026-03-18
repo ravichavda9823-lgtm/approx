@@ -4941,3 +4941,14 @@ body {
 .underline-input::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
+
+@media (max-width: 576px) {
+  .occasion-card {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .occasion-card img {
+    height: auto !important;
+  }
+}
