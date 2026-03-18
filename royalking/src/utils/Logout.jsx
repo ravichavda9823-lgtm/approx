@@ -1,10 +1,12 @@
-import cookie from "js-cookie";
+import Cookie from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
 function Logout() {
   let navigate = useNavigate();
   try {
-    cookie.remove("token");
+    // Cookie.remove("token");
+     document.cookie =
+      "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     alert("Logout Succesfully");
     navigate("/login");
   } catch (e) {
@@ -13,7 +15,9 @@ function Logout() {
 }
 function LogoutwithoutNotification() {
   try {
-    cookie.remove("token");
+    // Cookie.remove("token");
+     document.cookie =
+      "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     navigate("/login");
   } catch (e) {
     console.log(e);
