@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "./AxiosConfig";
 
 const Logout = async () => {
+  let navigate = useNavigate();
   try {
     const res = await api.post("/auth/logout");
 
