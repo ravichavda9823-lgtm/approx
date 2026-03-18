@@ -704,7 +704,7 @@ function Home() {
                     <Link to="#">
                       <img
                         style={{ height: "300px" }}
-                        src="https://www.oyorooms.com/blog/choose-perfect-venue-birthday-party/"
+                        src="https://www.oyorooms.com/blog/wp-content/uploads/2018/02/How-much-space-does-it-has.png"
                       />
                     </Link>
                   </div>
