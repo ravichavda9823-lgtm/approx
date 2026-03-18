@@ -4,9 +4,7 @@ import { useNavigate } from "react-router-dom";
 function Logout() {
   let navigate = useNavigate();
   try {
-    // Cookie.remove("token");
-     document.cookie =
-      "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    Cookie.remove("token");
     alert("Logout Succesfully");
     navigate("/login");
   } catch (e) {
@@ -15,9 +13,7 @@ function Logout() {
 }
 function LogoutwithoutNotification() {
   try {
-    // Cookie.remove("token");
-     document.cookie =
-      "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    Cookie.remove("token");
     navigate("/login");
   } catch (e) {
     console.log(e);

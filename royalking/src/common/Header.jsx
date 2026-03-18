@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import CheckToken from "../utils/CheckToken";
 import Logout from "../utils/Logout";
 import CheckRole from "../utils/CheckRole";
+import api from "../utils/AxiosConfig";
 
 function Header() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -17,8 +18,29 @@ function Header() {
     setIsMobileOpen(!isMobileOpen);
   }
   const handleLinkClick = () => {
-  setIsMobileOpen(false);
-};
+    setIsMobileOpen(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const res = await api.post(
+        "https://backend-t1tu.onrender.com/api/auth/logout",
+        {},
+        {
+          withCredentials: true, // ⚠️ VERY IMPORTANT (cookie ke liye)
+        },
+      );
+
+      const data = res.data;
+
+      if (data.success) {
+        alert("Logged out");
+        window.location.href = "/login";
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   console.log(isMobileOpen);
 
@@ -153,9 +175,7 @@ function Header() {
                             </li>
                             <li>
                               <Link
-                                onClick={() => {
-                                  Logout();
-                                }}
+                                onClick={handleLogout}
                               >
                                 Logout
                               </Link>
@@ -557,7 +577,6 @@ function Header() {
                       <Link
                         onClick={() => {
                           Logout();
-                          handleLinkClick();
                         }}
                       >
                         Logout
