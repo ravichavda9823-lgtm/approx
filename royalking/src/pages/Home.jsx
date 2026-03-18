@@ -704,8 +704,7 @@ function Home() {
                     <Link to="#">
                       <img
                         style={{ height: "300px" }}
-                        src="https://www.venuelook.com/_next/image?url=https%3A%2F%2Fcdn.venuelook.com%2Fuploads%2Fspace_40509%2F1740204212_595x400.png&w=1080&q=75"
-                        alt="Celebration Venue"
+                        src="https://www.oyorooms.com/blog/choose-perfect-venue-birthday-party/"
                       />
                     </Link>
                   </div>
