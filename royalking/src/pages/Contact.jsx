@@ -131,7 +131,7 @@ function Contact() {
                   <i className="icon-27 mr_10 fs_18" />
                   Location
                 </h4>
-                <p>New Hyde Park, NY 11040</p>
+                <p> SG Highway, Ahmedabad</p>
               </li>
               <li>
                 <h4 className="fs_20 mb_10">
@@ -139,7 +139,7 @@ function Contact() {
                   Phone No
                 </h4>
                 <p>
-                  <a href="tel:(+91) 333 666 0021">(+91) 333 666 0021</a>
+                  <Link href="tel:(+91) 333 666 0021">(+91) 9876543210</Link>
                 </p>
               </li>
               <li>
@@ -148,7 +148,7 @@ function Contact() {
                   Email
                 </h4>
                 <p>
-                  <a href="mailto:support@example.com">support@example.com</a>
+                  <Link href="mailto:support@example.com">occazone@venuebooking.com</Link>
                 </p>
               </li>
             </ul>
