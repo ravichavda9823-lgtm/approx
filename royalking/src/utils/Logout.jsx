@@ -3,9 +3,9 @@ import Cookie from "js-cookie";
 
 function Logout () {
    try {
-       Cookies.remove("token", { path: "/" });
+       Cookies.remove("token");
     alert("Logout Successfully...")
-     window.location.replace("/login");
+     window.location.href = "/login";
   } catch (e) {
     console.log(e);
   }
