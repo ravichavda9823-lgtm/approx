@@ -4,7 +4,7 @@ function Logout() {
   try {
     Cookie.remove("token");
     alert("Logout Successfully...");
-    window.location.href = "/login";
+    window.location.href = "/#/login";
   } catch (e) {
     console.log(e);
   }
