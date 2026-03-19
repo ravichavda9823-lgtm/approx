@@ -11,6 +11,8 @@ function Header() {
 
   const [openDropdown, setOpenDropdown] = useState(null);
 
+  let navigate = useNavigate();
+
   const toggleDropdown = (name) => {
     setOpenDropdown(openDropdown === name ? null : name);
   };
@@ -34,7 +36,7 @@ function Header() {
 
       if (res.data.success) {
         alert("Logout Successfully");
-        window.location.href = "/login";
+        navigate("/login");
       }
     } catch (error) {
       console.log("Logout error:", error);
