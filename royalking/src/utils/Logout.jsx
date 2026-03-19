@@ -1,11 +1,11 @@
 import Cookie from "js-cookie";
-import { useNavigate } from "react-router-dom";
-import api from "./AxiosConfig";
+
 
 function Logout (navigate) {
    try {
     Cookie.remove("token");
-    navigate("/login");
+    alert("Logout Successfully...")
+    window.location.href = "/login";
   } catch (e) {
     console.log(e);
   }
@@ -13,7 +13,7 @@ function Logout (navigate) {
 function LogoutwithoutNotification() {
   try {
     Cookie.remove("token");
-    navigate("/login");
+    window.location.href = "/login";
   } catch (e) {
     console.log(e);
   }

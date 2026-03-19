@@ -6,7 +6,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  let navigate = useNavigate();
 
   const [user, setUser] = useState({
     email: "",
@@ -40,7 +39,7 @@ function Login() {
         });
 
         alert("Login Successfully..");
-        navigate("/");
+        window.location.href = "/";
       }
     } catch (e) {
       setUser({
