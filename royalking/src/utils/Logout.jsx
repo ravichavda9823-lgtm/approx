@@ -3,7 +3,7 @@ import Cookie from "js-cookie";
 
 function Logout () {
    try {
-    Cookie.remove("token");
+       Cookies.remove("token", { path: "/" });
     alert("Logout Successfully...")
      window.location.replace("/login");
   } catch (e) {
