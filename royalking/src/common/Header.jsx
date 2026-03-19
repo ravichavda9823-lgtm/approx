@@ -4,6 +4,7 @@ import CheckToken from "../utils/CheckToken";
 import Logout from "../utils/Logout";
 import CheckRole from "../utils/CheckRole";
 import api from "../utils/AxiosConfig";
+import axios from "axios";
 
 function Header() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
