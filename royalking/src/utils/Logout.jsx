@@ -1,11 +1,11 @@
 import Cookie from "js-cookie";
 
 
-function Logout (navigate) {
+function Logout () {
    try {
     Cookie.remove("token");
     alert("Logout Successfully...")
-    window.location.href = "/login";
+     window.location.replace("/login");
   } catch (e) {
     console.log(e);
   }

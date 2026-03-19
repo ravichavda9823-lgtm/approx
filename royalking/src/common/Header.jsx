@@ -11,7 +11,6 @@ function Header() {
 
   const [openDropdown, setOpenDropdown] = useState(null);
 
-  let navigate = useNavigate();
 
   const toggleDropdown = (name) => {
     setOpenDropdown(openDropdown === name ? null : name);
@@ -161,7 +160,7 @@ function Header() {
                               <Link
                                 to="#"
                                 onClick={(e) => {
-                                  Logout(navigate);
+                                  Logout();
                                 }}
                               >
                                 Logout
