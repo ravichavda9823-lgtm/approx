@@ -24,24 +24,7 @@ function Header() {
     setIsMobileOpen(false);
   };
 
-  const handleLogout = async () => {
-    try {
-      const res = await axios.post(
-        "https://backend-t1tu.onrender.com/api/auth/logout",
-        {},
-        {
-          withCredentials: true, // 🔥 IMPORTANT
-        },
-      );
-
-      if (res.data.success) {
-        alert("Logout Successfully");
-        navigate("/login");
-      }
-    } catch (error) {
-      console.log("Logout error:", error);
-    }
-  };
+ 
 
   console.log(isMobileOpen);
 
@@ -178,8 +161,7 @@ function Header() {
                               <Link
                                 to="#"
                                 onClick={(e) => {
-                                  e.preventDefault(); // 🔥 VERY IMPORTANT
-                                  handleLogout();
+                                  Logout(navigate);
                                 }}
                               >
                                 Logout

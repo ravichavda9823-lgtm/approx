@@ -2,18 +2,12 @@ import Cookie from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import api from "./AxiosConfig";
 
-const Logout = async () => {
-  let navigate = useNavigate();
-  try {
-    const res = await api.post("/auth/logout");
-
-    if (res.data.success) {
-      alert("Logged out successfully");
-      navigate("/login"); // redirect
-    }
-  } catch (error) {
-    console.error("Logout error:", error);
-    alert("Logout failed");
+function Logout (navigate) {
+   try {
+    Cookie.remove("token");
+    navigate("/login");
+  } catch (e) {
+    console.log(e);
   }
 };
 function LogoutwithoutNotification() {
@@ -25,6 +19,6 @@ function LogoutwithoutNotification() {
   }
 }
 
-export default Logout;
+export default Logout ;
 
 export { LogoutwithoutNotification };
