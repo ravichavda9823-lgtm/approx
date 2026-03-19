@@ -1,15 +1,14 @@
 import Cookie from "js-cookie";
 
-
-function Logout () {
-   try {
-       Cookies.remove("token");
-    alert("Logout Successfully...")
-     window.location.href = "/login";
+function Logout() {
+  try {
+    Cookie.remove("token");
+    alert("Logout Successfully...");
+    window.location.href = "/login";
   } catch (e) {
     console.log(e);
   }
-};
+}
 function LogoutwithoutNotification() {
   try {
     Cookie.remove("token");
@@ -19,6 +18,6 @@ function LogoutwithoutNotification() {
   }
 }
 
-export default Logout ;
+export default Logout;
 
 export { LogoutwithoutNotification };
