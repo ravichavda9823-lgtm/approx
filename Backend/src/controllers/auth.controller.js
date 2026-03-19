@@ -80,14 +80,19 @@ let Singin = async (req, res) => {
 
     let token = jwt.sign(user, key, { expiresIn: "5h" });
 
-    return res
-      .status(200)
-      .send({
-        status: true,
-        Message: "Login Succesfully...",
-        token: token,
-        role: loginuser.role,
-      });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      path: "/",
+    });
+
+    return res.status(200).send({
+      status: true,
+      Message: "Login Succesfully...",
+      token: token,
+      role: loginuser.role,
+    });
   } catch (e) {
     return res.status(505).send({ status: true, Message: "Server error" });
   }
@@ -164,12 +169,12 @@ let EditUser = async (req, res) => {
     let { id } = req.params;
     console.log("userID:", id);
 
-    let {username, email, phone } = req.body;   
+    let { username, email, phone } = req.body;
 
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({
         status: false,
-        message: "Invalid User ID"
+        message: "Invalid User ID",
       });
     }
 
@@ -179,9 +184,9 @@ let EditUser = async (req, res) => {
         $set: {
           username: username,
           email: email,
-          phone:phone
-        }
-      }
+          phone: phone,
+        },
+      },
     );
 
     console.log("updatedData:", updateQuery);
@@ -197,7 +202,6 @@ let EditUser = async (req, res) => {
       status: true,
       message: "User Updated Successfully",
     });
-
   } catch (e) {
     console.log(e);
     return res.status(500).json({
@@ -205,7 +209,7 @@ let EditUser = async (req, res) => {
       message: "Internal Server Error",
     });
   }
-}
+};
 
 module.exports = {
   Signup,

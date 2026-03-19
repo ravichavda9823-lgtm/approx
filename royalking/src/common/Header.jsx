@@ -23,22 +23,20 @@ function Header() {
 
   const handleLogout = async () => {
     try {
-      const res = await api.post(
+      const res = await axios.post(
         "https://backend-t1tu.onrender.com/api/auth/logout",
         {},
         {
-          withCredentials: true, // ⚠️ VERY IMPORTANT (cookie ke liye)
+          withCredentials: true, // 🔥 IMPORTANT
         },
       );
 
-      const data = res.data;
-
-      if (data.success) {
-        alert("Logged out");
+      if (res.data.success) {
+        alert("Logout Successfully");
         window.location.href = "/login";
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.log("Logout error:", error);
     }
   };
 
@@ -175,8 +173,10 @@ function Header() {
                             </li>
                             <li>
                               <Link
-                                onClick={() => {
-                                  Logout();
+                                to="#"
+                                onClick={(e) => {
+                                  e.preventDefault(); // 🔥 VERY IMPORTANT
+                                  handleLogout();
                                 }}
                               >
                                 Logout
