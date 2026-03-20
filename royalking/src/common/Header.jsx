@@ -152,7 +152,6 @@ function Header() {
                             </li>
                             <li>
                               <Link
-                                to="#"
                                 onClick={() => {
                                   Logout();
                                 }}
