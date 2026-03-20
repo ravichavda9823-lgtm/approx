@@ -95,7 +95,7 @@ function App() {
         </Routes>
         <Footer />
       </BrowserRouter>
-      <ToastContainer  position="top-right" autoClose={8000} />
+      <ToastContainer  position="top-right" autoClose={8000} theme="colored"/>
     </>
   );
 }

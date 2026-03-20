@@ -4,16 +4,15 @@ import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Register() {
-
   const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   let [user, setUser] = useState({
     username: "",
     email: "",
     phone: "",
     password: "",
-    role: ""
+    role: "",
   });
 
   let [errors, setErrors] = useState({
@@ -34,14 +33,12 @@ function Register() {
   }
 
   function ValidateForm() {
-
     let isvalid = true;
 
     let emailFormat =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-    let phoneFormat =
-      /^(?:\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}$/;
+    let phoneFormat = /^(?:\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}$/;
 
     let passwordFormat =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{8,15}$/;
@@ -97,29 +94,32 @@ function Register() {
   }
 
   async function handelSubmit(e) {
-
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
 
     if (!ValidateForm()) return;
 
-    try{
-
-      
+    try {
       const response = await axios.post(
         "https://backend-t1tu.onrender.com/api/auth/Signup",
-        user
+        user,
       );
-      
+
       if (response.data.status) {
         alert("Registration Successfully...");
         window.location.href = "/login";
       }
-    }catch(e){
-      console.log(e);
+    } catch (e) {
+      setUser({
+        username: "",
+        email: "",
+        phone: "",
+        password: "",
+        role: "",
+      });
       alert("Invalid Details");
-      window.location.href = "/registartion"
-    }finally{
+      window.location.href = "/registartion";
+    } finally {
       setLoading(false);
     }
   }
@@ -127,7 +127,6 @@ function Register() {
   return (
     <>
       <div>
-
         {/* Page Title */}
         <div
           className="page-title"
@@ -148,12 +147,9 @@ function Register() {
         <section className="section-padding">
           <div className="auto-container">
             <div className="row no-gutters justify-content-center">
-
               <div className="col-lg-6">
                 <div className="form-alt form-alt3 with-shadow">
-
                   <form onSubmit={handelSubmit}>
-
                     <div className="section_heading mb_30 text-center">
                       <span className="section_heading_title_small">
                         Create Account
@@ -170,7 +166,7 @@ function Register() {
                         onChange={handelInputChange}
                         value={user.username}
                       />
-                      <p style={{color:"red"}}>{errors.usernameError}</p>
+                      <p style={{ color: "red" }}>{errors.usernameError}</p>
                     </div>
 
                     {/* Email */}
@@ -182,7 +178,7 @@ function Register() {
                         onChange={handelInputChange}
                         value={user.email}
                       />
-                      <p style={{color:"red"}}>{errors.emailError}</p>
+                      <p style={{ color: "red" }}>{errors.emailError}</p>
                     </div>
 
                     {/* Phone */}
@@ -194,7 +190,7 @@ function Register() {
                         onChange={handelInputChange}
                         value={user.phone}
                       />
-                      <p style={{color:"red"}}>{errors.phoneError}</p>
+                      <p style={{ color: "red" }}>{errors.phoneError}</p>
                     </div>
 
                     {/* Role */}
@@ -208,7 +204,7 @@ function Register() {
                         <option value="user">User</option>
                         <option value="manager">Manager</option>
                       </select>
-                      <p style={{color:"red"}}>{errors.roleError}</p>
+                      <p style={{ color: "red" }}>{errors.roleError}</p>
                     </div>
 
                     {/* Password with Eye Icon */}
@@ -216,7 +212,6 @@ function Register() {
                       className="form-group col-md-12"
                       style={{ position: "relative" }}
                     >
-
                       <input
                         type={showPassword ? "text" : "password"}
                         name="password"
@@ -234,19 +229,22 @@ function Register() {
                           top: "50%",
                           transform: "translateY(-50%)",
                           cursor: "pointer",
-                          color: "#666"
+                          color: "#666",
                         }}
                       >
-                        {showPassword ? <FaEyeSlash/> : <FaEye/>}
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
                       </span>
 
-                      <p style={{color:"red"}}>{errors.passwordError}</p>
-
+                      <p style={{ color: "red" }}>{errors.passwordError}</p>
                     </div>
 
                     <div className="form-group col-md-12">
-                      <button className="btn-1 w-100" type="submit" disabled={loading}>
-                          {loading ? "Signing up..." : "Register Now"}
+                      <button
+                        className="btn-1 w-100"
+                        type="submit"
+                        disabled={loading}
+                      >
+                        {loading ? "Signing up..." : "Register Now"}
                       </button>
                     </div>
 
@@ -256,16 +254,12 @@ function Register() {
                         <Link to="/login">Login Here</Link>
                       </p>
                     </div>
-
                   </form>
-
                 </div>
               </div>
-
             </div>
           </div>
         </section>
-
       </div>
     </>
   );
