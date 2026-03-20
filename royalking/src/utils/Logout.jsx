@@ -3,8 +3,8 @@ import Cookie from "js-cookie";
 function Logout() {
   try {
     Cookie.remove("token");
+    window.location.reload = false;
     alert("Logout Successfully...");
-    window.location.href = "/#/login";
   } catch (e) {
     console.log(e);
   }
