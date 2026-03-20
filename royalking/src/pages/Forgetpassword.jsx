@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -20,11 +21,11 @@ function ForgotPassword() {
     console.log(response.data);
 
     if (response.data.status) {
-      alert("Reset link sent to your email.");
+      toast.success("Reset link sent to your email.");
       setEmail("");
     }
     } catch (error) {
-      alert("Something went wrong.");
+      toast.error("Something went wrong.");
     }
   }
 

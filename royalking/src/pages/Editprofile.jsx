@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import api from "../utils/AxiosConfig";
+import { toast } from "react-toastify";
 
 function EditProfile() {
 
@@ -31,12 +32,12 @@ function EditProfile() {
       );
 
       if (response.data.status) {
-        alert("Profile Updated Successfully...");
+        toast.success("Profile Updated Successfully...");
       }
       window.location.href = "/profile"
     } catch (error) {
       console.error(error);
-      alert("Update failed");
+      toast.error("Updated failed...");
     }
   }
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -106,7 +107,7 @@ function Register() {
       );
 
       if (response.data.status) {
-        alert("Registration Successfully...");
+        toast.success("Registration Successfully...");
         window.location.href = "/login";
       }
     } catch (e) {
@@ -117,7 +118,7 @@ function Register() {
         password: "",
         role: "",
       });
-      alert("Invalid Details");
+      toast.error("Invalid Details");
       window.location.href = "/registartion";
     } finally {
       setLoading(false);

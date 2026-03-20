@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
+import { toast } from "react-toastify";
 
 function ResetPassword() {
   const { token } = useParams();
@@ -25,7 +26,7 @@ function ResetPassword() {
     e.preventDefault();
 
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -34,12 +35,12 @@ function ResetPassword() {
 
       const response = await api.post(`/user/password/resetpassword/${token}`, { newPassword: passwordData.newPassword })
       if (response.data.status) {
-        alert("Password reset successfully");
+        toast.success("Password reset successfully");
         window.location.href = "/login";
       }
 
     } catch (error) {
-      alert("Invalid or expired reset link");
+      toast.error("Invalid or expired reset link");
     }
      finally {
       setLoading(false);

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
+import { toast } from "react-toastify";
 
 function ManagerVenue() {
   const [venues, setVenues] = useState([]);
@@ -27,11 +28,12 @@ function ManagerVenue() {
     try {
       const response = await api.delete(`/manager/venue/delete/${id}`);
       if (response.status === 200) {
-        alert("Venue Deleted Successfully");
+        toast.success("Venue Deleted Successfully...");
         fetchVenues(); // reload list
       }
     } catch (e) {
       console.log(e);
+      toast.error("Invalid Details...")
     }
   };
 

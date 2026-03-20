@@ -4,10 +4,11 @@ import cookie from "js-cookie";
 import { LogoutwithoutNotification } from "../utils/Logout";
 import CheckRole from "../utils/CheckRole";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function AddHotel() {
   const [userProfile, setUserProfile] = useState({});
-  const[Preview, setPreview] = useState(null);
+  const [Preview, setPreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [hotel, setHotel] = useState({
     name: "",
@@ -85,7 +86,7 @@ function AddHotel() {
         cookie.set("token", response.data.token);
       }
 
-      alert("Hotel Added Successfully");
+      toast.success("Hotel Added Successfully");
 
       setHotel({
         name: "",
@@ -102,8 +103,9 @@ function AddHotel() {
       window.location.href = "/managerviewhotel";
     } catch (error) {
       console.log(error);
+      toast.error("Invalid Details");
 
-      //  window.location.href = "/addhotel";
+      window.location.href = "/addhotel";
     }
   };
 

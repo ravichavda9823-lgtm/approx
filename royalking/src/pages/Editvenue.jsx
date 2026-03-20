@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import api from "../utils/AxiosConfig";
 import { Link, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function EditVenue() {
   const venue = useLocation().state;
@@ -43,11 +44,12 @@ function EditVenue() {
       );
 
       if (response.status === 200) {
-        alert("Venue updated successfully");
+        toast.success("Venue updated successfully");
         window.location.href = "/managervenue";
       }
     } catch (error) {
       console.log(error);
+      toast.error("Updated Failed...")
     }
   };
 

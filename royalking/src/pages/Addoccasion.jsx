@@ -4,6 +4,7 @@ import cookie from "js-cookie";
 import { LogoutwithoutNotification } from "../utils/Logout";
 import CheckRole from "../utils/CheckRole";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function AddOccasion() {
   const [userProfile, setUserProfile] = useState({});
@@ -59,7 +60,7 @@ function AddOccasion() {
         cookie.set("token", response.data.token);
       }
 
-      alert("Occasion Added Successfully");
+      toast.success("Occasion Added Successfully");
 
       setOccasion({
         name: "",
@@ -71,7 +72,7 @@ function AddOccasion() {
       window.location.href = "/manageroccasion";
     } catch (error) {
       console.log(error);
-      alert("Invalid Details");
+      toast.error("Invalid Details");
        window.location.href = "/addoccasion";
 
     }

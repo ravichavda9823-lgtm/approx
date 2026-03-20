@@ -4,6 +4,7 @@ import api from "../utils/AxiosConfig";
 import cookie from "js-cookie";
 import CheckRole from "../utils/CheckRole";
 import { LogoutwithoutNotification } from "../utils/Logout";
+import { toast } from "react-toastify";
 
 function AddVenue() {
   const [userProfile, setUserProfile] = useState({});
@@ -96,7 +97,7 @@ function AddVenue() {
       cookie.set("token", response.data.token);
     }
 
-    alert("Venue Added Successfully");
+    toast.success("Venue Added Successfully");
 
     setVenue({
       name: "",
@@ -114,7 +115,7 @@ function AddVenue() {
     window.location.href = "/managervenue";
     } catch (e) {
       console.log(e);
-      alert("Invalid Details");
+      toast.error("Invalid Details");
     }
   };
 

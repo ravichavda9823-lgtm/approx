@@ -4,6 +4,7 @@ import api from "../utils/AxiosConfig";
 import cookie from "js-cookie";
 import { LogoutwithoutNotification } from "../utils/Logout";
 import CheckRole from "../utils/CheckRole";
+import { toast } from "react-toastify";
 
 function Feedback() {
   const [userProfile, setUserProfile] = useState({});
@@ -60,7 +61,7 @@ function Feedback() {
       if (response.data.token) {
         cookie.set("token", response.data.token);
       }
-      alert("Feedback submitted successfully ");
+      toast.success("Feedback submitted successfully...");
       setFeedback({
         name: "",
         email: "",
@@ -72,7 +73,7 @@ function Feedback() {
       window.location.href = "/";
     } catch (error) {
       console.error(error);
-      alert("Something went wrong ");
+      toast.error("Invalid Details");
     }
   };
 

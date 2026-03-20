@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function ManagerOccasion() {
   const [occasions, setOccasions] = useState([]);
@@ -27,11 +28,12 @@ function ManagerOccasion() {
       const response = await api.delete(`/manager/occasion/delete/${id}`);
 
       if (response.status === 200) {
-        alert("Occasion Deleted Successfully");
+        toast.success("Occasion Deleted Successfully...");
         window.location.href = "/manageroccasion";
       }
     } catch (e) {
       console.log(e);
+      toast.error("Invalid Details..")
     }
   };
 

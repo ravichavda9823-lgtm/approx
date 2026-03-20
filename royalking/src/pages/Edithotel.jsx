@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import api from "../utils/AxiosConfig";
+import { toast } from "react-toastify";
 
 function EditHotel() {
   let hotel = useLocation().state;
@@ -45,11 +46,12 @@ function EditHotel() {
         formData,
       );
       if (response.status == 200) {
-        alert("Hotel updated successfully..");
+        toast.success("Hotel updated successfully..");
         window.location.href = "/managerviewhotel";
       }
     } catch (e) {
       console.log(e);
+      toast.error("Updated Failed...")
     }
   }
 

@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import CheckRole from "../utils/CheckRole";
 import { LogoutwithoutNotification } from "../utils/Logout";
+import { toast } from "react-toastify";
 
 function Booking() {
   const today = new Date().toISOString().split("T")[0];
@@ -107,7 +108,7 @@ function Booking() {
               totalAmount,
             });
             console.log(response.data);
-            alert("Booking Successfully... ");
+            toast.success("Booking Successfully... ");
             setFormData({
               hotelId: id,
               type: "",
@@ -118,6 +119,8 @@ function Booking() {
             navigate("/bookinghistory");
           } catch (error) {
             console.log(error);
+            toast.error("Invalid Details");
+            navigate("/booking");
           }
         },
         prefill: {

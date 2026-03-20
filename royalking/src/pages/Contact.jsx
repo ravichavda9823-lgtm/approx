@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
+import { toast } from "react-toastify";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -24,7 +25,7 @@ function Contact() {
       let response =  await api.post("/user/inquiry/addinquiry", formData);
       console.log(response.data);
       setFormData(response.data.data);
-      alert("Inquiry submitted successfully");
+      toast.success("Inquiry submitted successfully");
       setFormData({
         name: "",
         email: "",
@@ -34,7 +35,7 @@ function Contact() {
       window.location.href = "/";
     } catch (e) {
       console.log(e);
-      alert("Invalid Details");
+      toast.error("Invalid Details");
     }
   };
 

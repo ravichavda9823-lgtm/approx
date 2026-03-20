@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../utils/AxiosConfig";
 
 import { Link, useLocation, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 function EditOccasion() {
@@ -28,11 +29,12 @@ function EditOccasion() {
         occasiondata,
       );
       if (response.status == 200) {
-        alert("Occasion updated successfully..");
+        toast.success("Occasion updated successfully..");
         window.location.href = "/manageroccasion";
       }
     } catch (e) {
       console.log(e);
+      toast.error("Updated Failed...")
     }
   }
   return (

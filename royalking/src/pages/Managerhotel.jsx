@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
+import { toast } from "react-toastify";
 
 function ManagerViewHotels() {
 
@@ -99,7 +100,7 @@ function ManagerViewHotels() {
 
       if (response.status === 200) {
 
-        alert("Hotel Deleted Successfully");
+        toast.success("Hotel Deleted Successfully...");
 
         fetchHotel();
 
@@ -108,6 +109,7 @@ function ManagerViewHotels() {
     } catch (e) {
 
       console.log(e);
+      toast.error("Invalid Details...")
 
     }
 
