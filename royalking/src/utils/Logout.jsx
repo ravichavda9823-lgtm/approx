@@ -3,7 +3,7 @@ import Cookie from "js-cookie";
 function Logout() {
   try {
     Cookie.remove("token");
-    window.location.reload = false;
+    window.location.reload = true;
     alert("Logout Successfully...");
   } catch (e) {
     console.log(e);
