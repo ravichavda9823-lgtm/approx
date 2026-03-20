@@ -3,6 +3,7 @@ import cookie from "js-cookie";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -40,7 +41,7 @@ function Login() {
           password: "",
         });
 
-        alert("Login Successfully..");
+        toast.success("Login Successfully..");
         window.location.href = "/";
       }
     } catch (e) {
@@ -49,7 +50,7 @@ function Login() {
         password: "",
       });
 
-      alert("Invalid Details");
+      toast.error("Invalid Details");
       navigate("/login");
     } finally {
       setLoading(false); // ✅ stop loading (IMPORTANT)

@@ -6,6 +6,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 function Register() {
 
   const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
 
   let [user, setUser] = useState({
     username: "",
@@ -98,17 +99,28 @@ function Register() {
   async function handelSubmit(e) {
 
     e.preventDefault();
+    setLoading(true)
 
     if (!ValidateForm()) return;
 
-    const response = await axios.post(
-      "https://backend-t1tu.onrender.com/api/auth/Signup",
-      user
-    );
+    try{
 
-    if (response.data.status) {
-      alert("Registration Successfully...");
-      window.location.href = "/login";
+      
+      const response = await axios.post(
+        "https://backend-t1tu.onrender.com/api/auth/Signup",
+        user
+      );
+      
+      if (response.data.status) {
+        alert("Registration Successfully...");
+        window.location.href = "/login";
+      }
+    }catch(e){
+      console.log(e);
+      alert("Invalid Details");
+      window.location.href = "/registartion"
+    }finally{
+      setLoading(false);
     }
   }
 
@@ -233,8 +245,8 @@ function Register() {
                     </div>
 
                     <div className="form-group col-md-12">
-                      <button className="btn-1 w-100" type="submit">
-                        Register Now
+                      <button className="btn-1 w-100" type="submit" disabled={loading}>
+                          {loading ? "Signing up..." : "Register Now"}
                       </button>
                     </div>
 
