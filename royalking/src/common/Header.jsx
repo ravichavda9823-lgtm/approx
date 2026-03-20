@@ -24,9 +24,6 @@ function Header() {
   };
 
  
-
-  console.log(isMobileOpen);
-
   let [token, setToken] = useState("");
   let [role, setRole] = useState("");
 
@@ -36,9 +33,6 @@ function Header() {
     role = CheckRole();
     setRole(role);
   }, []);
-
-  console.log(token);
-  console.log(role);
 
   return (
     <>
@@ -159,7 +153,7 @@ function Header() {
                             <li>
                               <Link
                                 to="#"
-                                onClick={(e) => {
+                                onClick={() => {
                                   Logout();
                                 }}
                               >
