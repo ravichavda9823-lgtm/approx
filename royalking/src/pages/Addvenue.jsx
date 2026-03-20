@@ -78,44 +78,50 @@ function AddVenue() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-    const formData = new FormData();
-    formData.append("name", venue.name);
-    formData.append("city", venue.city);
-    formData.append("type", venue.type);
-    formData.append("price", venue.price);
-    formData.append("shortdesc", venue.shortdesc);
-    formData.append("desc", venue.desc);
-    formData.append("status", venue.status);
-    formData.append("managerId", venue.managerId);
-    formData.append("occasionId", venue.occasionId);
+      const formData = new FormData();
+      formData.append("name", venue.name);
+      formData.append("city", venue.city);
+      formData.append("type", venue.type);
+      formData.append("price", venue.price);
+      formData.append("shortdesc", venue.shortdesc);
+      formData.append("desc", venue.desc);
+      formData.append("status", venue.status);
+      formData.append("managerId", venue.managerId);
+      formData.append("occasionId", venue.occasionId);
 
-    formData.append("image", selectedFile);
+      formData.append("image", selectedFile);
 
-    const response = await api.post("/manager/venue/addvenue", formData);
+      const response = await api.post("/manager/venue/addvenue", formData);
 
-    if (response.data.token) {
-      cookie.set("token", response.data.token);
-    }
+      if (response.data.token) {
+        cookie.set("token", response.data.token);
+      }
 
-    toast.success("Venue Added Successfully");
+      toast.success("Venue Added Successfully", {
+        onClose: () => {
+          window.location.href = "/managervenue";
+        },
+      });
 
-    setVenue({
-      name: "",
-      city: "",
-      type: "",
-      price: "",
-      image: "",
-      shortdesc: "",
-      desc: "",
-      occasionId: "",
-      status: "Active",
-      managerId: userProfile._id,
-    });
-
-    window.location.href = "/managervenue";
+      setVenue({
+        name: "",
+        city: "",
+        type: "",
+        price: "",
+        image: "",
+        shortdesc: "",
+        desc: "",
+        occasionId: "",
+        status: "Active",
+        managerId: userProfile._id,
+      });
     } catch (e) {
       console.log(e);
-      toast.error("Invalid Details");
+      toast.error("Invalid Details", {
+        onClose: () => {
+          window.location.href = "/addvenue";
+        },
+      });
     }
   };
 

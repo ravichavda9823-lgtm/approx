@@ -108,7 +108,11 @@ function Booking() {
               totalAmount,
             });
             console.log(response.data);
-            toast.success("Booking Successfully... ");
+            toast.success("Booking Successfully... ", {
+              onClose: () => {
+                navigate("/bookinghistory");
+              },
+            });
             setFormData({
               hotelId: id,
               type: "",
@@ -116,11 +120,10 @@ function Booking() {
               checkout: "",
               message: "",
             });
-            navigate("/bookinghistory");
-          } catch (error) {
+                   } catch (error) {
             console.log(error);
-            toast.error("Invalid Details");
-            navigate("/booking");
+            toast.error("Invalid Details",  {onClose: ()=> { navigate("/booking");}});
+           
           }
         },
         prefill: {

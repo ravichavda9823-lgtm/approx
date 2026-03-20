@@ -41,8 +41,7 @@ function Login() {
           password: "",
         });
 
-        toast.success("Login Successfully..");
-        window.location.href = "/";
+        toast.success("Login Successfully.." , {onClose: ()=> {window.location.href = "/"}});
       }
     } catch (e) {
       setUser({
@@ -50,8 +49,7 @@ function Login() {
         password: "",
       });
 
-      toast.error("Invalid Details");
-      navigate("/login");
+      toast.error("Invalid Details..." , {onClose: ()=> {window.location.href = "/login"}});
     } finally {
       setLoading(false); // ✅ stop loading (IMPORTANT)
     }

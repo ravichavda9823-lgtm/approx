@@ -60,7 +60,7 @@ function AddOccasion() {
         cookie.set("token", response.data.token);
       }
 
-      toast.success("Occasion Added Successfully");
+      toast.success("Occasion Added Successfully", {onClose: ()=> {window.location.href = "/manageroccasion"}});
 
       setOccasion({
         name: "",
@@ -68,13 +68,9 @@ function AddOccasion() {
         image: "",
         managerId: userProfile._id,
       });
-
-      window.location.href = "/manageroccasion";
     } catch (error) {
       console.log(error);
-      toast.error("Invalid Details");
-       window.location.href = "/addoccasion";
-
+      toast.error("Invalid Details",  {onClose: ()=> {window.location.href = "/addoccasion"}});
     }
   };
 

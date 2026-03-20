@@ -86,7 +86,7 @@ function AddHotel() {
         cookie.set("token", response.data.token);
       }
 
-      toast.success("Hotel Added Successfully");
+      toast.success("Hotel Added Successfully",  {onClose: ()=> {window.location.href = "/managerviewhotel"}});
 
       setHotel({
         name: "",
@@ -100,12 +100,11 @@ function AddHotel() {
         managerId: userProfile._id,
       });
 
-      window.location.href = "/managerviewhotel";
     } catch (error) {
       console.log(error);
-      toast.error("Invalid Details");
+      toast.error("Invalid Details", {onClose: ()=> {window.location.href = "/addhotel"}});
 
-      window.location.href = "/addhotel";
+   
     }
   };
 
