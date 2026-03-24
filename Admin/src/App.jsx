@@ -5,10 +5,10 @@ import "./App.css";
 import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
 import Header from "./common/Header";
 import Home from "./pages/Home";
-import Animation from "./pages/Animation";
+
 import Clipborad from "./pages/Clipborad";
 import Dragula from "./pages/Dragula";
-import AdvanceFile from "./pages/AdvanceFile";
+
 import Highlight from "./pages/Highlight";
 import Rangeslider from "./pages/Rangeslider";
 import Rating from "./pages/Rating";
@@ -25,7 +25,7 @@ import Login from "./pages/Login";
 import Maintenance from "./pages/Maintenance";
 import Recoverpw from "./pages/Recoverpw";
 import Cards from "./pages/Cards";
-import Apex from "./pages/Apex";
+
 import Chartjs from "./pages/Chartjs";
 import Justgage from "./pages/Justgage";
 import Chartstoats from "./pages/Chartstoats";
@@ -110,11 +110,8 @@ function App() {
                 <Home />
               </ProtectPages>
             }
-          />
-          <Route path="/animation" element={<Animation />} />
-          <Route path="/clipborad" element={<Clipborad />} />
+          />          <Route path="/clipborad" element={<Clipborad />} />
           <Route path="/dragula" element={<Dragula />} />
-          <Route path="/file" element={<AdvanceFile />} />
           <Route path="/highlight" element={<Highlight />} />
           <Route path="/rangeslider" element={<Rangeslider />} />
           <Route path="/rating" element={<Rating />} />
@@ -130,7 +127,6 @@ function App() {
           <Route path="/maintenance" element={<Maintenance />} />
           <Route path="/recoverpw" element={<Recoverpw />} />
           <Route path="/cards" element={<Cards />} />
-          <Route path="/apex" element={<Apex />} />
           <Route path="/chartjs" element={<Chartjs />} />
           <Route path="/justgage" element={<Justgage />} />
           <Route path="/chartstoats" element={<Chartstoats />} />

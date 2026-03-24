@@ -6,7 +6,6 @@ import api from "../utils/AxiosConfig";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  let navigate = useNavigate()
 
   let [admin, setAdmin] = useState({
     email: "",
@@ -35,7 +34,7 @@ function Login() {
       if (response.data.token) {
         cookie.set("token", response.data.token);
         alert("Login Successfully..");
-        navigate("/");
+        window.location.href = "/"
       }
     } catch (error) {
       console.log(error.response);
