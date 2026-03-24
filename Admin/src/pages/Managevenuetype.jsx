@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import api from "../utils/AxiosConfig";
 import Footer from "../common/Footer";
 import Header from "../common/Header";
+import { toast } from "react-toastify";
 
 function ManageVenueType() {
-  /* ================= STATE ================= */
   const [venueTypes, setVenueTypes] = useState([]);
   const [venueName, setVenueName] = useState("");
   const [editVenueId, setEditVenueId] = useState(null);
 
-  /* ================= FETCH VENUE TYPES ================= */
   const fetchVenueTypes = async () => {
     try {
       const response = await api.get("/admin/venuetype");
@@ -30,18 +29,17 @@ function ManageVenueType() {
       if (editVenueId) {
         let response = await api.put(
           `/admin/venuetype/update/${editVenueId._id}`,
-          { _id: editVenueId,   name: venueName }
-        
+          { _id: editVenueId, name: venueName },
         );
         console.log(response.data);
         setEditVenueId(response.data.data);
-        alert("Venuetype Updated Successfully");
+        toast.success("Venuetype Updated Successfully...");
       } else {
         let response = await api.post("/admin/venuetype/addvenuetype", {
           name: venueName,
         });
         setVenueName(response.data.data);
-        alert("Venue Added Successfully");
+        toast.success("Venue Added Successfully...");
       }
       setVenueName("");
       setEditVenueId(null);
@@ -51,12 +49,11 @@ function ManageVenueType() {
     }
   };
 
-  /* ================= DELETE ================= */
   const deleteVenueType = async (id) => {
     try {
       const response = await api.delete(`/admin/venuetype/delete/${id}`);
       if (response.status === 200) {
-        alert("Venue Type Deleted");
+        toast.success("Venue Type Deleted...");
         fetchVenueTypes();
       }
     } catch (error) {
@@ -64,27 +61,20 @@ function ManageVenueType() {
     }
   };
 
-  /* ================= UI ================= */
   return (
     <div className="page-wrapper bg-light min-vh-100">
-      <Header/>
+      <Header />
       <div className="page-content container-fluid py-4">
         {/* HEADER */}
         <div className="row mb-4 align-items-center">
           <div className="col-md-6">
-            <h3 className="fw-bold text-dark mb-0">
-            Manage Venue Type
-            </h3>
+            <h3 className="fw-bold text-dark mb-0">Manage Venue Type</h3>
           </div>
           <div className="col-md-6 d-flex justify-content-md-end justify-content-start mt-2 mt-md-0">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb mb-0 small">
                 <li className="breadcrumb-item">
-                  <a
-                    href="#"
-                    className="text-decoration-none text-muted"
-                   
-                  >
+                  <a href="#" className="text-decoration-none text-muted">
                     Dashboard
                   </a>
                 </li>
