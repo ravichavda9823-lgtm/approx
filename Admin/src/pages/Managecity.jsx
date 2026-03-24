@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../utils/AxiosConfig";
 import Footer from "../common/Footer";
 import Header from "../common/Header";
+import { toast } from "react-toastify";
 
 function ManageCity() {
 
@@ -31,12 +32,12 @@ function ManageCity() {
         await api.put(`/admin/city/update/${editCityId}`, {
           name: cityName,
         });
-        alert("City Updated Successfully");
+        toast.success("City Updated Successfully");
       } else {
         await api.post("/admin/city/addcity", {
           name: cityName,
         });
-        alert("City Added Successfully");
+        toast.success("City Added Successfully");
       }
 
       setCityName("");
@@ -44,6 +45,7 @@ function ManageCity() {
       fetchCities();
     } catch (err) {
       console.log(err);
+      toast.error("Invalid Details...")
     }
   };
 
@@ -51,7 +53,7 @@ function ManageCity() {
   const deleteCity = async (id) => {
     try {
       await api.delete(`/admin/city/delete/${id}`);
-      alert("City Deleted Successfully");
+      toast.success("City Deleted Successfully");
       fetchCities();
     } catch (err) {
       console.log(err);

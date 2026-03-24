@@ -30,7 +30,7 @@ function ManageVenueBooking() {
 
   const updateStatus = async (id, status) => {
   try {
-    let response = await api.put(`/admin/booking/status/${_id}`, {
+    let response = await api.put(`/admin/booking/status/${id}`, {
       status: status,
     });
 
