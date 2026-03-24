@@ -29,12 +29,19 @@ function EditOccasion() {
         occasiondata,
       );
       if (response.status == 200) {
-        toast.success("Occasion updated successfully..");
-        window.location.href = "/manageroccasion";
+        toast.success("Occasion updated successfully.." , {
+        onClose: () => {
+          window.location.href = "/manageroccasion";
+        },
+      });
       }
     } catch (e) {
       console.log(e);
-      toast.error("Updated Failed...")
+      toast.error("Updated Failed..." , {
+        onClose: () => {
+          window.location.href = "/editoccasion/:id";
+        },
+      })
     }
   }
   return (

@@ -44,12 +44,19 @@ function EditVenue() {
       );
 
       if (response.status === 200) {
-        toast.success("Venue updated successfully");
-        window.location.href = "/managervenue";
+        toast.success("Venue updated successfully", {
+          onClose: () => {
+            window.location.href = "/managervenue";
+          },
+        });
       }
     } catch (error) {
       console.log(error);
-      toast.error("Updated Failed...")
+      toast.error("Updated Failed...", {
+        onClose: () => {
+          window.location.href = "/editvenue/:id";
+        },
+      });
     }
   };
 
@@ -178,7 +185,6 @@ function EditVenue() {
                       type="file"
                       name="image"
                       placeholder="Venue Image URL"
-                  
                       onChange={handleFileChange}
                       required
                     />

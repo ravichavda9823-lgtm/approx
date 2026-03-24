@@ -28,18 +28,25 @@ function ManagerVenue() {
     try {
       const response = await api.delete(`/manager/venue/delete/${id}`);
       if (response.status === 200) {
-        toast.success("Venue Deleted Successfully...");
+        toast.success("Venue Deleted Successfully...", {
+          onClose: () => {
+            window.location.href = "/managervenue";
+          },
+        });
         fetchVenues(); // reload list
       }
     } catch (e) {
       console.log(e);
-      toast.error("Invalid Details...")
+      toast.error("Invalid Details...", {
+        onClose: () => {
+          window.location.href = "/managervenue";
+        },
+      });
     }
   };
 
   // HELPERS
-  const formatPrice = (price) =>
-    new Intl.NumberFormat("en-IN").format(price);
+  const formatPrice = (price) => new Intl.NumberFormat("en-IN").format(price);
 
   const truncateText = (text, limit = 90) =>
     text && text.length > limit ? text.substring(0, limit) + "..." : text;
@@ -113,10 +120,7 @@ function ManagerVenue() {
       <section className="section-padding pt-5">
         <div className="auto-container">
           <div className="row">
-
-            {loading && (
-              <p className="text-center">Loading venues...</p>
-            )}
+            {loading && <p className="text-center">Loading venues...</p>}
 
             {!loading && venues.length === 0 && (
               <p className="text-center">No venues available</p>
@@ -125,7 +129,6 @@ function ManagerVenue() {
             {venues.map((venue) => (
               <div className="col-lg-4 col-md-6 mb_30" key={venue._id}>
                 <div className="manager-card h-100 d-flex flex-column">
-
                   {/* IMAGE */}
                   <img
                     src={`${api.defaults.baseURL}/uploads/${venue.image}`}
@@ -199,11 +202,9 @@ function ManagerVenue() {
                       </button>
                     </div>
                   </div>
-
                 </div>
               </div>
             ))}
-
           </div>
         </div>
       </section>

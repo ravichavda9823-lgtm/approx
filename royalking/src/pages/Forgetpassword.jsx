@@ -16,16 +16,27 @@ function ForgotPassword() {
     e.preventDefault();
 
     try {
-    setLoading(true);
-    const response = await axios.post("http://localhost:8000/api/user/password/forgotpassword", { email });
-    console.log(response.data);
+      setLoading(true);
+      const response = await axios.post(
+        "http://localhost:8000/api/user/password/forgotpassword",
+        { email },
+      );
+      console.log(response.data);
 
-    if (response.data.status) {
-      toast.success("Reset link sent to your email.");
-      setEmail("");
-    }
+      if (response.data.status) {
+        toast.success("Reset link sent to your email.", {
+          onClose: () => {
+            window.location.href = "/";
+          },
+        });
+        setEmail("");
+      }
     } catch (error) {
-      toast.error("Something went wrong.");
+      toast.error("Something went wrong.", {
+        onClose: () => {
+          window.location.href = "/forgetpassword";
+        },
+      });
     }
   }
 
@@ -90,10 +101,7 @@ function ForgotPassword() {
                     </div>
 
                     <div className="form-group col-md-12">
-                      <button
-                        className="btn-1 w-100"
-                        type="submit"
-                      >
+                      <button className="btn-1 w-100" type="submit">
                         Send Reset Link
                       </button>
                     </div>

@@ -46,12 +46,20 @@ function EditHotel() {
         formData,
       );
       if (response.status == 200) {
-        toast.success("Hotel updated successfully..");
-        window.location.href = "/managerviewhotel";
+        toast.success("Hotel updated successfully.." , {
+        onClose: () => {
+          window.location.href = "/managerviewhotel";
+        },
+      });
+    
       }
     } catch (e) {
       console.log(e);
-      toast.error("Updated Failed...")
+      toast.error("Updated Failed...", {
+        onClose: () => {
+          window.location.href = "/edithotel/:id";
+        },
+      })
     }
   }
 

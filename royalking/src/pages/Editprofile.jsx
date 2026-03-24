@@ -32,12 +32,19 @@ function EditProfile() {
       );
 
       if (response.data.status) {
-        toast.success("Profile Updated Successfully...");
+        toast.success("Profile Updated Successfully...", {
+        onClose: () => {
+          window.location.href = "/profile";
+        },
+      });
       }
-      window.location.href = "/profile"
     } catch (error) {
       console.error(error);
-      toast.error("Updated failed...");
+      toast.error("Updated failed...", {
+        onClose: () => {
+          window.location.href = "/editprofile";
+        },
+      });
     }
   }
 

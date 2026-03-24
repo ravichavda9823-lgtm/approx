@@ -4,7 +4,6 @@ import api from "../utils/AxiosConfig";
 import { toast } from "react-toastify";
 
 function ManagerViewHotels() {
-
   const [cities, setCities] = useState([]);
   const [types, setTypes] = useState([]);
   const [hotel, setHotel] = useState([]);
@@ -38,21 +37,15 @@ function ManagerViewHotels() {
   // FETCH HOTELS
   const fetchHotel = async () => {
     try {
-
       setLoading(true);
 
       const response = await api.get("/manager/hotel");
 
       setHotel(response.data.data);
-
     } catch (error) {
-
       console.log(error);
-
     } finally {
-
       setLoading(false);
-
     }
   };
 
@@ -64,14 +57,12 @@ function ManagerViewHotels() {
 
   // HANDLE SELECT CHANGE
   const handleChange = (e) => {
-
     const { name, value } = e.target;
 
     setFilters({
       ...filters,
       [name]: value,
     });
-
   };
 
   // SEARCH BUTTON
@@ -81,38 +72,36 @@ function ManagerViewHotels() {
 
   // FILTER LOGIC
   const filteredHotels = hotel.filter((item) => {
-
     return (
       (filters.city === "" || item.city === filters.city) &&
       (filters.type === "" ||
         item.type === filters.type ||
         item.type?.name === filters.type)
     );
-
   });
 
   // DELETE HOTEL
   const FetchDeleteHotel = async (id) => {
-
     try {
-
       const response = await api.delete(`/manager/hotel/delete/${id}`);
 
       if (response.status === 200) {
-
-        toast.success("Hotel Deleted Successfully...");
+        toast.success("Hotel Deleted Successfully...", {
+          onClose: () => {
+            window.location.href = "/managerviewhotel";
+          },
+        });
 
         fetchHotel();
-
       }
-
     } catch (e) {
-
       console.log(e);
-      toast.error("Invalid Details...")
-
+      toast.error("Invalid Details...", {
+        onClose: () => {
+          window.location.href = "/managerviewhotel";
+        },
+      });
     }
-
   };
 
   return (
@@ -133,62 +122,39 @@ function ManagerViewHotels() {
 
       {/* FILTER SECTION */}
       <div className="hotel-booking-form-1 gray-bg">
-
         <div className="auto-container">
-
           <form
             className="hotel-booking-form-1-form d-flex flex-wrap align-items-end"
             onSubmit={handleSearch}
           >
-
             {/* CITY */}
             <div className="form-group">
-
               <p className="hotel-booking-form-1-label">City</p>
 
-              <select
-                name="city"
-                value={filters.city}
-                onChange={handleChange}
-              >
-
+              <select name="city" value={filters.city} onChange={handleChange}>
                 <option value="">All Cities</option>
 
                 {cities.map((city) => (
-
                   <option key={city._id} value={city.name}>
                     {city.name}
                   </option>
-
                 ))}
-
               </select>
-
             </div>
 
             {/* TYPE */}
             <div className="form-group">
-
               <p className="hotel-booking-form-1-label">Venue Type</p>
 
-              <select
-                name="type"
-                value={filters.type}
-                onChange={handleChange}
-              >
-
+              <select name="type" value={filters.type} onChange={handleChange}>
                 <option value="">All Types</option>
 
                 {types.map((type) => (
-
                   <option key={type._id} value={type.name}>
                     {type.name}
                   </option>
-
                 ))}
-
               </select>
-
             </div>
 
             <div className="form-group">
@@ -196,34 +162,23 @@ function ManagerViewHotels() {
                 Search Hotels
               </button>
             </div>
-
           </form>
-
         </div>
-
       </div>
 
       {/* HOTEL LIST */}
       <div className="container">
-
         <div className="row mt-5">
-
-          {loading && (
-            <p className="text-center">Loading hotels...</p>
-          )}
+          {loading && <p className="text-center">Loading hotels...</p>}
 
           {!loading && filteredHotels.length === 0 && (
             <p className="text-center">❌ No hotels found</p>
           )}
 
           {filteredHotels.map((value) => (
-
             <div key={value._id} className="col-lg-4 col-md-6 mb-4">
-
               <div className="card shadow h-100">
-
                 <Link to={`/managerhoteldetails/${value._id}`}>
-
                   <img
                     src={`${api.defaults.baseURL}/uploads/${value.image}`}
                     alt={value.name}
@@ -233,11 +188,9 @@ function ManagerViewHotels() {
                       objectFit: "cover",
                     }}
                   />
-
                 </Link>
 
                 <div className="card-body">
-
                   <h5>{value.name}</h5>
 
                   <span className="badge bg-success">
@@ -249,7 +202,6 @@ function ManagerViewHotels() {
                   <p>₹{value.price} / Night</p>
 
                   <div className="d-flex gap-2 mt-3">
-
                     <Link
                       to={`/edithotel/${value._id}`}
                       state={value}
@@ -265,19 +217,12 @@ function ManagerViewHotels() {
                     >
                       Delete
                     </button>
-
                   </div>
-
                 </div>
-
               </div>
-
             </div>
-
           ))}
-
         </div>
-
       </div>
     </>
   );

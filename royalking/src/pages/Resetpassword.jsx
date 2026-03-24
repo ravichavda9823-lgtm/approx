@@ -35,12 +35,19 @@ function ResetPassword() {
 
       const response = await api.post(`/user/password/resetpassword/${token}`, { newPassword: passwordData.newPassword })
       if (response.data.status) {
-        toast.success("Password reset successfully");
-        window.location.href = "/login";
+        toast.success("Password reset successfully"), {
+        onClose: () => {
+          window.location.href = "/login";
+        },
+      };
       }
 
     } catch (error) {
-      toast.error("Invalid or expired reset link");
+      toast.error("Invalid or expired reset link", {
+        onClose: () => {
+          window.location.href = "resetpassword/:token";
+        },
+      });
     }
      finally {
       setLoading(false);

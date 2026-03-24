@@ -19,23 +19,30 @@ function Contact() {
     });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let response =  await api.post("/user/inquiry/addinquiry", formData);
+      let response = await api.post("/user/inquiry/addinquiry", formData);
       console.log(response.data);
       setFormData(response.data.data);
-      toast.success("Inquiry submitted successfully");
+      toast.success("Inquiry submitted successfully", {
+        onClose: () => {
+          window.location.href = "/";
+        },
+      });
       setFormData({
         name: "",
         email: "",
         subject: "",
         message: "",
       });
-      window.location.href = "/";
     } catch (e) {
       console.log(e);
-      toast.error("Invalid Details");
+      toast.error("Invalid Details", {
+        onClose: () => {
+          window.location.href = "/contact";
+        },
+      });
     }
   };
 
@@ -53,7 +60,6 @@ function Contact() {
               <form
                 method="post"
                 action="https://html.tonatheme.com/2022/royalking/index.html"
-               
               >
                 <div className="form-group">
                   <fieldset>
@@ -149,14 +155,16 @@ function Contact() {
                   Email
                 </h4>
                 <p>
-                  <Link href="mailto:support@example.com">occazone@venuebooking.com</Link>
+                  <Link href="mailto:support@example.com">
+                    occazone@venuebooking.com
+                  </Link>
                 </p>
               </li>
             </ul>
             <div className="row no-gutters">
               <div className="col-lg-5">
                 <div className="form-alt form-alt3 with-shadow">
-                  <form method="post" id="contact-form"  onSubmit={handleSubmit}>
+                  <form method="post" id="contact-form" onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="form-group col-md-12">
                         <input
@@ -203,10 +211,7 @@ function Contact() {
                           className="form-control"
                           type="hidden"
                         />
-                        <button
-                          className="btn-1"
-                          type="submit"
-                        >
+                        <button className="btn-1" type="submit">
                           Submit Now <i className="flaticon-right-arrow-1" />
                           <span />
                         </button>

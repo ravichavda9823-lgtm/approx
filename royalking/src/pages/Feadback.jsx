@@ -61,7 +61,11 @@ function Feedback() {
       if (response.data.token) {
         cookie.set("token", response.data.token);
       }
-      toast.success("Feedback submitted successfully...");
+      toast.success("Feedback submitted successfully...", {
+        onClose: () => {
+          window.location.href = "/";
+        },
+      });
       setFeedback({
         name: "",
         email: "",
@@ -70,10 +74,13 @@ function Feedback() {
         loginId: userProfile._id,
         createdAt: new Date(),
       });
-      window.location.href = "/";
     } catch (error) {
       console.error(error);
-      toast.error("Invalid Details");
+      toast.error("Invalid Details", {
+        onClose: () => {
+          window.location.href = "/feedback";
+        },
+      });
     }
   };
 

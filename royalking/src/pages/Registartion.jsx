@@ -107,8 +107,11 @@ function Register() {
       );
 
       if (response.data.status) {
-        toast.success("Registration Successfully...");
-        window.location.href = "/login";
+        toast.success("Registration Successfully...", {
+        onClose: () => {
+          window.location.href = "/login";
+        },
+      });
       }
     } catch (e) {
       setUser({
@@ -118,8 +121,11 @@ function Register() {
         password: "",
         role: "",
       });
-      toast.error("Invalid Details");
-      window.location.href = "/registartion";
+      toast.error("Invalid Details", {
+        onClose: () => {
+          window.location.href = "/registartion";
+        },
+      });
     } finally {
       setLoading(false);
     }
