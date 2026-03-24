@@ -126,6 +126,7 @@ function Register() {
           window.location.href = "/registartion";
         },
       });
+
     } finally {
       setLoading(false);
     }
