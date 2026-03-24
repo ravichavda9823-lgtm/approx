@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
+import { useQuery } from "@tanstack/react-query";
 
 function SelectOccasion() {
   const [occasions, setOccasions] = useState([]);
@@ -17,9 +18,15 @@ function SelectOccasion() {
     }
   };
 
-  useEffect(() => {
-    fetchOccasions();
-  }, []);
+  // useEffect(() => {
+  //   fetchOccasions();
+  // }, []);
+
+  
+ const { data: occasion, isLoading, isError, error } = useQuery({
+    queryKey: ["occasion"],
+    queryFn: fetchOccasions,
+  });
 
   return (
     <>

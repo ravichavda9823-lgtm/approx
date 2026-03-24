@@ -1,9 +1,9 @@
-import React, { useState,useNavigate} from "react";
+import React, { useState, useNavigate } from "react";
 import cookie from "js-cookie";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
-import api from "../utils/AxiosConfig";
 import { toast } from "react-toastify";
+
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,21 +25,26 @@ function Login() {
   async function handelSubmit(e) {
     e.preventDefault();
     try {
-      let response = await axios.post(
-        "https://backend-t1tu.onrender.com/api/auth/Signin",
-        admin,
-      );
+      let response = await axios.post(`${import.meta.env.URL}/auth/Signin`, admin);
 
       console.log(response.data);
 
       if (response.data.token) {
         cookie.set("token", response.data.token);
-        toast.success("Login Successfully..", {onClose: ()=> {window.location.href = "/"}});
-        window.location.href = "/"
+        toast.success("Login Successfully..", {
+          onClose: () => {
+            window.location.href = "/";
+          },
+        });
+        window.location.href = "/";
       }
     } catch (error) {
       console.log(error.response);
-      toast.error("Invalid Details", {onClose: ()=> {window.location.href = "/login"}});
+      toast.error("Invalid Details", {
+        onClose: () => {
+          window.location.href = "/login";
+        },
+      });
     }
   }
 

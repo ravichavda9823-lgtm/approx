@@ -2,9 +2,10 @@ import axios from "axios";
 import CheckToken from "./CheckToken";
 import { LogoutwithoutNotification } from "./Logout";
 
+
+
 let api = axios.create({
-    baseURL:"https://backend-t1tu.onrender.com/api",
-    
+    baseURL:import.meta.env.URL
 }); 
 
 api.interceptors.request.use((config)=>{
