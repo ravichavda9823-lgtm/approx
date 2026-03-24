@@ -78,7 +78,7 @@ let EditCity = async (req, res) => {
     let  { _id, name } = req.body || {}; 
     console.log(_id);
 
-    let city = await collection.findOne({_id: ObjectId.createFromHexString(id)});
+    let city = await collection.findOne({_id: ObjectId.createFromHexString(_id)});
 
     if(!city){
       return res.status(404).json({
@@ -92,7 +92,7 @@ let EditCity = async (req, res) => {
     }
 
     let updateQuery = await collection.updateOne(
-      {_id: ObjectId.createFromHexString(id)}, {$set: updatecity});
+      {_id: ObjectId.createFromHexString(_id)}, {$set: updatecity});
 
       console.log(updateQuery);
       if(updateQuery.acknowledged){

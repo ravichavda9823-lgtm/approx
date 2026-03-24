@@ -45,7 +45,6 @@ function ManageCity() {
       fetchCities();
     } catch (err) {
       console.log(err);
-      toast.error("Invalid Details...")
     }
   };
 
