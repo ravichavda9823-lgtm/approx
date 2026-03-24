@@ -71,7 +71,7 @@ let DeleteCity = async (req, res) => {
 
 
 let EditCity = async (req, res) => {
-  try {
+  // try {
     let db = await connectDb();
     let collection = db.collection("city");
     let { id } = req.params;
@@ -101,12 +101,12 @@ let EditCity = async (req, res) => {
           Message:"city Updated Successfully"
         })
       }
-  }catch(e){
-      return res.status(500).json({
-        status:false, 
-        Message:"Internal Server Error. please try again later."
-      })
-  }
+  // }catch(e){
+  //     return res.status(500).json({
+  //       status:false, 
+  //       Message:"Internal Server Error. please try again later."
+  //     })
+  // }
 }
 
 
