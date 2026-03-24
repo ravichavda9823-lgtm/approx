@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
+import { toast } from "react-toastify";
 
 function ManageBookingHistory() {
   const [users, setUsers] = useState([]);
@@ -30,7 +31,7 @@ function ManageBookingHistory() {
   const DeleteBooking = async (id) => {
     try {
       await api.delete(`/admin/booking/delete/${id}`);
-      alert("Booking Deleted Successfully");
+      toast.success("Booking Deleted Successfully", {onClose: ()=> {window.location.href = "/managebookinghistory"}});
       fetchBookings();
     } catch (err) {
       console.log(err);

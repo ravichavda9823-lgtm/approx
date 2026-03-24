@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
+import { toast } from "react-toastify";
 
 function ManageVenueBooking() {
   const [bookings, setBookings] = useState([]);
@@ -33,18 +34,18 @@ function ManageVenueBooking() {
       status: status,
     });
 
-    alert("Status updated successfully");
+    toast.success("Status updated successfully...");
     fetchBookings();
   } catch (error) {
     console.log(error);
-    alert("Failed to update status");
+    toast.error("Failed to update status...");
   }
 };
 
   const DeleteBooking = async (id) => {
     try {
       await api.delete(`/admin/booking/delete/${id}`);
-      alert("Booking Deleted Successfully");
+      toast.success("Booking Deleted Successfully...");
       fetchBookings();
     } catch (err) {
       console.log(err);
