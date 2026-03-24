@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
+import { toast } from "react-toastify";
 
 function ManageHotel() {
   const [hotel, setHotel] = useState([]);
@@ -11,6 +12,7 @@ function ManageHotel() {
   const [editId, setEditId] = useState(null);
   const [preview, setPreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+
   const [form, setForm] = useState({
     name: "",
     city: "",
@@ -103,19 +105,22 @@ function ManageHotel() {
       if (isEdit) {
         let response = await api.put(`/admin/hotel/update/${editId}`, formData);
         setEditId(response.data.data);
-        alert("Hotel Updated Successfully");
+        toast.success("Hotel Updated Successfully...");
       } else {
         let response = await api.post("/admin/hotel/addhotel", formData);
         setHotel(response.data.data);
-        alert("Hotel Added Successfully");
+        toast.success("Hotel Added Successfully...", {
+          onClose: () => {
+            window.location.href = "/managehotel";
+          },
+        });
       }
-
-      window.location.href = "/managehotel"
 
       handleCancel();
       fetchHotel();
     } catch (e) {
       console.log(e);
+      toast.error("Something went wrong");
     }
   };
 
@@ -129,7 +134,7 @@ function ManageHotel() {
     try {
       const response = await api.delete(`/admin/hotel/delete/${id}`);
       if (response.status === 200) {
-        alert("Hotel Deleted Successfully");
+        toast.success("Hotel Deleted Successfully");
         fetchHotel();
       }
     } catch (e) {
@@ -139,7 +144,7 @@ function ManageHotel() {
 
   return (
     <div className="page-wrapper">
-      <Header/>
+      <Header />
       <div className="page-content">
         <div className="container-fluid mt-4">
           <div className="row mb-4 align-items-center">
@@ -168,7 +173,11 @@ function ManageHotel() {
           {/* ===== HEADER ===== */}
           <div className="mb-3 row ">
             <div className="col-2 ms-5  ms-auto">
-              <button className="btn btn-primary" style={{width:"100%"}} onClick={handleAdd}>
+              <button
+                className="btn btn-primary"
+                style={{ width: "100%" }}
+                onClick={handleAdd}
+              >
                 + Add Hotel
               </button>
             </div>
