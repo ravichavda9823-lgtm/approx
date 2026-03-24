@@ -2,7 +2,8 @@ import {} from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Error from "./pages/Error";
 import Login from "./pages/Login";
@@ -31,6 +32,7 @@ import ProtectPages from "./utils/ProtectedPages";
 function App() {
   return (
     <>
+      <ToastContainer  position="top-right" autoClose={2000} theme="colored" style={{zIndex: 99999}}/>
       <BrowserRouter>
         <Routes>
           <Route

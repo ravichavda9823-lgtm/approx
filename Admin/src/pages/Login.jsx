@@ -3,6 +3,7 @@ import cookie from "js-cookie";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import api from "../utils/AxiosConfig";
+import { toast } from "react-toastify";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,12 +34,12 @@ function Login() {
 
       if (response.data.token) {
         cookie.set("token", response.data.token);
-        alert("Login Successfully..");
+        toast.success("Login Successfully..", {onClose: ()=> {window.location.href = "/"}});
         window.location.href = "/"
       }
     } catch (error) {
       console.log(error.response);
-      alert("Invalid Details");
+      toast.error("Invalid Details", {onClose: ()=> {window.location.href = "/login"}});
     }
   }
 
