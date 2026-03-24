@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
+import { toast } from "react-toastify";
 
 function ManageOccasion() {
   const [occasionList, setOccasionList] = useState([]);
@@ -55,7 +56,7 @@ function ManageOccasion() {
     e.preventDefault();
 
     if (!formDataState.name || !formDataState.desc) {
-      alert("All fields are required");
+      toast.error("All fields are required");
       return;
     }
 
@@ -72,10 +73,10 @@ function ManageOccasion() {
       if (editId) {
         await api.put(`/admin/occasion/update/${editId}`, formData
         );
-        alert("Occasion Updated Successfully");
+        toast.success("Occasion Updated Successfully");
       } else {
         await api.post("/admin/occasion/addoccasion", formData);
-        alert("Occasion Added Successfully");
+        toast.success("Occasion Added Successfully");
       }
 
       handleCancel();
@@ -106,7 +107,7 @@ function ManageOccasion() {
     try {
       const response = await api.delete(`/admin/occasion/delete/${id}`);
       if (response.status === 200) {
-        alert("Occasion Deleted Successfully");
+       toast.success("Occasion Deleted Successfully");
         fetchOccasions();
       }
     } catch (e) {

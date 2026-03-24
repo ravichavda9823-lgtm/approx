@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
+import { toast } from "react-toastify";
 
 function ManageInquiry() {
 
@@ -28,7 +29,7 @@ function ManageInquiry() {
       const response = await api.delete(`/admin/inquiry/delete/${id}`);
 
       if (response.status === 200) {
-        alert("Inquiry Deleted Successfully");
+        toast.success("Inquiry Deleted Successfully");
         fetchInquiry();
       }
     } catch (e) {

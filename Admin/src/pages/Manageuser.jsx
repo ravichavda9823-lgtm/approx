@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
+import { toast } from "react-toastify";
 
 function ManageUser() {
   const [users, setUsers] = useState([]);
@@ -61,7 +62,7 @@ function ManageUser() {
         status: form.status,
       });
 
-      alert("User Updated Successfully");
+      toast.success("User Updated Successfully");
 
       setIsEdit(false);
       setEditId(null);
@@ -75,6 +76,7 @@ function ManageUser() {
       fetchUsers();
     } catch (error) {
       console.log(error);
+      toast.error("Invalid Details...")
     }
   };
 
@@ -93,7 +95,8 @@ function ManageUser() {
     try {
       let response = await api.delete(`/auth/delete/${id}`);
       if (response.status === 200) {
-        alert("User Deleted Successfully");
+        
+        toast.success("User Deleted Successfully");
         fetchUsers();
       }
     } catch (e) {

@@ -109,11 +109,7 @@ function ManageHotel() {
       } else {
         let response = await api.post("/admin/hotel/addhotel", formData);
         setHotel(response.data.data);
-        toast.success("Hotel Added Successfully...", {
-          onClose: () => {
-            window.location.href = "/managehotel";
-          },
-        });
+        toast.success("Hotel Added Successfully...");
       }
 
       handleCancel();

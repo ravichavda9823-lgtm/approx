@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
+import { toast } from "react-toastify";
 
 function ViewFeedback() {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -98,7 +99,7 @@ function ViewFeedback() {
     try {
       let response = await api.delete(`/admin/delete/${id}`);
       if (response.status === 200) {
-        alert("Feedback Deleted Successfully");
+        toast.success("Feedback Deleted Successfully");
         fetchFeedback();
       }
     } catch (e) {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
+import { toast } from "react-toastify";
 
 function Managevenue() {
   const [venue, setVenue] = useState([]);
@@ -108,17 +109,18 @@ function Managevenue() {
       if (isEdit) {
         let response = await api.put(`/admin/venue/update/${editId}`, formData);
         setEditId(response.data.data);
-        alert("Venue Updated Successfully");
+        toast.success("Venue Updated Successfully");
       } else {
         let response = await api.post("/admin/venue/addvenue", formData);
         setVenue(response.data.data);
-        alert("Venue Added Successfully");
+        toast.success("Venue Added Successfully");
       }
 
       handleCancel();
       fetchvenue();
     } catch (e) {
       console.log(e);
+      toast.error("Somrthing went wrong")
     }
   };
 
@@ -132,7 +134,7 @@ function Managevenue() {
     try {
       const response = await api.delete(`/admin/venue/delete/${id}`);
       if (response.status === 200) {
-        alert("Hotel Deleted Successfully");
+        toast.success("Hotel Deleted Successfully");
         fetchHotel();
       }
     } catch (e) {
