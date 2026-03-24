@@ -31,7 +31,7 @@ function ManageBookingHistory() {
   const DeleteBooking = async (id) => {
     try {
       await api.delete(`/admin/booking/delete/${id}`);
-      toast.success("Booking Deleted Successfully", {onClose: ()=> {window.location.href = "/managebookinghistory"}});
+      toast.success("Booking Deleted Successfully");
       fetchBookings();
     } catch (err) {
       console.log(err);
