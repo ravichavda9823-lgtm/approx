@@ -2,20 +2,31 @@ import React, { useState, useEffect } from "react";
 import api from "../utils/AxiosConfig";
 
 function Testimonials() {
-  let [feedback , setFeedback] = useState([]);
+  // let [feedback , setFeedback] = useState([]);
   const fetchfeedback = async (e) => {
-    // try {
+    try {
       const response = await api.get("/user/feedback/");
       console.log(response.data);
-      setFeedback(response.data.data.slice(0,2));
-    // } catch (e) {
-    //   console.log(e);
-    // }
+      return response.data.data.slice(0,2);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  useEffect(() => {
-    fetchfeedback();
-  }, []);
+  // useEffect(() => {
+  //   fetchfeedback();
+  // }, []);
+
+    const {
+    data: feedback,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["feedback"],
+    queryFn:fetchfeedback ,
+  });
+
 
   console.log(feedback);
 

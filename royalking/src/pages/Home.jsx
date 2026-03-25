@@ -5,11 +5,12 @@ import { Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import { LogoutwithoutNotification } from "../utils/Logout";
 import CheckRole from "../utils/CheckRole";
+import { useQuery } from "@tanstack/react-query";
 
 function Home() {
   let [user, setUser] = useState({});
-  const [hotel, setHotel] = useState([]);
-  const [occasions, setOccasions] = useState([]);
+  // const [hotel, setHotel] = useState([]);
+  // const [occasions, setOccasions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
@@ -85,11 +86,9 @@ function Home() {
     try {
       const response = await api.get("/user/occasion");
       console.log(response.data);
-      setOccasions(response.data.data);
+      return response.data.data;
     } catch (error) {
       console.error("API Error:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -99,7 +98,7 @@ function Home() {
 
       const response = await api.get("/user/hotel");
       console.log(response.data);
-      setHotel(response.data.data.slice(0, 3));
+      return response.data.data.slice(0, 3);
     } catch (e) {
       console.log(e);
     } finally {
@@ -107,10 +106,30 @@ function Home() {
     }
   };
 
-  useEffect(() => {
-    fetchOccasions();
-    fetchHotel();
-  }, []);
+  // useEffect(() => {
+  //   fetchOccasions();
+  //   fetchHotel();
+  // }, []);
+
+  const {
+    data: occasions,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["occasions"],
+    queryFn: fetchOccasions,
+  });
+
+  const {
+    data: hotel = [],
+    hotelLoading,
+    hotelisError,
+    hotelerror,
+  } = useQuery({
+    queryKey: ["hotel"],
+    queryFn: fetchHotel,
+  });
 
   console.log(occasions);
 
@@ -292,84 +311,6 @@ function Home() {
           </div>
         </section>
 
-        {/* <div className="hotel-booking-form-1 gray-bg">
-            <div className="auto-container">
-              <div className="hotel-booking-form-1-wrap">
-                <form className="hotel-booking-form-1-form flex-grow-1 d-flex align-items-end">
-                  <div className="form-group">
-                    <p className="hotel-booking-form-1-label text-lg-center">
-                      Check - in:
-                    </p>
-                    <input
-                      placeholder="17 Sep, 2022"
-                      className
-                      type="text"
-                      name="form-name"
-                      id="nd_booking_archive_form_date_range_from"
-                      defaultValue
-                    />
-                  </div>
-                  <div className="form-group">
-                    <p className="hotel-booking-form-1-label text-lg-center">
-                      Check - Out:
-                    </p>
-                    <input
-                      placeholder="21 Sep, 2022"
-                      className
-                      type="text"
-                      name="form-name"
-                      id="nd_booking_archive_form_date_range_to"
-                      defaultValue
-                    />
-                  </div>
-                  <div className="form-group">
-                    <p className="hotel-booking-form-1-label text-lg-center">
-                      Rooms:
-                    </p>
-                    <select>
-                      <option data-display="1 Room">1 Room</option>
-                      <option value="2 Rooms">2 Rooms</option>
-                      <option value="3 Rooms">3 Rooms</option>
-                      <option value="4 Rooms">4 Rooms</option>
-                      <option value="5 Rooms">5 Rooms</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <p className="hotel-booking-form-1-label text-lg-center">
-                      Adults:
-                    </p>
-                    <select>
-                      <option data-display="2 Adults">2 Adults</option>
-                      <option value="1 Adult">1 Adult</option>
-                      <option value="3 Adults">3 Adults</option>
-                      <option value="4 Adults">4 Adults</option>
-                      <option value="5 Adults">5 Adults</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <p className="hotel-booking-form-1-label text-lg-center">
-                      Child:
-                    </p>
-                    <select>
-                      <option data-display="1 Children">1 Children</option>
-                      <option value="0 Children">0 Children</option>
-                      <option value="2 Childrens">2 Childrens</option>
-                      <option value="3 Childrens">3 Childrens</option>
-                      <option value="4 Childrens">4 Childrens</option>
-                      <option value="5 Childrens">5 Childrens</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <button type="submit" className="btn-1">
-                      Check Availability
-                      <span />
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div> */}
-        {/* Feature */}
         <section className="section-padding">
           <div className="gray-bg p_absolute l_0 b_0 r_0 h_340" />
           <div className="auto-container">
@@ -382,7 +323,7 @@ function Home() {
               </h2>
             </div>
             <div className="row">
-              {loading ? (
+              {isLoading ? (
                 <h4 className="text-center mt-4">Loading occasions...</h4>
               ) : (
                 occasions.map((value) => (
@@ -471,46 +412,50 @@ function Home() {
             </div>
 
             <div className="row mt-3">
-              {hotel.map((value) => (
-                <div className="col-lg-4 col-md-6">
-                  <div
-                    className="room-1-block wow fadeInUp"
-                    data-wow-delay=".2s"
-                    data-wow-duration=".8s"
-                  >
-                    <div className="room-1-image hvr-img-zoom-1">
-                      <img
-                        src={`${api.defaults.baseURL}/uploads/${value.image}`}
-                        style={{ height: "300px" }}
-                        alt
-                      />
-                    </div>
-                    <div className="room-1-content">
-                      <p className="room-1-meta-info">
-                        Start from ₹{" "}
-                        <span className="theme-color">{value.price}</span>
-                        /night
-                      </p>
-                      <div className="room-1-rating">
-                        <i className="icon-6" />
-                        <i className="icon-6" />
-                        <i className="icon-6" />
-                        <i className="icon-6" />
-                        <i className="icon-7" />
+              {hotelLoading && <h3>Loading hotels...</h3>}
+
+              {hotelisError && <h3 style={{ color: "red" }}>{hotelerror}</h3>}
+
+              {!hotelLoading && hotel.length === 0 && <h3>No hotels found</h3>}
+
+              {!hotelLoading &&
+                hotel.length > 0 &&
+                hotel.map((value) => (
+                  <div className="col-lg-4 col-md-6" key={value.id}>
+                    <div className="room-1-block wow fadeInUp">
+                      <div className="room-1-image hvr-img-zoom-1">
+                        <img
+                          src={`${api.defaults.baseURL}/uploads/${value.image}`}
+                          style={{ height: "300px" }}
+                          alt="hotel"
+                        />
                       </div>
-                      <h4 className="room-1-title mb_20">
-                        <Link to="/viewhotels">{value.name}</Link>
-                      </h4>
-                      <p className="room-1-text mb_30">{value.shortdesc}</p>
-                      <div className="link-btn">
-                        <Link to="/booking/:id" className="btn-1 btn-alt">
-                          Book Now <span />
-                        </Link>
+
+                      <div className="room-1-content">
+                        <p className="room-1-meta-info">
+                          Start from ₹{" "}
+                          <span className="theme-color">{value.price}</span>
+                          /night
+                        </p>
+
+                        <h4 className="room-1-title mb_20">
+                          <Link to="/viewhotels">{value.name}</Link>
+                        </h4>
+
+                        <p className="room-1-text mb_30">{value.shortdesc}</p>
+
+                        <div className="link-btn">
+                          <Link
+                            to={`/booking/${value.id}`}
+                            className="btn-1 btn-alt"
+                          >
+                            Book Now <span />
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </section>
