@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import CheckRole from "../utils/CheckRole";
 import Logout, { LogoutwithoutNotification } from "../utils/Logout";
+import { useQuery } from "@tanstack/react-query";
 
 function Profile() {
-  let [userProfile, SetUserProfile] = useState({});
+  // let [userProfile, SetUserProfile] = useState({});
   const role = CheckRole();
 
   async function FethchUserProfile() {
@@ -13,7 +14,7 @@ function Profile() {
       try {
         let response = await api.get("/user/profile");
         console.log(response);
-        SetUserProfile(response.data.users);
+        return response.data.users;
       } catch (e) {
         if (e.response.status == 401 && e.response.status == 403) {
           LogoutwithoutNotification();
@@ -23,7 +24,7 @@ function Profile() {
       try {
         let response = await api.get("/manager/managerprofile");
         console.log(response);
-        SetUserProfile(response.data.manager);
+        return response.data.manager;
       } catch (e) {
         if (e.response.status == 401 && e.response.status == 403) {
           LogoutwithoutNotification();
@@ -33,9 +34,19 @@ function Profile() {
       LogoutwithoutNotification();
     }
   }
-  useEffect(() => {
-    FethchUserProfile();
-  }, []);
+  // useEffect(() => {
+  //   FethchUserProfile();
+  // }, []);
+
+   const {
+    data: userProfile,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["userProfile"],
+    queryFn: FethchUserProfile,
+  });
 
 ;
 
