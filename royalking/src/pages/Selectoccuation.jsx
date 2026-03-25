@@ -20,8 +20,12 @@ function SelectOccasion() {
   //   fetchOccasions();
   // }, []);
 
-  
- const { data: occasions, isLoading, isError, error } = useQuery({
+  const {
+    data: occasions,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["occasions"],
     queryFn: fetchOccasions,
   });
@@ -62,14 +66,12 @@ function SelectOccasion() {
           <div className="row">
             {isLoading ? (
               <h4 className="text-center mt-4">Loading occasions...</h4>
+            ) : isError ? (
+              <h4 className="text-danger text-center">Error loading data</h4>
             ) : (
               occasions.map((value) => (
-                <div
-                  className="col-lg-4 col-md-6 col-12 mb_30"
-                  key={value.id}
-                >
+                <div className="col-lg-4 col-md-6 col-12 mb_30" key={value.id}>
                   <div className="occasion-card with-shadniche ow d-flex flex-column">
-                    
                     {/* IMAGE */}
                     <img
                       src={`${api.defaults.baseURL}/uploads/${value.image}`}
@@ -97,7 +99,6 @@ function SelectOccasion() {
                         Choose {value.name} <span />
                       </Link>
                     </div>
-
                   </div>
                 </div>
               ))

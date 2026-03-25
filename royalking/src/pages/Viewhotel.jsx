@@ -3,11 +3,9 @@ import { Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 
 function ViewHotels() {
-  const [cities, setCities] = useState([]);
-  const [types, setTypes] = useState([]);
-  const [hotel, setHotel] = useState([]);
-
-  const [loading, setLoading] = useState(false);
+  // const [cities, setCities] = useState([]);
+  // const [types, setTypes] = useState([]);
+  // const [hotel, setHotel] = useState([]);
 
   const [filters, setFilters] = useState({
     city: "",
@@ -20,7 +18,7 @@ function ViewHotels() {
   const fetchCities = async () => {
     try {
       const response = await api.get("/user/city");
-      setCities(response.data.data);
+      return response.data.data;
     } catch (error) {
       console.log(error);
     }
@@ -30,7 +28,7 @@ function ViewHotels() {
   const fetchTypes = async () => {
     try {
       const response = await api.get("/user/venuetype");
-      setTypes(response.data.data);
+      return response.data.data;
     } catch (error) {
       console.log(error);
     }
@@ -39,23 +37,42 @@ function ViewHotels() {
   // FETCH HOTELS
   const fetchHotel = async () => {
     try {
-      setLoading(true);
       const response = await api.get("/user/hotel");
-      setHotel(response.data.data);
+      return response.data.data;
     } catch (e) {
       console.log(e);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
-  useEffect(() => {
-    fetchCities();
-    fetchTypes();
-    fetchHotel();
-  }, []);
+  // useEffect(() => {
+  //   fetchCities();
+  //   fetchTypes();
+  // }, []);
 
-  // HANDLE INPUT CHANGE
+    const {
+    data: hotel,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["hotel"],
+    queryFn: fetchHotel,
+  });
+
+     const {
+    data: cities,
+  } = useQuery({
+    queryKey: ["cities"],
+    queryFn: fetchCities,
+  });
+     const {
+    data: types,
+  } = useQuery({
+    queryKey: ["types"],
+    queryFn: fetchTypes,
+  });
+
+
   const handleChange = (e) => {
     setFilters({
       ...filters,
@@ -63,13 +80,11 @@ function ViewHotels() {
     });
   };
 
-  // SEARCH BUTTON
   const handleSearch = (e) => {
     e.preventDefault();
     setApplyFilter(true);
   };
 
-  // FILTER LOGIC
   const filteredHotels = applyFilter
     ? hotel.filter((item) => {
         return (
@@ -166,9 +181,9 @@ function ViewHotels() {
       {/* HOTEL LIST */}
       <div className="container">
         <div className="row mt-5">
-          {loading && <p className="text-center">Loading hotels...</p>}
+          {isLoading && <p className="text-center">Loading hotels...</p>}
 
-          {!loading && filteredHotels.length === 0 && (
+          {!isLoading && filteredHotels.length === 0 && (
             <p className="text-center">❌ No hotels found</p>
           )}
 
