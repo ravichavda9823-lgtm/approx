@@ -4,29 +4,27 @@ import api from "../utils/AxiosConfig";
 import { useQuery } from "@tanstack/react-query";
 
 function SelectOccasion() {
-  const [occasions, setOccasions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [occasions, setOccasions] = useState([]);
+  // const [loading, setLoading] = useState(true);
 
   const fetchOccasions = async () => {
     try {
       const response = await api.get("user/occasion");
-      setOccasions(response.data.data);
+      return response.data.data;
     } catch (error) {
       console.error("API Error:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchOccasions();
-  }, []);
+  // useEffect(() => {
+  //   fetchOccasions();
+  // }, []);
 
   
-//  const { data: occasion, isLoading, isError, error } = useQuery({
-//     queryKey: ["occasion"],
-//     queryFn: fetchOccasions,
-//   });
+ const { data: occasions, isLoading, isError, error } = useQuery({
+    queryKey: ["occasions"],
+    queryFn: fetchOccasions,
+  });
 
   return (
     <>
@@ -62,7 +60,7 @@ function SelectOccasion() {
       <section className="section-padding">
         <div className="auto-container">
           <div className="row">
-            {loading ? (
+            {isLoading ? (
               <h4 className="text-center mt-4">Loading occasions...</h4>
             ) : (
               occasions.map((value) => (
