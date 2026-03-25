@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/AxiosConfig";
+import { useQuery } from "@tanstack/react-query";
 
 function Testimonials() {
   // let [feedback , setFeedback] = useState([]);
