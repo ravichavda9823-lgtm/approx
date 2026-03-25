@@ -51,12 +51,12 @@ function ViewHotels() {
   // }, []);
 
     const {
-    data: filteredHotels,
+    data: hotel,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: ["filteredHotels"],
+    queryKey: ["hotel"],
     queryFn: fetchHotel,
   });
 
