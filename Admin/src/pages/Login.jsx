@@ -25,8 +25,7 @@ function Login() {
   async function handelSubmit(e) {
     e.preventDefault();
     try {
-      let response = await axios.post(`${import.meta.env.URL}/auth/Signin`, admin);
-
+      let response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/Signin`, admin);
       console.log(response.data);
 
       if (response.data.token) {

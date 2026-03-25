@@ -18,15 +18,15 @@ function SelectOccasion() {
     }
   };
 
-  // useEffect(() => {
-  //   fetchOccasions();
-  // }, []);
+  useEffect(() => {
+    fetchOccasions();
+  }, []);
 
   
- const { data: occasion, isLoading, isError, error } = useQuery({
-    queryKey: ["occasion"],
-    queryFn: fetchOccasions,
-  });
+//  const { data: occasion, isLoading, isError, error } = useQuery({
+//     queryKey: ["occasion"],
+//     queryFn: fetchOccasions,
+//   });
 
   return (
     <>
