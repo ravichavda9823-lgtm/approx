@@ -11,23 +11,22 @@ function ViewHotels() {
 
   const [applyFilter, setApplyFilter] = useState(false);
 
-  // ✅ FETCH FUNCTIONS (SAFE)
   const fetchHotel = async () => {
     const response = await api.get("/user/hotel");
-    return response?.data?.data || [];
+    return response.data.data ;
   };
 
   const fetchCities = async () => {
     const response = await api.get("/user/city");
-    return response?.data?.data || [];
+    return response.data.data;
   };
 
   const fetchTypes = async () => {
     const response = await api.get("/user/venuetype");
-    return response?.data?.data || [];
+    return response.data.data;
   };
 
-  // ✅ REACT QUERY
+
   const {
     data: hotel = [],
     isLoading,
@@ -49,7 +48,6 @@ function ViewHotels() {
     queryFn: fetchTypes,
   });
 
-  // ✅ FILTER HANDLER
   const handleChange = (e) => {
     setFilters({
       ...filters,
@@ -62,7 +60,6 @@ function ViewHotels() {
     setApplyFilter(true);
   };
 
-  // ✅ SAFE FILTER
   const filteredHotels = applyFilter
     ? hotel.filter((item) => {
         return (
@@ -93,32 +90,46 @@ function ViewHotels() {
       {/* FILTER */}
       <div className="hotel-booking-form-1 gray-bg">
         <div className="auto-container">
-          <form onSubmit={handleSearch} className="d-flex flex-wrap gap-3">
+          <div className="hotel-booking-form-1-wrap">
+            <form
+              className="hotel-booking-form-1-form d-flex flex-wrap align-items-end"
+              onSubmit={handleSearch}
+            >
+              {/* CITY */}
+              <div className="form-group">
+                <p className="hotel-booking-form-1-label">City</p>
+                <select name="city" onChange={handleChange}>
+                  <option value="">All Cities</option>
 
-            {/* CITY */}
-            <select name="city" onChange={handleChange}>
-              <option value="">All Cities</option>
-              {cities.map((city) => (
-                <option key={city._id} value={city.name}>
-                  {city.name}
-                </option>
-              ))}
-            </select>
+                  {cities.map((city) => (
+                    <option key={city._id} value={city.name}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* TYPE */}
+              <div className="form-group">
+                <p className="hotel-booking-form-1-label">Venue Type</p>
 
-            {/* TYPE */}
-            <select name="type" onChange={handleChange}>
-              <option value="">All Types</option>
-              {types.map((type) => (
-                <option key={type._id} value={type.name}>
-                  {type.name}
-                </option>
-              ))}
-            </select>
+                <select name="type" onChange={handleChange}>
+                  <option value="">All Types</option>
 
-            <button type="submit" className="btn-1">
-              Search
-            </button>
-          </form>
+                  {types.map((type) => (
+                    <option key={type._id} value={type.name}>
+                      {type.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* BUTTON */}
+              <div className="form-group">
+                <button type="submit" className="btn-1">
+                  Search Hotels
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 
