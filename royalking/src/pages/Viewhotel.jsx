@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import { useQuery } from "@tanstack/react-query";
 
 function ViewHotels() {
-  // const [cities, setCities] = useState([]);
-  // const [types, setTypes] = useState([]);
-  // const [hotel, setHotel] = useState([]);
-
   const [filters, setFilters] = useState({
     city: "",
     type: "",
@@ -15,65 +11,45 @@ function ViewHotels() {
 
   const [applyFilter, setApplyFilter] = useState(false);
 
-  // FETCH CITIES
-  const fetchCities = async () => {
-    try {
-      const response = await api.get("/user/city");
-      return response.data.data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // FETCH TYPES
-  const fetchTypes = async () => {
-    try {
-      const response = await api.get("/user/venuetype");
-      return response.data.data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // FETCH HOTELS
+  // ✅ FETCH FUNCTIONS (SAFE)
   const fetchHotel = async () => {
-    try {
-      const response = await api.get("/user/hotel");
-      return response.data.data;
-    } catch (e) {
-      console.log(e);
-    } 
+    const response = await api.get("/user/hotel");
+    return response?.data?.data || [];
   };
 
-  // useEffect(() => {
-  //   fetchCities();
-  //   fetchTypes();
-  // }, []);
+  const fetchCities = async () => {
+    const response = await api.get("/user/city");
+    return response?.data?.data || [];
+  };
 
-    const {
-    data: hotel,
+  const fetchTypes = async () => {
+    const response = await api.get("/user/venuetype");
+    return response?.data?.data || [];
+  };
+
+  // ✅ REACT QUERY
+  const {
+    data: hotel = [],
     isLoading,
     isError,
-    error,
   } = useQuery({
     queryKey: ["hotel"],
     queryFn: fetchHotel,
+
   });
 
-     const {
-    data: cities,
-  } = useQuery({
+  const { data: cities = [] } = useQuery({
     queryKey: ["cities"],
     queryFn: fetchCities,
+ 
   });
-     const {
-    data: types,
-  } = useQuery({
+
+  const { data: types = [] } = useQuery({
     queryKey: ["types"],
     queryFn: fetchTypes,
   });
 
-
+  // ✅ FILTER HANDLER
   const handleChange = (e) => {
     setFilters({
       ...filters,
@@ -86,6 +62,7 @@ function ViewHotels() {
     setApplyFilter(true);
   };
 
+  // ✅ SAFE FILTER
   const filteredHotels = applyFilter
     ? hotel.filter((item) => {
         return (
@@ -113,120 +90,95 @@ function ViewHotels() {
         </div>
       </div>
 
-      {/* FILTER SECTION */}
+      {/* FILTER */}
       <div className="hotel-booking-form-1 gray-bg">
         <div className="auto-container">
-          <div className="hotel-booking-form-1-wrap">
-            <form
-              className="hotel-booking-form-1-form d-flex flex-wrap align-items-end"
-              onSubmit={handleSearch}
-            >
-              {/* CITY */}
-              <div className="form-group">
-                <p className="hotel-booking-form-1-label">City</p>
-                <select name="city" onChange={handleChange}>
-                  <option value="">All Cities</option>
+          <form onSubmit={handleSearch} className="d-flex flex-wrap gap-3">
 
-                  {cities.map((city) => (
-                    <option key={city._id} value={city.name}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {/* TYPE */}
-              <div className="form-group">
-                <p className="hotel-booking-form-1-label">Venue Type</p>
+            {/* CITY */}
+            <select name="city" onChange={handleChange}>
+              <option value="">All Cities</option>
+              {cities.map((city) => (
+                <option key={city._id} value={city.name}>
+                  {city.name}
+                </option>
+              ))}
+            </select>
 
-                <select name="type" onChange={handleChange}>
-                  <option value="">All Types</option>
+            {/* TYPE */}
+            <select name="type" onChange={handleChange}>
+              <option value="">All Types</option>
+              {types.map((type) => (
+                <option key={type._id} value={type.name}>
+                  {type.name}
+                </option>
+              ))}
+            </select>
 
-                  {types.map((type) => (
-                    <option key={type._id} value={type.name}>
-                      {type.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-           
-              {/* <div className="form-group">
-                {" "}
-                <p className="hotel-booking-form-1-label">Check In</p>{" "}
-                <input
-                  type="date"
-                  name="checkin"
-                  onChange={handleChange}
-                />{" "}
-              </div>{" "}
-            
-              <div className="form-group">
-                {" "}
-                <p className="hotel-booking-form-1-label">Check Out</p>{" "}
-                <input
-                  type="date"
-                  name="checkout"
-                  onChange={handleChange}
-                />{" "}
-              </div> */}
-              {/* BUTTON */}
-              <div className="form-group">
-                <button type="submit" className="btn-1">
-                  Search Hotels
-                </button>
-              </div>
-            </form>
-          </div>
+            <button type="submit" className="btn-1">
+              Search
+            </button>
+          </form>
         </div>
       </div>
 
-      {/* HOTEL LIST */}
+      {/* HOTELS */}
       <div className="container">
         <div className="row mt-5">
-          {isLoading && <p className="text-center">Loading hotels...</p>}
 
+          {/* LOADING */}
+          {isLoading && (
+            <p className="text-center">Loading hotels...</p>
+          )}
+
+          {/* ERROR */}
+          {isError && (
+            <p className="text-danger text-center">Error loading hotels</p>
+          )}
+
+          {/* NO DATA */}
           {!isLoading && filteredHotels.length === 0 && (
             <p className="text-center">❌ No hotels found</p>
           )}
 
-          {filteredHotels.map((value) => (
-            <div key={value._id} className="col-lg-4 col-md-6 mt-4 mb-4">
-              <div className="card shadow h-100">
-                <Link to={`/viewvenue/${value._id}`}>
-                  <img
-                    src={`${api.defaults.baseURL}/uploads/${value.image}`}
-                    className="card-img-top"
-                    style={{
-                      height: "300px",
-                      objectFit: "cover",
-                    }}
-                    alt={value.name}
-                  />
-                </Link>
+          {/* DATA */}
+          {!isLoading &&
+            filteredHotels.map((value) => (
+              <div key={value._id} className="col-lg-4 col-md-6 mt-4 mb-4">
+                <div className="card shadow h-100">
 
-                <div className="card-body">
-                  <h5>{value.name}</h5>
-
-                  {/* TYPE */}
-                  <span className="badge bg-success">
-                    {value.type?.name || value.type}
-                  </span>
-
-                  {/* CITY */}
-                  <p className="mt-2">📍 {value.city}</p>
-
-                  {/* PRICE */}
-                  <p>₹{value.price} / Night</p>
-
-                  <Link
-                    to={`/hoteldetails/${value._id}`}
-                    className="btn-1 w-100"
-                  >
-                    View Details
+                  <Link to={`/viewvenue/${value._id}`}>
+                    <img
+                      src={`${api.defaults.baseURL}/uploads/${value?.image}`}
+                      className="card-img-top"
+                      style={{ height: "300px", objectFit: "cover" }}
+                      alt={value?.name}
+                    />
                   </Link>
+
+                  <div className="card-body">
+                    <h5>{value?.name}</h5>
+
+                    <span className="badge bg-success">
+                      {value?.type?.name || value?.type}
+                    </span>
+
+                    <p className="mt-2">📍 {value?.city}</p>
+
+                    <p>₹{value?.price} / Night</p>
+
+                    <Link
+                      to={`/hoteldetails/${value._id}`}
+                      className="btn-1 w-100"
+                    >
+                      View Details
+                    </Link>
+                  </div>
+
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+
         </div>
       </div>
     </>
