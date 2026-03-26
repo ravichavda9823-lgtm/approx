@@ -3,14 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import { LogoutwithoutNotification } from "../utils/Logout";
 import CheckRole from "../utils/CheckRole";
+import { useQuery } from "@tanstack/react-query";
 
 function ManageBookingsManager() {
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
-   const [userProfile, setUserProfile] = useState({});
+  // const [bookings, setBookings] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  const [userProfile, setUserProfile] = useState({});
 
-
-    const FetchUserProfile = async () => {
+  const FetchUserProfile = async () => {
     if (CheckRole() === "manager") {
       try {
         const response = await api.get("/manager/managerprofile");
@@ -18,7 +18,6 @@ function ManageBookingsManager() {
 
         setUserProfile(response.data.manager);
         console.log(response.data.manager);
-
       } catch (error) {
         console.log(error);
         if (error.response.status === 401) {
@@ -30,26 +29,34 @@ function ManageBookingsManager() {
     }
   };
 
-  
-    useEffect(() => {
-      FetchUserProfile();
-    }, []);
-
   useEffect(() => {
-    fetchBookings();
+    FetchUserProfile();
   }, []);
 
   const fetchBookings = async () => {
     try {
       const response = await api.get("/manager/booking");
       console.log(response.data);
-      setBookings(response.data.data);
+      return response.data.data;
     } catch (error) {
       console.log("Booking fetch error", error);
-    } finally {
-      setLoading(false);
     }
   };
+
+  //   useEffect(() => {
+  //   fetchBookings();
+  // }, []);
+
+  
+  const {
+    data: bookings,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["bookings"],
+    queryFn: fetchBookings,
+
+  });
 
   console.log(bookings);
 
@@ -107,14 +114,12 @@ function ManageBookingsManager() {
       <section className="py-5 bg-light">
         <div className="container">
           <div className="row g-4">
-            {loading ? (
+            {isLoading ? (
               <h4 className="text-center">Loading...</h4>
             ) : bookings.length === 0 ? (
               <h4 className="text-center">No Bookings Found</h4>
             ) : (
               bookings.map((value, index) => {
-              
-
                 return (
                   <div className="col-lg-4 col-md-6" key={value._id || index}>
                     <div className="booking-card shadow-sm bg-white p-3 rounded-4 position-relative">
@@ -158,10 +163,14 @@ function ManageBookingsManager() {
 
                       <div className="d-flex justify-content-between align-items-center border-top pt-3">
                         <span className="fw-bold text-primary fs-5">
-                          ₹{value.totalAmount  || 0}
+                          ₹{value.totalAmount || 0}
                         </span>
 
-                        <Link to="/managerbookinghistory" state={ value } className="btn btn-dark btn-sm rounded-pill px-3">
+                        <Link
+                          to="/managerbookinghistory"
+                          state={value}
+                          className="btn btn-dark btn-sm rounded-pill px-3"
+                        >
                           Details
                         </Link>
                       </div>

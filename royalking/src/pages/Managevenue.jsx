@@ -2,26 +2,35 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 function ManagerVenue() {
-  const [venues, setVenues] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [venues, setVenues] = useState([]);
+  // const [loading, setLoading] = useState(true);
 
   // FETCH VENUES
   const fetchVenues = async () => {
     try {
       const response = await api.get("/manager/venue");
-      setVenues(response.data.data || []);
+      return response.data.data || [];
     } catch (error) {
       console.log("Venue API error:", error);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
-  useEffect(() => {
-    fetchVenues();
-  }, []);
+  // useEffect(() => {
+  //   fetchVenues();
+  // }, []);
+
+    const {
+    data: venues,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["venues"],
+    queryFn: fetchVenues,
+
+  });
 
   // DELETE VENUE
   const FetchDeleteVenue = async (id) => {
@@ -120,13 +129,13 @@ function ManagerVenue() {
       <section className="section-padding pt-5">
         <div className="auto-container">
           <div className="row">
-            {loading && <p className="text-center">Loading venues...</p>}
+            {isLoading && <p className="text-center">Loading venues...</p>}
 
-            {!loading && venues.length === 0 && (
+            {!isLoading && venues.length === 0 && (
               <p className="text-center">No venues available</p>
             )}
 
-            {venues.map((venue) => (
+            {venues?.map((venue) => (
               <div className="col-lg-4 col-md-6 mb_30" key={venue._id}>
                 <div className="manager-card h-100 d-flex flex-column">
                   {/* IMAGE */}

@@ -3,10 +3,10 @@ import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 function ViewFeedback() {
-  const [feedbacks, setFeedbacks] = useState([]);
-  const [loading, setLoading] = useState(true);
+
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [replyText, setReplyText] = useState("");
 
@@ -14,25 +14,24 @@ function ViewFeedback() {
     try {
       const response = await api.get("/admin/feedback");
 
-      setFeedbacks(
-        (response.data.data || []).map((value) => ({
+      
+       return  (response.data.data || []).map((value) => ({
           ...value,
           id: value._id,
           isVisible: value.isVisible ?? false,
           status: value.status ?? "Pending",
-        }))
-      );
+        }));
     } catch (e) {
       console.log(e);
-    } finally {
-      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchFeedback();
-  }, []);
-
+ 
+ const { data: feedbacks = [], isLoading,isError,error } = useQuery({
+   queryKey: ["feedbacks"],
+    queryFn: fetchFeedback,
+ 
+  });
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "short", day: "numeric" };
     return new Date(dateString).toLocaleDateString("en-US", options);
@@ -155,9 +154,9 @@ function ViewFeedback() {
               </thead>
 
               <tbody>
-                {loading ? (
+                {isLoading ? (
                   <tr>
-                    <td colSpan="6" className="text-center py-4 ">
+                    <td colSpan="6" className="text-left py-4 ">
                       Loading feedback...
                     </td>
                   </tr>

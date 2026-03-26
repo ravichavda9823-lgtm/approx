@@ -3,9 +3,9 @@ import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 function ManageOccasion() {
-  const [occasionList, setOccasionList] = useState([]);
   const [formDataState, setFormDataState] = useState({
     name: "",
     desc: "",
@@ -17,21 +17,24 @@ function ManageOccasion() {
   const [preview, setPreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
 
- 
   const fetchOccasions = async () => {
     try {
       const response = await api.get("/admin/occasion");
-      setOccasionList(response.data.data || []);
+      return response.data.data || [];
     } catch (err) {
       console.log(err);
     }
   };
 
-  useEffect(() => {
-    fetchOccasions();
-  }, []);
-
-
+  const {
+    data: occasionList = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["occasionList"],
+    queryFn: fetchOccasions,
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -49,8 +52,6 @@ function ManageOccasion() {
       setPreview(URL.createObjectURL(file));
     }
   };
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,8 +72,7 @@ function ManageOccasion() {
       }
 
       if (editId) {
-        await api.put(`/admin/occasion/update/${editId}`, formData
-        );
+        await api.put(`/admin/occasion/update/${editId}`, formData);
         toast.success("Occasion Updated Successfully");
       } else {
         await api.post("/admin/occasion/addoccasion", formData);
@@ -85,8 +85,6 @@ function ManageOccasion() {
       console.log(error);
     }
   };
-
-
 
   const handleEdit = (value) => {
     setEditId(value._id);
@@ -101,13 +99,11 @@ function ManageOccasion() {
     setIsFormVisible(true);
   };
 
-
-
   const handleDelete = async (id) => {
     try {
       const response = await api.delete(`/admin/occasion/delete/${id}`);
       if (response.status === 200) {
-       toast.success("Occasion Deleted Successfully");
+        toast.success("Occasion Deleted Successfully");
         fetchOccasions();
       }
     } catch (e) {
@@ -127,37 +123,35 @@ function ManageOccasion() {
     setIsFormVisible(false);
   };
 
-
   return (
     <div className="page-wrapper bg-light min-vh-100">
-      <Header/>
+      <Header />
       <div className="page-content container-fluid py-4">
         <div className="row mb-4 align-items-center">
-            <div className="col-md-6">
-              <h3 className="fw-bold text-dark mb-0">Occasion Management</h3>
-            </div>
-            <div className="col-md-6 d-flex justify-content-md-end justify-content-start mt-2 mt-md-0">
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb mb-0 small">
-                  <li className="breadcrumb-item">
-                    <a
-                      href="#"
-                      className="text-decoration-none text-muted"
-                      onClick={() => setIsDetailView(false)}
-                    >
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="breadcrumb-item active fw-medium text-primary">
-                    occasion
-                  </li>
-                </ol>
-              </nav>
-            </div>
+          <div className="col-md-6">
+            <h3 className="fw-bold text-dark mb-0">Occasion Management</h3>
           </div>
+          <div className="col-md-6 d-flex justify-content-md-end justify-content-start mt-2 mt-md-0">
+            <nav aria-label="breadcrumb">
+              <ol className="breadcrumb mb-0 small">
+                <li className="breadcrumb-item">
+                  <a
+                    href="#"
+                    className="text-decoration-none text-muted"
+                    onClick={() => setIsDetailView(false)}
+                  >
+                    Dashboard
+                  </a>
+                </li>
+                <li className="breadcrumb-item active fw-medium text-primary">
+                  occasion
+                </li>
+              </ol>
+            </nav>
+          </div>
+        </div>
 
         {isFormVisible ? (
-         
           <div className="card border-0 shadow-sm rounded-4">
             <div className="card-header bg-white py-3 border-bottom">
               <h5 className="mb-0 fw-bold">
@@ -259,7 +253,6 @@ function ManageOccasion() {
             </form>
           </div>
         ) : (
-         
           <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
             <div className="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
               <h5 className="mb-0 fw-bold text-secondary">
@@ -274,75 +267,74 @@ function ManageOccasion() {
             </div>
 
             <div className="table-responsive">
-              <table className="table table-hover align-middle mb-0">
-                <thead className="bg-light text-uppercase small">
-                  <tr>
-                    <th className="ps-4">Occasion</th>
-                    <th>Status</th>
-                    <th>ID</th>
-                    <th className="text-end pe-4">Actions</th>
-                  </tr>
-                </thead>
+              {isLoading ? (
+                <p className="p-3">Loading Occasion...</p>
+              ) : (
+                <>
+                  <table className="table table-hover align-middle mb-0">
+                    <thead className="bg-light text-uppercase small">
+                      <tr>
+                        <th className="ps-4">Occasion</th>
+                        <th>Status</th>
+                        <th>ID</th>
+                        <th className="text-end pe-4">Actions</th>
+                      </tr>
+                    </thead>
 
-                <tbody>
-                  {occasionList.map((value) => (
-                    <tr key={value._id}>
-                      <td className="ps-4">
-                        <div className="d-flex align-items-center">
-                          <img
-                            src={`${api.defaults.baseURL}/uploads/${value.image}`}
-                            alt={value.name}
-                            className="rounded-3 me-3"
-                            style={{
-                              width: "50px",
-                              height: "50px",
-                              objectFit: "cover",
-                            }}
-                          />
-                          <div className="fw-bold">
-                            {value.name}
-                          </div>
-                        </div>
-                      </td>
+                    <tbody>
+                      {occasionList.map((value) => (
+                        <tr key={value._id}>
+                          <td className="ps-4">
+                            <div className="d-flex align-items-center">
+                              <img
+                                src={`${api.defaults.baseURL}/uploads/${value.image}`}
+                                alt={value.name}
+                                className="rounded-3 me-3"
+                                style={{
+                                  width: "50px",
+                                  height: "50px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                              <div className="fw-bold">{value.name}</div>
+                            </div>
+                          </td>
 
-                      <td>
-                        {value.status}
-                      </td>
+                          <td>{value.status}</td>
 
-                      <td>
-                        OCC-
-                        {value._id
-                          .toString()
-                          .slice(-4)
-                          .padStart(4, "0")}
-                      </td>
+                          <td>
+                            OCC-
+                            {value._id.toString().slice(-4).padStart(4, "0")}
+                          </td>
 
-                       <td className="text-end pe-3">
-                              <button
-                                className="btn btn-sm btn-light me-2"
-                                 onClick={() => handleEdit(value)}
-                              >
-                                <i className="fa fa-edit text-info"></i>
-                              </button>
-                              <button
-                                className="btn btn-sm btn-light"
-                                onClick={() => handleDelete(value._id)}
-                              >
-                                <i className="fa fa-trash text-danger"></i>
-                              </button>
-                            </td>
-                    </tr>
-                  ))}
+                          <td className="text-end pe-3">
+                            <button
+                              className="btn btn-sm btn-light me-2"
+                              onClick={() => handleEdit(value)}
+                            >
+                              <i className="fa fa-edit text-info"></i>
+                            </button>
+                            <button
+                              className="btn btn-sm btn-light"
+                              onClick={() => handleDelete(value._id)}
+                            >
+                              <i className="fa fa-trash text-danger"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
 
-                  {occasionList.length === 0 && (
-                    <tr>
-                      <td colSpan="4" className="text-center py-4">
-                        No occasions found.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                      {occasionList.length === 0 && (
+                        <tr>
+                          <td colSpan="4" className="text-center py-4">
+                            No occasions found.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </>
+              )}
             </div>
           </div>
         )}

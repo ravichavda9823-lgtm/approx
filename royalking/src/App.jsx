@@ -23,7 +23,6 @@ import BookingHistory from "./pages/BookingHistory";
 import SelectOccasion from "./pages/Selectoccuation";
 import SelectOccasionManager from "./pages/Manageroccasion";
 import ManageBookingsManager from "./pages/Managebookingmanager";
-import ViewPaymentsManager from "./pages/Managerviewpayment";
 
 import BookingDetails from "./pages/Managerbookinghistory";
 import AddOccasion from "./pages/Addoccasion";
@@ -74,7 +73,7 @@ function App() {
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/manageroccasion" element={<SelectOccasionManager />} />
           <Route path="/managerbooking" element={<ManageBookingsManager />} />
-          <Route path="/managerviewpayment" element={<ViewPaymentsManager />} />
+
           <Route path="/managerbookinghistory" element={<BookingDetails />} />
           <Route path="/managerviewhotel" element={<ManagerViewHotels />} />
           <Route

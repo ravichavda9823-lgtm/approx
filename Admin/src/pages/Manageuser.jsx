@@ -3,10 +3,10 @@ import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 function ManageUser() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+ 
 
   const [isEdit, setIsEdit] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -21,17 +21,17 @@ function ManageUser() {
   const fetchUsers = async () => {
     try {
       const response = await api.get("/auth/Signin");
-      setUsers(response.data.data || []);
+      return response.data.data || [];
     } catch (e) {
       console.log(e);
-    } finally {
-      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+   const { data: users = [], isLoading,isError,error } = useQuery({
+   queryKey: ["users"],
+    queryFn: fetchUsers,
+ 
+  });
 
   const handleEdit = (user) => {
     setIsEdit(true);
@@ -193,7 +193,7 @@ function ManageUser() {
          
           <div className="card shadow-sm">
             <div className="card-body p-0">
-              {loading ? (
+              {isLoading ? (
                 <p className="p-3">Loading users...</p>
               ) : (
                 <div className="table-responsive">

@@ -4,9 +4,6 @@ import api from "../utils/AxiosConfig";
 
 function ManagerHotelDetails() {
   const { id } = useParams();
-
-
-
   const [venue, setVenue] = useState(null);
   const [loading, setLoading] = useState(true);
 

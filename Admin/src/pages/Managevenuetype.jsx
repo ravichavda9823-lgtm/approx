@@ -3,24 +3,25 @@ import api from "../utils/AxiosConfig";
 import Footer from "../common/Footer";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 function ManageVenueType() {
-  const [venueTypes, setVenueTypes] = useState([]);
   const [venueName, setVenueName] = useState("");
   const [editVenueId, setEditVenueId] = useState(null);
 
   const fetchVenueTypes = async () => {
     try {
       const response = await api.get("/admin/venuetype");
-      setVenueTypes(response.data.data);
+      return response.data.data;
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-    fetchVenueTypes();
-  }, []);
+  const { data: venuetype = [], isLoading } = useQuery({
+    queryKey: ["venuetype"],
+    queryFn: fetchVenueTypes,
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -132,51 +133,57 @@ function ManageVenueType() {
 
                 {/* TABLE */}
                 <div className="table-responsive">
-                  <table className="table table-hover align-middle">
-                    <thead className="table-light">
-                      <tr className="text-uppercase small text-muted">
-                        <th className="ps-3">#</th>
-                        <th>Venue Type</th>
-                        <th className="text-end pe-3">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {venueTypes.length === 0 ? (
-                        <tr>
-                          <td
-                            colSpan="3"
-                            className="text-center py-4 text-muted"
-                          >
-                            No venue types found
-                          </td>
-                        </tr>
-                      ) : (
-                        venueTypes.map((value, index) => (
-                          <tr key={value._id}>
-                            <td className="ps-3">{index + 1}</td>
-                            <td className="fw-bold">{value.name}</td>
-                            <td className="text-end pe-3">
-                              <button
-                                className="btn btn-sm btn-light me-2"
-                                onClick={() => {
-                                  setVenueName(value.name);
-                                  setEditVenueId(value._id);
-                                }}
-                              >
-                                <i className="fa fa-edit text-info"></i>
-                              </button>
-                              <button
-                                className="btn btn-sm btn-light"
-                                onClick={() => deleteVenueType(value._id)}
-                              >
-                                <i className="fa fa-trash text-danger"></i>
-                              </button>
-                            </td>
+                  {isLoading ? (
+                    <p className="p-3">Loading Venuetypes...</p>
+                  ) : (
+                    <>
+                      <table className="table table-hover align-middle">
+                        <thead className="table-light">
+                          <tr className="text-uppercase small text-muted">
+                            <th className="ps-3">#</th>
+                            <th>Venue Type</th>
+                            <th className="text-end pe-3">Actions</th>
                           </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
+                        </thead>
+                        <tbody>
+                          {venuetype.length === 0 ? (
+                            <tr>
+                              <td
+                                colSpan="3"
+                                className="text-center py-4 text-muted"
+                              >
+                                No venue types found
+                              </td>
+                            </tr>
+                          ) : (
+                            venuetype.map((value, index) => (
+                              <tr key={value._id}>
+                                <td className="ps-3">{index + 1}</td>
+                                <td className="fw-bold">{value.name}</td>
+                                <td className="text-end pe-3">
+                                  <button
+                                    className="btn btn-sm btn-light me-2"
+                                    onClick={() => {
+                                      setVenueName(value.name);
+                                      setEditVenueId(value._id);
+                                    }}
+                                  >
+                                    <i className="fa fa-edit text-info"></i>
+                                  </button>
+                                  <button
+                                    className="btn btn-sm btn-light"
+                                    onClick={() => deleteVenueType(value._id)}
+                                  >
+                                    <i className="fa fa-trash text-danger"></i>
+                                  </button>
+                                </td>
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

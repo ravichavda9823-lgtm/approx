@@ -1,9 +1,6 @@
 import axios from "axios";
 import CheckToken from "./CheckToken";
 import { LogoutwithoutNotification } from "./Logout";
-
-
-
 let api = axios.create({
     baseURL:import.meta.env.VITE_API_URL
 }); 

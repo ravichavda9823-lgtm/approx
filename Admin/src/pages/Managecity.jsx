@@ -3,26 +3,29 @@ import api from "../utils/AxiosConfig";
 import Footer from "../common/Footer";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 function ManageCity() {
-
-  const [cities, setCities] = useState([]);
   const [cityName, setCityName] = useState("");
   const [editCityId, setEditCityId] = useState(null);
-
 
   const fetchCities = async () => {
     try {
       const response = await api.get("/admin/city");
-      setCities(response.data.data || []);
+      return response.data.data || [];
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-    fetchCities();
-  }, []);
+  // useEffect(() => {
+  //   fetchCities();
+  // }, []);
+
+  const { data: cities = [], isLoading } = useQuery({
+    queryKey: ["cities"],
+    queryFn: fetchCities,
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,7 +51,6 @@ function ManageCity() {
     }
   };
 
-
   const deleteCity = async (id) => {
     try {
       await api.delete(`/admin/city/delete/${id}`);
@@ -59,27 +61,20 @@ function ManageCity() {
     }
   };
 
-  
   return (
     <div className="page-wrapper bg-light min-vh-100">
-      <Header/>
+      <Header />
       <div className="page-content container-fluid py-4">
         {/* HEADER */}
-         <div className="row mb-4 align-items-center">
+        <div className="row mb-4 align-items-center">
           <div className="col-md-6">
-            <h3 className="fw-bold text-dark mb-0">
-            Manage Cities
-            </h3>
+            <h3 className="fw-bold text-dark mb-0">Manage Cities</h3>
           </div>
           <div className="col-md-6 d-flex justify-content-md-end justify-content-start mt-2 mt-md-0">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb mb-0 small">
                 <li className="breadcrumb-item">
-                  <a
-                    href="#"
-                    className="text-decoration-none text-muted"
-                   
-                  >
+                  <a href="#" className="text-decoration-none text-muted">
                     Dashboard
                   </a>
                 </li>
@@ -139,51 +134,57 @@ function ManageCity() {
 
                 {/* TABLE */}
                 <div className="table-responsive">
-                  <table className="table table-hover align-middle">
-                    <thead className="table-light">
-                      <tr className="text-uppercase small text-muted">
-                        <th className="ps-3">#</th>
-                        <th>City Name</th>
-                        <th className="text-end pe-3">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {cities.length === 0 ? (
-                        <tr>
-                          <td
-                            colSpan="3"
-                            className="text-center py-4 text-muted"
-                          >
-                            No cities found
-                          </td>
-                        </tr>
-                      ) : (
-                        cities.map((city, index) => (
-                          <tr key={city._id}>
-                            <td className="ps-3">{index + 1}</td>
-                            <td className="fw-bold">{city.name}</td>
-                            <td className="text-end pe-3">
-                              <button
-                                className="btn btn-sm btn-light me-2"
-                                onClick={() => {
-                                  setCityName(city.name);
-                                  setEditCityId(city._id);
-                                }}
-                              >
-                                <i className="fa fa-edit text-info"></i>
-                              </button>
-                              <button
-                                className="btn btn-sm btn-light"
-                                onClick={() => deleteCity(city._id)}
-                              >
-                                <i className="fa fa-trash text-danger"></i>
-                              </button>
-                            </td>
+                  {isLoading ? (
+                    <p className="p-3">Loading Cities...</p>
+                  ) : (
+                    <>
+                      <table className="table table-hover align-middle">
+                        <thead className="table-light">
+                          <tr className="text-uppercase small text-muted">
+                            <th className="ps-3">#</th>
+                            <th>City Name</th>
+                            <th className="text-end pe-3">Actions</th>
                           </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
+                        </thead>
+                        <tbody>
+                          {cities.length === 0 ? (
+                            <tr>
+                              <td
+                                colSpan="3"
+                                className="text-center py-4 text-muted"
+                              >
+                                No cities found
+                              </td>
+                            </tr>
+                          ) : (
+                            cities.map((city, index) => (
+                              <tr key={city._id}>
+                                <td className="ps-3">{index + 1}</td>
+                                <td className="fw-bold">{city.name}</td>
+                                <td className="text-end pe-3">
+                                  <button
+                                    className="btn btn-sm btn-light me-2"
+                                    onClick={() => {
+                                      setCityName(city.name);
+                                      setEditCityId(city._id);
+                                    }}
+                                  >
+                                    <i className="fa fa-edit text-info"></i>
+                                  </button>
+                                  <button
+                                    className="btn btn-sm btn-light"
+                                    onClick={() => deleteCity(city._id)}
+                                  >
+                                    <i className="fa fa-trash text-danger"></i>
+                                  </button>
+                                </td>
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

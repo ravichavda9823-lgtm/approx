@@ -3,26 +3,26 @@ import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 function ManageInquiry() {
 
-  const [inquiry, setInquiry] = useState([]);
-  const [loading, setLoading] = useState(true);
+
 
   const fetchInquiry = async () => {
     try {
       const response = await api.get("/admin/inquiry");
-      setInquiry(response.data.data || []);
+      return response.data.data || [];
     } catch (e) {
       console.log(e);
-    } finally {
-      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchInquiry();
-  }, []);
+ const { data:inquiry  = [], isLoading,isError,error } = useQuery({
+   queryKey: ["inquiry"],
+    queryFn: fetchInquiry,
+ 
+  });
 
   const deleteInquiry = async (id) => {
     try {
@@ -70,7 +70,7 @@ function ManageInquiry() {
           <div className="card shadow-sm">
             <div className="card-body p-0">
 
-              {loading ? (
+              {isLoading ? (
                 <p className="p-3">Loading inquiry...</p>
               ) : (
                 <div className="table-responsive">

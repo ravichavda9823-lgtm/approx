@@ -7,7 +7,7 @@ function Testimonials() {
   const fetchfeedback = async (e) => {
     try {
       const response = await api.get("/user/feedback/");
-      console.log(response.data);
+
       return response.data.data.slice(0,2);
     } catch (e) {
       console.log(e);
@@ -75,7 +75,7 @@ function Testimonials() {
           <div className="col-lg-8">
             <div className="testimonial-1-block-wrap">
               <div className="row">
-                {feedback.map((item) => (
+                {feedback?.map((item) => (
                   <div
                     className="col-md-6" 
                     key={item.id}

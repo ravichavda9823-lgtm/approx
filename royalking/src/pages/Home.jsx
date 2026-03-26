@@ -11,7 +11,7 @@ function Home() {
   let [user, setUser] = useState({});
   // const [hotel, setHotel] = useState([]);
   // const [occasions, setOccasions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -94,15 +94,13 @@ function Home() {
 
   const fetchHotel = async () => {
     try {
-      setLoading(true);
+     
 
       const response = await api.get("/user/hotel");
       console.log(response.data);
       return response.data.data.slice(0, 3);
     } catch (e) {
       console.log(e);
-    } finally {
-      setLoading(false);
     }
   };
 

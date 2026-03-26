@@ -4,9 +4,9 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   let [admin, setAdmin] = useState({
     email: "",
@@ -24,18 +24,18 @@ function Login() {
 
   async function handelSubmit(e) {
     e.preventDefault();
+    setLoading(true)
     try {
-      let response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/Signin`, admin);
+      let response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/Signin`,admin);
       console.log(response.data);
 
       if (response.data.token) {
         cookie.set("token", response.data.token);
-        toast.success("Login Successfully..", {
+        toast.success("Login Successfully...", {
           onClose: () => {
             window.location.href = "/";
           },
         });
-        window.location.href = "/";
       }
     } catch (error) {
       console.log(error.response);
@@ -44,9 +44,12 @@ function Login() {
           window.location.href = "/login";
         },
       });
+    }finally {
+      setLoading(false); 
     }
   }
-
+  console.log(admin); 
+  console.log(import.meta.env.VITE_API_URL);
   return (
     <>
       <div className="container-xxl">
@@ -137,8 +140,8 @@ function Login() {
                         <div className="form-group mb-0 row">
                           <div className="col-12">
                             <div className="d-grid mt-3">
-                              <button className="btn btn-primary" type="submit">
-                                Log In
+                              <button className="btn btn-primary" type="submit" disabled={loading}>
+                                  {loading ? " Log In..." : " Log In "}
                               </button>
                             </div>
                           </div>

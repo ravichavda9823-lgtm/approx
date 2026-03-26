@@ -3,10 +3,10 @@ import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 function Managevenue() {
-  const [venue, setVenue] = useState([]);
-  const [loading, setLoading] = useState(true);
+
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -28,17 +28,17 @@ function Managevenue() {
 
     try {
       const response = await api.get("/admin/venue");
-      setVenue(response.data.data || []);
+      return response.data.data || [];
     } catch (e) {
       console.log(e);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
-  useEffect(() => {
-    fetchvenue();
-  }, []);
+   const { data: venue = [], isLoading,isError,error } = useQuery({
+   queryKey: ["venue"],
+    queryFn: fetchvenue,
+ 
+  });
 
   const handleAdd = () => {
     setIsFormOpen(true);
@@ -299,8 +299,8 @@ function Managevenue() {
 
           <div className="card shadow-sm">
             <div className="card-body p-0">
-              {loading ? (
-                <p className="p-3">Loading hotels...</p>
+              {isLoading ? (
+                <p className="p-3">Loading Venues...</p>
               ) : (
                 <table className="table mb-0 align-middle">
                   <thead className="table-light">

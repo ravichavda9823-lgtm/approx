@@ -3,10 +3,9 @@ import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 function ManageHotel() {
-  const [hotel, setHotel] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -27,17 +26,23 @@ function ManageHotel() {
   const fetchHotel = async () => {
     try {
       const response = await api.get("/admin/hotel");
-      setHotel(response.data.data || []);
+      return response.data.data || [];
     } catch (e) {
       console.log(e);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   useEffect(() => {
     fetchHotel();
   }, []);
+
+  
+  const { data: hotel = [], isLoading,isError,error } = useQuery({
+   queryKey: ["hotel"],
+    queryFn: fetchHotel,
+ 
+  });
+
 
   const handleAdd = () => {
     setIsFormOpen(true);
@@ -297,7 +302,7 @@ function ManageHotel() {
 
           <div className="card shadow-sm">
             <div className="card-body p-0">
-              {loading ? (
+              {isLoading ? (
                 <p className="p-3">Loading hotels...</p>
               ) : (
                 <table className="table mb-0 align-middle">

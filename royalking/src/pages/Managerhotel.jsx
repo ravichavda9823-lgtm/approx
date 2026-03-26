@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 function ManagerViewHotels() {
-  const [cities, setCities] = useState([]);
-  const [types, setTypes] = useState([]);
-  const [hotel, setHotel] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // const [cities, setCities] = useState([]);
+  // const [types, setTypes] = useState([]);
+  // const [hotel, setHotel] = useState([]);
+  // const [loading, setLoading] = useState(false);
 
   const [filters, setFilters] = useState({
     city: "",
@@ -18,7 +19,7 @@ function ManagerViewHotels() {
   const fetchCities = async () => {
     try {
       const response = await api.get("/manager/city");
-      setCities(response.data.data);
+      return response.data.data;
     } catch (error) {
       console.log(error);
     }
@@ -28,7 +29,7 @@ function ManagerViewHotels() {
   const fetchTypes = async () => {
     try {
       const response = await api.get("/manager/venuetype");
-      setTypes(response.data.data);
+      return response.data.data;
     } catch (error) {
       console.log(error);
     }
@@ -37,23 +38,42 @@ function ManagerViewHotels() {
   // FETCH HOTELS
   const fetchHotel = async () => {
     try {
-      setLoading(true);
+   
 
       const response = await api.get("/manager/hotel");
 
-      setHotel(response.data.data);
+      return response.data.data;
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
-  useEffect(() => {
-    fetchCities();
-    fetchTypes();
-    fetchHotel();
-  }, []);
+  // useEffect(() => {
+  //   fetchCities();
+  //   fetchTypes();
+  //   fetchHotel();
+  // }, []);
+
+    const { data: cities = [] } = useQuery({
+    queryKey: ["cities"],
+    queryFn: fetchCities,
+ 
+  });
+
+  const { data: types = [] } = useQuery({
+    queryKey: ["types"],
+    queryFn: fetchTypes,
+  });
+
+    const {
+    data: hotel = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["hotel"],
+    queryFn: fetchHotel,
+
+  });
 
   // HANDLE SELECT CHANGE
   const handleChange = (e) => {
@@ -169,9 +189,9 @@ function ManagerViewHotels() {
       {/* HOTEL LIST */}
       <div className="container">
         <div className="row mt-5">
-          {loading && <p className="text-center">Loading hotels...</p>}
+          {isLoading && <p className="text-center">Loading hotels...</p>}
 
-          {!loading && filteredHotels.length === 0 && (
+          {!isLoading && filteredHotels.length === 0 && (
             <p className="text-center">❌ No hotels found</p>
           )}
 

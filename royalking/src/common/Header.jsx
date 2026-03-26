@@ -8,10 +8,7 @@ import axios from "axios";
 
 function Header() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-
   const [openDropdown, setOpenDropdown] = useState(null);
-
-
   const toggleDropdown = (name) => {
     setOpenDropdown(openDropdown === name ? null : name);
   };
@@ -279,13 +276,6 @@ function Header() {
                                       Manage Booking
                                     </Link>
                                   </li>
-
-                                  <li>
-                                    <Link to="/managerviewpayment">
-                                      {" "}
-                                      View Payment
-                                    </Link>
-                                  </li>
                                 </ul>
                               </li>
                             </>
@@ -519,14 +509,7 @@ function Header() {
                             Manage Booking
                           </Link>
                         </li>
-                        <li>
-                          <Link
-                            to="/managerviewpayment"
-                            onClick={handleLinkClick}
-                          >
-                            View Payment
-                          </Link>
-                        </li>
+                       
                       </ul>
                       <div
                         className="dropdown-btn"

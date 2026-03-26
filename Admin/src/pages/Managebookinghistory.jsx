@@ -3,12 +3,9 @@ import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 function ManageBookingHistory() {
-  const [users, setUsers] = useState([]);
-
-  const [hotel, setHotel] = useState([]);
-  const [bookings, setBookings] = useState([]);
   const [isDetailView, setIsDetailView] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
 
@@ -16,17 +13,21 @@ function ManageBookingHistory() {
     try {
       const response = await api.get("/admin/booking");
       console.log(response.data);
-      setBookings(response.data.data || []);
+      return response.data.data || [];
     } catch (error) {
       console.log("Booking fetch error", error);
     }
   };
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
-
-
+  const {
+    data: bookings = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["bookings"],
+    queryFn: fetchBookings,
+  });
 
   const DeleteBooking = async (id) => {
     try {
@@ -45,7 +46,7 @@ function ManageBookingHistory() {
 
   return (
     <div className="page-wrapper bg-light min-vh-100 ">
-      <Header/>
+      <Header />
       <div className="page-content container-fluid py-4">
         {/* HEADER */}
         <div className="row mb-4 align-items-center">
@@ -79,77 +80,92 @@ function ManageBookingHistory() {
         {!isDetailView ? (
           <>
             {/* STATS */}
-          
 
             {/* TABLE */}
             <div className="card border-0 shadow-sm overflow-hidden mt-4">
-              <div className="table-responsive">
-                <table className="table table-hover align-middle mb-0">
-                  <thead className="bg-light">
-                    <tr>
-                      <th className="ps-4">ID</th>
-                      <th>User</th>
-                      <th>Hotel</th>
-                      <th>CheckIn</th>
-                      <th>CheckOut</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                      <th className="text-end pe-4">Actions</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {bookings.map((value) => (
-                      <tr key={value._id}>
-                        <td className="ps-4 fw-bold">
-                          #{value._id.slice(0, 4)}
-                        </td>
-
-                        <td>{value.user_name}</td>
-
-                        {/* HOTEL NAME FIX */}
-                        <td>
-                          {value.hotel_name} <br />
-                          <small className="text-muted">{value.message}</small>
-                        </td>
-
-                        <td>{value.checkin.split("T")[0]}</td>
-                        <td>{value.checkout.split("T")[0]}</td>
-
-                        <td className="fw-bold">₹{value.totalAmount}</td>
-
-                        <td>
-                          <span
-                            className={`badge rounded-pill ${
-                              value.status === "Completed"
-                                ? "bg-success"
-                                : "bg-danger"
-                            }`}
-                          >
-                            {value.status}
-                          </span>
-                        </td>
-
-                        <td className="text-end pe-4">
-                          <button
-                            className="btn btn-sm btn-light me-2"
-                            onClick={() => handleView(value)}
-                          >
-                            <i className="fa fa-eye text-info"></i>
-                          </button>
-
-                          <button
-                            className="btn btn-sm btn-light"
-                            onClick={() => DeleteBooking(value._id)}
-                          >
-                            <i className="fa fa-trash text-danger"></i>
-                          </button>
-                        </td>
+              {isLoading ? (
+                <p className="p-3">Loading bookings...</p>
+              ) : (
+                <div className="table-responsive">
+                  <table className="table table-hover align-middle mb-0">
+                    <thead className="bg-light">
+                      <tr>
+                        <th className="ps-4">ID</th>
+                        <th>User</th>
+                        <th>Hotel</th>
+                        <th>CheckIn</th>
+                        <th>CheckOut</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th className="text-end pe-4">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+
+                    <tbody>
+                      {bookings.length > 0 ? (
+                        bookings.map((value) => (
+                          <tr key={value._id}>
+                            <td className="ps-4 fw-bold">
+                              #{value._id.slice(0, 4)}
+                            </td>
+
+                            <td>{value.user_name}</td>
+
+                            <td>
+                              {value.hotel_name} <br />
+                              <small className="text-muted">
+                                {value.message}
+                              </small>
+                            </td>
+
+                            <td>{value.checkin.split("T")[0]}</td>
+                            <td>{value.checkout.split("T")[0]}</td>
+
+                            <td className="fw-bold">₹{value.totalAmount}</td>
+
+                            <td>
+                              <span
+                                className={`badge rounded-pill ${
+                                  value.status === "Completed"
+                                    ? "bg-success"
+                                    : "bg-danger"
+                                }`}
+                              >
+                                {value.status}
+                              </span>
+                            </td>
+
+                            <td className="text-end pe-4">
+                              <button
+                                className="btn btn-sm btn-light me-2"
+                                onClick={() => handleView(value)}
+                              >
+                                <i className="fa fa-eye text-info"></i>
+                              </button>
+
+                              <button
+                                className="btn btn-sm btn-light"
+                                onClick={() => DeleteBooking(value._id)}
+                              >
+                                <i className="fa fa-trash text-danger"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td
+                            colSpan="8"
+                            className="text-center py-4 text-muted"
+                          >
+                            No bookings found
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </>
         ) : (

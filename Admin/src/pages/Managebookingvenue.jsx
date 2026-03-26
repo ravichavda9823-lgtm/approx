@@ -3,44 +3,48 @@ import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 function ManageVenueBooking() {
-  const [bookings, setBookings] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isDetailView, setIsDetailView] = useState(false);
 
   const fetchBookings = async () => {
     try {
       const response = await api.get("/admin/booking");
-      setBookings(response.data.data || []);
+      return response.data.data || [];
     } catch (error) {
       console.log("Booking fetch error", error);
     }
   };
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
+  const {
+    data: bookings = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["bookings"],
+    queryFn: fetchBookings,
+  });
 
-  const handleStatusChange = (id, field, value) => {
-    setBookings(
-      bookings.map((b) => (b.id === id ? { ...b, [field]: value } : b)),
-    );
+  const handleStatusChange = (bookings, id, field, value) => {
+    return bookings.map((b) => (b.id === id ? { ...b, [field]: value } : b));
   };
 
   const updateStatus = async (id, status) => {
-  try {
-    let response = await api.put(`/admin/booking/status/${id}`, {
-      status: status,
-    });
+    try {
+      let response = await api.put(`/admin/booking/status/${id}`, {
+        status: status,
+      });
 
-    toast.success("Status updated successfully...");
-    fetchBookings();
-  } catch (error) {
-    console.log(error);
-    toast.error("Failed to update status...");
-  }
-};
+      toast.success("Status updated successfully...");
+      fetchBookings();
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to update status...");
+    }
+  };
 
   const DeleteBooking = async (id) => {
     try {
@@ -65,7 +69,7 @@ function ManageVenueBooking() {
 
   return (
     <div className="page-wrapper bg-light min-vh-100">
-      <Header/>
+      <Header />
       <div className="page-content container-fluid py-4">
         {/* HEADER SECTION */}
         <div className="row mb-4 align-items-center">
@@ -98,82 +102,101 @@ function ManageVenueBooking() {
           <>
             <div className="card shadow-sm border-0 rounded-4 overflow-hidden mt-5">
               <div className="card-body p-0">
-                <div className="table-responsive">
-                  <table className="table table-hover align-middle mb-0">
-                    <thead className="bg-light">
-                      <tr className="text-muted small text-uppercase">
-                        <th className="ps-4">Venue & Event</th>
-                        <th>Customer Details</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                        <th className="text-end pe-4">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {bookings.map((value) => (
-                        <tr key={value.id}>
-                          <td className="ps-4">
-                            <div className="fw-bold text-dark">
-                              {value.hotel_name}
-                            </div>
-                            <span className="badge rounded-pill bg-primary bg-opacity-10 text-primary fw-normal small">
-                              {value.message}
-                            </span>
-                          </td>
-                          <td>
-                            <div className="fw-semibold text-dark">
-                              {value.user_name}
-                            </div>
-                            <div className="small text-muted">
-                              {value.user_email}
-                            </div>
-                          </td>
-                          <td>
-                            <div className="fw-bold text-success">
-                              ₹{value.totalAmount}
-                            </div>
-                            <div className="small text-muted">
-                              {value.checkin.split("T")[0]}
-                            </div>
-                          </td>
-                          <td>
-                            <select
-                              className={`form-select form-select-sm border-0 fw-bold bg-opacity-10 ${
-                                value.status === "Confirmed"
-                                  ? "bg-success text-success"
-                                  : value.status === "Cancelled"
-                                    ? "bg-danger text-danger"
-                                    : "bg-warning text-dark"
-                              }`}
-                              value={value.status}
-                              onChange={(e) => updateStatus( value._id,e.target.value)
-                              }
-                            >
-                              <option value="Confirmed">Confirmed</option>
-                              <option value="Pending">Pending</option>
-                              <option value="Cancelled">Cancelled</option>
-                            </select>
-                          </td>
-                          <td className="text-end pe-4">
-                            <button
-                              className="btn btn-sm btn-light me-2"
-                              onClick={() => handleViewDetails(value)}
-                            >
-                              <i className="fa fa-eye text-info"></i>
-                            </button>
-                            <button
-                              className="btn btn-sm btn-light me-2"
-                              onClick={() => DeleteBooking(value._id)}
-                            >
-                              <i className="fa fa-trash text-danger"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+  {isLoading ? (
+    <p className="p-3">Loading bookings...</p>
+  ) : (
+    <div className="table-responsive">
+      <table className="table table-hover align-middle mb-0">
+        <thead className="bg-light">
+          <tr className="text-muted small text-uppercase">
+            <th className="ps-4">Venue & Event</th>
+            <th>Customer Details</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th className="text-end pe-4">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {bookings.length > 0 ? (
+            bookings.map((value) => (
+              <tr key={value._id}>
+                <td className="ps-4">
+                  <div className="fw-bold text-dark">
+                    {value.hotel_name}
+                  </div>
+                  <span className="badge rounded-pill bg-primary bg-opacity-10 text-primary fw-normal small">
+                    {value.message}
+                  </span>
+                </td>
+
+                <td>
+                  <div className="fw-semibold text-dark">
+                    {value.user_name}
+                  </div>
+                  <div className="small text-muted">
+                    {value.user_email}
+                  </div>
+                </td>
+
+                <td>
+                  <div className="fw-bold text-success">
+                    ₹{value.totalAmount}
+                  </div>
+                  <div className="small text-muted">
+                    {value.checkin.split("T")[0]}
+                  </div>
+                </td>
+
+                <td>
+                  <select
+                    className={`form-select form-select-sm border-0 fw-bold bg-opacity-10 ${
+                      value.status === "Confirmed"
+                        ? "bg-success text-success"
+                        : value.status === "Cancelled"
+                        ? "bg-danger text-danger"
+                        : "bg-warning text-dark"
+                    }`}
+                    value={value.status}
+                    onChange={(e) =>
+                      updateStatus(value._id, e.target.value)
+                    }
+                  >
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </td>
+
+                <td className="text-end pe-4">
+                  <button
+                    className="btn btn-sm btn-light me-2"
+                    onClick={() => handleViewDetails(value)}
+                  >
+                    <i className="fa fa-eye text-info"></i>
+                  </button>
+
+                  <button
+                    className="btn btn-sm btn-light"
+                    onClick={() => DeleteBooking(value._id)}
+                  >
+                    <i className="fa fa-trash text-danger"></i>
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="text-center py-4 text-muted">
+                No bookings found
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  )}
+</div>
             </div>
           </>
         ) : (
