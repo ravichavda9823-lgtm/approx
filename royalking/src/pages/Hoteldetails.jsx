@@ -122,7 +122,6 @@ function Hoteldetails() {
               <p><strong>City:</strong> {venue.city}</p>
               <p><strong>Hotel Type:</strong> {venue.type}</p>
                  <p><strong>Hotel price:</strong> {venue.price}</p>
-                  <p><strong>Hotel ShortDesc:</strong> {venue.shortdesc}</p>
             </div>
 
             <div className="col-lg-6">

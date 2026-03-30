@@ -124,7 +124,6 @@ function VenueDetail() {
               <p><strong>City:</strong> {venuedeatils.city}</p>
               <p><strong>Hotel Type:</strong> {venuedeatils.type}</p>
                  <p><strong>Hotel price:</strong> {venuedeatils.price}</p>
-                  <p><strong>Hotel ShortDesc:</strong> {venuedeatils.shortdesc}</p>
             </div>
 
             <div className="col-lg-6">
