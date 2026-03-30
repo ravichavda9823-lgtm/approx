@@ -35,13 +35,14 @@ import EditHotel from "./pages/Edithotel";
 import AddVenue from "./pages/Addvenue";
 import ManagerVenue from "./pages/Managevenue";
 import EditVenue from "./pages/Editvenue";
-import VenueDetails from "./pages/Venuedetails";
+
 import BookingDetailsUser from "./pages/Bookingdetails";
 import EditProfile from "./pages/Editprofile";
 import ForgotPassword from "./pages/Forgetpassword";
 import ResetPassword from "./pages/Resetpassword";
 import Hoteldetails from "./pages/Hoteldetails";
 import ProtectPages from "./utils/ProtectedPage";
+import VenueDetail from "./pages/Venuedetail";
 
 function App() {
   return (
@@ -70,6 +71,8 @@ function App() {
           <Route path="/selectoccasion" element={<SelectOccasion />} />
           <Route path="/viewhotels" element={<ViewHotels />} />
           <Route path="/hoteldetails/:id" element={<Hoteldetails />} />
+          <Route path="/venuedeatils/:id" element={<VenueDetail />} />
+
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/manageroccasion" element={<SelectOccasionManager />} />
           <Route path="/managerbooking" element={<ManageBookingsManager />} />
@@ -85,7 +88,7 @@ function App() {
           <Route path="/addoccasion" element={<AddOccasion />} />
 
           <Route path="/addhotel" element={<AddHotel />} />
-          <Route path="/venuedeatils/:id" element={<VenueDetails />} />
+        
           <Route path="/addvenue" element={<AddVenue />} />
           <Route path="/managervenue" element={<ManagerVenue />} />
           <Route path="/editvenue/:id" element={<EditVenue />} />

@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 
-function Venuedeatils() {
-  const { id } = useParams(); 
-  const [venue, setVenue] = useState(null);
+function VenueDetail() {
+  const { id } = useParams();
+  const [venuedeatils, setVenueDeatils] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // 🔹 FETCH SINGLE HOTEL
-  const fetchHotelDetails = async () => {
+  const fetchVenueDetails = async () => {
     try {
       const response = await api.get(`/user/venue/${id}`);
       console.log(response.data)
-      setVenue(response.data.data);
+      setVenueDeatils(response.data.data);
     } catch (error) {
       console.log("Venue details error", error);
     } finally {
@@ -21,14 +21,14 @@ function Venuedeatils() {
   };
   
   useEffect(() => {
-    fetchHotelDetails();
+    fetchVenueDetails();
   }, [id]);
 
   if (loading) {
     return <p className="text-center mt-5">Loading venue details...</p>;
   }
 
-  if (!venue) {
+  if (!venuedeatils) {
     return <p className="text-center mt-5">Venue not found</p>;
   }
 
@@ -38,11 +38,15 @@ function Venuedeatils() {
       <div
         className="page-title"
         style={{
-          backgroundImage: "url(../assets/images/background/page-title-6.jpg)",
+          backgroundImage:
+            "url(https://cdn0.hitched.co.uk/vendor/2811/3_2/960/jpg/haynehouse-jadeg-379_4_192811-170324482894495.jpeg)",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <div className="auto-container">
-          <h1>Hotel Details</h1>
+          <h1>Venue Details</h1>
         </div>
       </div>
 
@@ -53,7 +57,7 @@ function Venuedeatils() {
             <li>
               <Link to="/">Home</Link>
             </li>
-            <li>{venue.name}</li>
+            <li>{venuedeatils.name}</li>
           </ul>
         </div>
       </div>
@@ -64,8 +68,8 @@ function Venuedeatils() {
 
           {/* Hotel Header */}
           <div className="mb_30">
-            <h2>{venue.name}</h2>
-            <p>📍 {venue.city}</p>
+            <h2>{venuedeatils.name}</h2>
+            <p>📍 {venuedeatils.city}</p>
           </div>
 
           {/* Image + Booking Info */}
@@ -73,8 +77,8 @@ function Venuedeatils() {
             {/* Left Image */}
             <div className="col-lg-8">
               <img
-                src={venue.image}
-                alt={venue.name}
+                src={`${api.defaults.baseURL}/uploads/${venuedeatils.image}`}
+                alt={venuedeatils.name}
                 style={{ width: "100%", borderRadius: "12px" }}
               />
             </div>
@@ -90,14 +94,14 @@ function Venuedeatils() {
                 }}
               >
                 <h4>
-                  ₹{venue.price} <small>/ night</small>
+                  ₹{venuedeatils.price} <small>/ night</small>
                 </h4>
 
-                <p className="mb-2">{venue.type}</p>
+                <p className="mb-2">{venuedeatils.type}</p>
 
                 <Link
-                  to={`/booking/${venue._id}`}
-                   state={{ price: hotel.price }}
+                  to={`/booking/${venuedeatils._id}`}
+                   state={{ price: venuedeatils.price }}
                   className="btn-1 w-100 text-center mb-3"
                 >
                   Book Now <span />
@@ -117,10 +121,10 @@ function Venuedeatils() {
           <div className="row mb_40">
             <div className="col-lg-6">
               <h5>Hotel Information</h5>
-              <p><strong>City:</strong> {venue.city}</p>
-              <p><strong>Hotel Type:</strong> {venue.type}</p>
-                 <p><strong>Hotel price:</strong> {venue.price}</p>
-                  <p><strong>Hotel ShortDesc:</strong> {venue.ShortDesc}</p>
+              <p><strong>City:</strong> {venuedeatils.city}</p>
+              <p><strong>Hotel Type:</strong> {venuedeatils.type}</p>
+                 <p><strong>Hotel price:</strong> {venuedeatils.price}</p>
+                  <p><strong>Hotel ShortDesc:</strong> {venuedeatils.shortdesc}</p>
             </div>
 
             <div className="col-lg-6">
@@ -140,13 +144,13 @@ function Venuedeatils() {
           <div className="mb_40">
             <h5>About this Hotel</h5>
             <p>
-              {venue.desc || "No description available."}
+              {venuedeatils.desc || "No description available."}
             </p>
           </div>
 
           {/* Actions */}
           <div className="text-center">
-            <Link to={`/booking/${venue._id}`}  state={{ price: hotel.price }} className="btn-1">
+            <Link to={`/booking/${venuedeatils._id}`}  state={{ price: venuedeatils.price }} className="btn-1">
               Book This Hotel <span />
             </Link>
             &nbsp;&nbsp;
@@ -161,4 +165,4 @@ function Venuedeatils() {
   );
 }
 
-export default Venuedeatils;
+export default VenueDetail;
