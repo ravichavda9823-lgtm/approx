@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 
 function Venuedeatils() {
-  const { id } = useParams(); // 👈 URL se ID
+  const { id } = useParams(); 
   const [venue, setVenue] = useState(null);
   const [loading, setLoading] = useState(true);
 
