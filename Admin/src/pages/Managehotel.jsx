@@ -3,9 +3,7 @@ import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 function ManageHotel() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -42,8 +40,6 @@ function ManageHotel() {
   const {
     data: hotel = [],
     isLoading,
-    isError,
-    error,
   } = useQuery({
     queryKey: ["hotel"],
     queryFn: fetchHotel,
@@ -125,7 +121,6 @@ function ManageHotel() {
 
   const mutation = useMutation({
     mutationFn: saveHotel,
-
     onSuccess: (result) => {
       if (result.isEdit) {
         toast.success("Hotel Updated Successfully...");
@@ -134,9 +129,8 @@ function ManageHotel() {
       }
 
       handleCancel();
-     queryClient.invalidateQueries({ queryKey: ["hotel"] });
+      queryClient.invalidateQueries({ queryKey: ["hotel"] });
     },
-
     onError: (error) => {
       console.log(error);
       toast.error("Something went wrong");
@@ -145,7 +139,6 @@ function ManageHotel() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     mutation.mutate({ form, selectedFile, isEdit, editId });
   };
 
@@ -160,7 +153,7 @@ function ManageHotel() {
       const response = await api.delete(`/admin/hotel/delete/${id}`);
       if (response.status === 200) {
         toast.success("Hotel Deleted Successfully");
-      queryClient.invalidateQueries({ queryKey: ["hotel"] });
+        queryClient.invalidateQueries({ queryKey: ["hotel"] });
       }
     } catch (e) {
       console.log(e);
@@ -172,19 +165,18 @@ function ManageHotel() {
       <Header />
       <div className="page-content">
         <div className="container-fluid mt-4">
-          <div className="row mb-4 align-items-center">
+
+          {/* HEADER */}
+          <div className="row mb-4 align-items-center g-2">
             <div className="col-md-6">
               <h3 className="fw-bold text-dark mb-0">Manage Hotels</h3>
             </div>
+
             <div className="col-md-6 d-flex justify-content-md-end justify-content-start mt-2 mt-md-0">
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb mb-0 small">
                   <li className="breadcrumb-item">
-                    <a
-                      href="#"
-                      className="text-decoration-none text-muted"
-                      onClick={() => setIsDetailView(false)}
-                    >
+                    <a href="#" className="text-decoration-none text-muted">
                       Dashboard
                     </a>
                   </li>
@@ -195,9 +187,10 @@ function ManageHotel() {
               </nav>
             </div>
           </div>
-          {/* ===== HEADER ===== */}
-          <div className="mb-3 row ">
-            <div className="col-2 ms-5  ms-auto">
+
+          {/* BUTTON */}
+          <div className="mb-3 row">
+            <div className="col-12 col-md-2 ms-auto">
               <button
                 className="btn btn-primary"
                 style={{ width: "100%" }}
@@ -208,15 +201,16 @@ function ManageHotel() {
             </div>
           </div>
 
-          {/* ===== ADD / EDIT FORM ===== */}
+          {/* FORM */}
           {isFormOpen && (
             <div className="card shadow-sm mb-4">
               <div className="card-body">
                 <h5 className="mb-3">{isEdit ? "Edit Hotel" : "Add Hotel"}</h5>
 
                 <form onSubmit={handleSubmit} encType="multipart/form-data">
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
+                  <div className="row g-2">
+
+                    <div className="col-12 col-md-6 mb-3">
                       <label className="form-label">Hotel Name</label>
                       <input
                         className="form-control"
@@ -227,19 +221,18 @@ function ManageHotel() {
                       />
                     </div>
 
-                    <div className="col-md-6 mb-3">
+                    <div className="col-12 col-md-6 mb-3">
                       <label className="form-label">Image Url</label>
                       <input
                         type="file"
                         className="form-control"
-                        name="image"
                         accept="image/*"
                         onChange={handleFileChange}
                         required={!editId}
                       />
                     </div>
 
-                    <div className="col-md-6 mb-3">
+                    <div className="col-12 col-md-6 mb-3">
                       <label className="form-label">City</label>
                       <input
                         className="form-control"
@@ -250,7 +243,7 @@ function ManageHotel() {
                       />
                     </div>
 
-                    <div className="col-md-6 mb-3">
+                    <div className="col-12 col-md-6 mb-3">
                       <label className="form-label">ShortDesc</label>
                       <input
                         className="form-control"
@@ -261,7 +254,7 @@ function ManageHotel() {
                       />
                     </div>
 
-                    <div className="col-md-6 mb-3">
+                    <div className="col-12 col-md-6 mb-3">
                       <label className="form-label">Description</label>
                       <input
                         className="form-control"
@@ -272,7 +265,7 @@ function ManageHotel() {
                       />
                     </div>
 
-                    <div className="col-md-6 mb-3">
+                    <div className="col-12 col-md-6 mb-3">
                       <label className="form-label">Hotel Type</label>
                       <input
                         className="form-control"
@@ -283,7 +276,7 @@ function ManageHotel() {
                       />
                     </div>
 
-                    <div className="col-md-6 mb-3">
+                    <div className="col-12 col-md-6 mb-3">
                       <label className="form-label">Price</label>
                       <input
                         type="number"
@@ -295,7 +288,7 @@ function ManageHotel() {
                       />
                     </div>
 
-                    <div className="col-md-6 mb-3">
+                    <div className="col-12 col-md-6 mb-3">
                       <label className="form-label">Status</label>
                       <select
                         className="form-select"
@@ -307,19 +300,11 @@ function ManageHotel() {
                         <option value="Inactive">Inactive</option>
                       </select>
                     </div>
+
                   </div>
 
-                  <button
-                    className="btn btn-success me-2"
-                    disabled={mutation.isPending}
-                  >
-                    {mutation.isPending
-                      ? isEdit
-                        ? "Updating..."
-                        : "Adding..."
-                      : isEdit
-                        ? "Update Hotel"
-                        : "Add Hotel"}
+                  <button className="btn btn-success me-2">
+                    {isEdit ? "Update Hotel" : "Add Hotel"}
                   </button>
                   <button
                     type="button"
@@ -333,63 +318,67 @@ function ManageHotel() {
             </div>
           )}
 
+          {/* TABLE */}
           <div className="card shadow-sm">
             <div className="card-body p-0">
               {isLoading ? (
                 <p className="p-3">Loading hotels...</p>
               ) : (
-                <table className="table mb-0 align-middle">
-                  <thead className="table-light">
-                    <tr>
-                      <th>#</th>
-                      <th>Name</th>
-                      <th>City</th>
-                      <th>Type</th>
-                      <th>Price</th>
-                      <th>Status</th>
-                      <th className="text-end">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {hotel.map((value, index) => (
-                      <tr key={value._id}>
-                        <td>{index + 1}</td>
-                        <td>{value.name}</td>
-                        <td>{value.city}</td>
-                        <td>{value.type}</td>
-                        <td>{value.price}</td>
-                        <td>
-                          <span
-                            className={`badge ${
-                              value.status === "Active"
-                                ? "bg-success-subtle text-success"
-                                : "bg-danger-subtle text-danger"
-                            }`}
-                          >
-                            {value.status}
-                          </span>
-                        </td>
-                        <td className="text-end pe-3">
-                          <button
-                            className="btn btn-sm btn-light me-2"
-                            onClick={() => handleEdit(value)}
-                          >
-                            <i className="fa fa-edit text-info"></i>
-                          </button>
-                          <button
-                            className="btn btn-sm btn-light"
-                            onClick={() => FetchDeleteHotel(value._id)}
-                          >
-                            <i className="fa fa-trash text-danger"></i>
-                          </button>
-                        </td>
+                <div className="table-responsive">
+                  <table className="table mb-0 align-middle">
+                    <thead className="table-light">
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>City</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th className="text-end">Action</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {hotel.map((value, index) => (
+                        <tr key={value._id}>
+                          <td>{index + 1}</td>
+                          <td>{value.name}</td>
+                          <td>{value.city}</td>
+                          <td>{value.type}</td>
+                          <td>{value.price}</td>
+                          <td>
+                            <span
+                              className={`badge ${
+                                value.status === "Active"
+                                  ? "bg-success-subtle text-success"
+                                  : "bg-danger-subtle text-danger"
+                              }`}
+                            >
+                              {value.status}
+                            </span>
+                          </td>
+                          <td className="text-end pe-3">
+                            <button
+                              className="btn btn-sm btn-light me-2"
+                              onClick={() => handleEdit(value)}
+                            >
+                              <i className="fa fa-edit text-info"></i>
+                            </button>
+                            <button
+                              className="btn btn-sm btn-light"
+                              onClick={() => FetchDeleteHotel(value._id)}
+                            >
+                              <i className="fa fa-trash text-danger"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           </div>
+
         </div>
         <Footer />
       </div>
