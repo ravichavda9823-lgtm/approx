@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import api from "../utils/AxiosConfig";
 import { toast } from "react-toastify";
@@ -9,6 +9,7 @@ function EditProfile() {
 
     let profile = useLocation().state;
     let[profiledata, setProfiledata ] = useState(profile);
+      let navigate = useNavigate();
 
     console.log(profiledata._id);
 
@@ -36,14 +37,14 @@ function EditProfile() {
     onSuccess: () => {
        toast.success("Profile Updated Successfully...", {
         onClose: () => {
-          window.location.href = "/profile";
+        navigate("/profile");
         },
       });
     },
     onError: () => {
      toast.error("Updated failed...", {
         onClose: () => {
-          window.location.href = "/editprofile";
+       navigate("/editprofile");
         },
       });
       return;

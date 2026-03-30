@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 
 function Contact() {
+    let navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -31,7 +32,7 @@ function Contact() {
     onSuccess: () => {
       toast.success("Inquiry submitted successfully...", {
         onClose: () => {
-          window.location.href = "/";
+          navigate("/");
         },
       });
       setFormData({
@@ -44,7 +45,7 @@ function Contact() {
     onError: () => {
       toast.error("Invalid Details", {
         onClose: () => {
-          window.location.href = "/contact";
+         navigate("/contact");
         },
       });
       return;

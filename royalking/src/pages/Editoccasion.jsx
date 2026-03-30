@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/AxiosConfig";
 
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 
 function EditOccasion() {
   let occasion = useLocation().state;
   let [occasiondata, setOccasionData] = useState(occasion);
+    let navigate = useNavigate();
 
   console.log(occasiondata);
 
@@ -31,7 +32,7 @@ function EditOccasion() {
       if (response.status == 200) {
         toast.success("Occasion updated successfully.." , {
         onClose: () => {
-          window.location.href = "/manageroccasion";
+         navigate("/manageroccasion");
         },
       });
       }
@@ -39,7 +40,7 @@ function EditOccasion() {
       console.log(e);
       toast.error("Updated Failed..." , {
         onClose: () => {
-          window.location.href = "/editoccasion/:id";
+          navigate("/editoccasion/:id");
         },
       })
     }

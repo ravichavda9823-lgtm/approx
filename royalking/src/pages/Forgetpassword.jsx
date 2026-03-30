@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
+    let navigate = useNavigate();
 
   function handleChange(e) {
     setEmail(e.target.value);
@@ -25,7 +26,7 @@ function ForgotPassword() {
     onSuccess: () => {
       toast.success("Reset link sent to your email.", {
         onClose: () => {
-          window.location.href = "/";
+        navigate("/");
         },
       });
       setEmail("");
@@ -34,7 +35,7 @@ function ForgotPassword() {
     onError: () => {
       toast.error("Something went wrong.", {
         onClose: () => {
-          window.location.href = "/forgetpassword";
+         navigate("/forgetpassword");
         },
       });
     },

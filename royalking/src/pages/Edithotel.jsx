@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams, Link, useLocation, useNavigate} from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
@@ -9,6 +9,7 @@ function EditHotel() {
   let [hoteldata, setHoteldata] = useState(hotel);
   const [Preview, setPreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  let navigate = useNavigate()
 
   console.log(hoteldata);
 
@@ -41,7 +42,7 @@ function EditHotel() {
     onSuccess: () => {
       toast.success("Hotel updated successfully..", {
         onClose: () => {
-          window.location.href = "/managerviewhotel";
+        navigate("/managerviewhotel");
         },
       });
     },
@@ -49,7 +50,7 @@ function EditHotel() {
     onError: () => {
       toast.error("Updated Failed...", {
         onClose: () => {
-          window.location.href = "/edithotel/:id";
+        navigate("/edithotel/:id");
         },
       });
       return;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import cookie from "js-cookie";
 import CheckRole from "../utils/CheckRole";
@@ -12,6 +12,7 @@ function AddVenue() {
   const [Preview, setPreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [occasion, setOccasion] = useState([]);
+    let navigate = useNavigate()
 
   const [venue, setVenue] = useState({
     name: "",
@@ -72,7 +73,7 @@ function AddVenue() {
     onSuccess: () => {
       toast.success("Venue Added Successfully...", {
         onClose: () => {
-          window.location.href = "/managervenue";
+          navigate("/managervenue");
         },
       });
       setVenue({
@@ -91,7 +92,7 @@ function AddVenue() {
     onError: () => {
       toast.error("Invalid Details", {
         onClose: () => {
-          window.location.href = "/addvenue";
+          navigate("/addvenue");
         },
       });
       return;

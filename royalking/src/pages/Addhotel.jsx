@@ -11,6 +11,7 @@ function AddHotel() {
   const [userProfile, setUserProfile] = useState({});
   const [Preview, setPreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  let navigate = useNavigate();
   const [hotel, setHotel] = useState({
     name: "",
     city: "",
@@ -70,7 +71,7 @@ function AddHotel() {
     onSuccess: () => {
       (toast.success("Hotel Added Successfully...", {
         onClose: () => {
-          window.location.href = "/managerviewhotel";
+          navigate("/managerviewhotel");
         },
       }),
         setHotel({
@@ -88,7 +89,7 @@ function AddHotel() {
     onError: () => {
       toast.error("Invalid Details", {
         onClose: () => {
-          window.location.href = "/addhotel";
+          navigate("/addhotel");
         },
       });
       return;

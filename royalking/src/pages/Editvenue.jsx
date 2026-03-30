@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import api from "../utils/AxiosConfig";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 
@@ -9,6 +9,8 @@ function EditVenue() {
   const [venuedata, setVenueData] = useState(venue);
   const [Preview, setPreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+
+    let navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -39,14 +41,14 @@ function EditVenue() {
     onSuccess: () => {
       toast.success("Venue updated successfully...", {
           onClose: () => {
-            window.location.href = "/managervenue";
+          navigate("/managervenue");
           },
         });
     },
     onError: () => {
        toast.error("Updated Failed...", {
         onClose: () => {
-          window.location.href = "/editvenue/:id";
+        navigate("/editvenue/:id");
         },
       });
       return;

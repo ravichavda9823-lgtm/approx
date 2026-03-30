@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 
 function ResetPassword() {
   const { token } = useParams();
+    let navigate = useNavigate();
   console.log(token);
   const [passwordData, setPasswordData] = useState({
     newPassword: "",
@@ -34,14 +35,14 @@ function ResetPassword() {
     onSuccess: () => {
        toast.success("Password reset successfully"), {
         onClose: () => {
-          window.location.href = "/login";
+         navigate("/login");
         },
       };
     },
     onError: () => {
       toast.error("Invalid or expired reset link", {
         onClose: () => {
-          window.location.href = "resetpassword/:token";
+        navigate("resetpassword/:token");
         },
       });
       return;

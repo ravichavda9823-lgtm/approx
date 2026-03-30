@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import cookie from "js-cookie";
 import { LogoutwithoutNotification } from "../utils/Logout";
@@ -10,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 function Feedback() {
   const [userProfile, setUserProfile] = useState({});
   const [hoverRating, setHoverRating] = useState(0);
+    let navigate = useNavigate();
   const [feedback, setFeedback] = useState({
     name: "",
     email: "",
@@ -64,7 +65,7 @@ function Feedback() {
     onSuccess: () => {
       toast.success("Feedback submitted successfully...", {
         onClose: () => {
-          window.location.href = "/";
+       navigate("/");
         },
       });
       setFeedback({
@@ -79,7 +80,7 @@ function Feedback() {
     onError: () => {
        toast.error("Invalid Details", {
         onClose: () => {
-          window.location.href = "/feedback";
+         navigate("/feedback");
         },
       });
       return;
