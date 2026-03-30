@@ -3,15 +3,16 @@ import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 function Managevenue() {
-
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editId, setEditId] = useState(null);
   const [preview, setPreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const queryClient = useQueryClient();
   const [form, setForm] = useState({
     name: "",
     city: "",
@@ -20,24 +21,27 @@ function Managevenue() {
     image: "",
     shortdesc: "",
     desc: "",
-    occasionId:"",
+    occasionId: "",
     status: "Active",
   });
 
   const fetchvenue = async () => {
-
     try {
       const response = await api.get("/admin/venue");
       return response.data.data || [];
     } catch (e) {
       console.log(e);
-    } 
+    }
   };
 
-   const { data: venue = [], isLoading,isError,error } = useQuery({
-   queryKey: ["venue"],
+  const {
+    data: venue = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["venue"],
     queryFn: fetchvenue,
- 
   });
 
   const handleAdd = () => {
@@ -52,7 +56,7 @@ function Managevenue() {
       price: "",
       shortdesc: "",
       desc: "",
-      occasionId:"",
+      occasionId: "",
       status: "Active",
     });
   };
@@ -71,7 +75,7 @@ function Managevenue() {
       shortdesc: value.shortdesc,
       desc: value.desc,
       status: value.status,
-      occasionId:value.occasionId
+      occasionId: value.occasionId,
     });
   };
 
@@ -92,36 +96,60 @@ function Managevenue() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append("name", form.name);
-      formData.append("city", form.city);
-      formData.append("type", form.type);
-      formData.append("price", form.price);
-      formData.append("shortdesc", form.shortdesc);
-      formData.append("desc", form.desc);
-      formData.append("status", form.status);
-      formData.append("image", selectedFile);
-      formData.append("occasionId",form.occasionId);
+  const saveVenue = async ({ form, selectedFile, isEdit, editId }) => {
+    const formData = new FormData();
 
-      if (isEdit) {
-        let response = await api.put(`/admin/venue/update/${editId}`, formData);
-        setEditId(response.data.data);
+    formData.append("name", form.name);
+    formData.append("city", form.city);
+    formData.append("type", form.type);
+    formData.append("price", form.price);
+    formData.append("shortdesc", form.shortdesc);
+    formData.append("desc", form.desc);
+    formData.append("status", form.status);
+    formData.append("occasionId", form.occasionId);
+
+    if (selectedFile) {
+      formData.append("image", selectedFile);
+    }
+
+    if (isEdit) {
+      const res = await api.put(`/admin/venue/update/${editId}`, formData);
+      return { data: res.data, isEdit: true };
+    } else {
+      const res = await api.post("/admin/venue/addvenue", formData);
+      return { data: res.data, isEdit: false };
+    }
+  };
+
+  const mutation = useMutation({
+    mutationFn: saveVenue,
+
+    onSuccess: (result) => {
+      if (result.isEdit) {
         toast.success("Venue Updated Successfully");
       } else {
-        let response = await api.post("/admin/venue/addvenue", formData);
-        setVenue(response.data.data);
         toast.success("Venue Added Successfully");
       }
 
       handleCancel();
-      fetchvenue();
-    } catch (e) {
-      console.log(e);
-      toast.error("Somrthing went wrong")
-    }
+      queryClient.invalidateQueries({ queryKey: ["venue"] });
+    },
+
+    onError: (error) => {
+      console.log(error);
+      toast.error("Something went wrong");
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    mutation.mutate({
+      form,
+      selectedFile,
+      isEdit,
+      editId,
+    });
   };
 
   const handleCancel = () => {
@@ -135,7 +163,7 @@ function Managevenue() {
       const response = await api.delete(`/admin/venue/delete/${id}`);
       if (response.status === 200) {
         toast.success("Hotel Deleted Successfully");
-        fetchHotel();
+        queryClient.invalidateQueries({ queryKey: ["venue"] });
       }
     } catch (e) {
       console.log(e);
@@ -144,10 +172,9 @@ function Managevenue() {
 
   return (
     <div className="page-wrapper">
-      <Header/>
+      <Header />
       <div className="page-content">
         <div className="container-fluid mt-4">
-
           <div className="row mb-4 align-items-center">
             <div className="col-md-6">
               <h3 className="fw-bold text-dark mb-0">Manage Venue</h3>
@@ -172,14 +199,17 @@ function Managevenue() {
             </div>
           </div>
           {/* ===== HEADER ===== */}
-           <div className="mb-3 row ">
+          <div className="mb-3 row ">
             <div className="col-2 ms-5  ms-auto">
-              <button className="btn btn-primary" style={{width:"100%"}} onClick={handleAdd}>
+              <button
+                className="btn btn-primary"
+                style={{ width: "100%" }}
+                onClick={handleAdd}
+              >
                 + Add Venue
               </button>
             </div>
           </div>
-         
 
           {/* ===== ADD / EDIT FORM ===== */}
           {isFormOpen && (
@@ -282,8 +312,18 @@ function Managevenue() {
                     </div>
                   </div>
 
-                  <button className="btn btn-success me-2">
-                    {isEdit ? "Update Hotel" : "Add Hotel"}
+                  <button
+                    className="btn btn-primary me-2 fw-bold" 
+                    type="submit"
+                    disabled={mutation.isPending}
+                  >
+                    {mutation.isPending
+                      ? isEdit
+                        ? "Updating..."
+                        : "Adding..."
+                      : isEdit
+                        ? "Update Hotel"
+                        : "Add Hotel"}
                   </button>
                   <button
                     type="button"
@@ -336,13 +376,13 @@ function Managevenue() {
                         <td className="text-end pe-3">
                           <button
                             className="btn btn-sm btn-light me-2"
-                           onClick={() => handleEdit(value)}
+                            onClick={() => handleEdit(value)}
                           >
                             <i className="fa fa-edit text-info"></i>
                           </button>
                           <button
                             className="btn btn-sm btn-light"
-                             onClick={() => FetchDeletevenue(value._id)}
+                            onClick={() => FetchDeletevenue(value._id)}
                           >
                             <i className="fa fa-trash text-danger"></i>
                           </button>

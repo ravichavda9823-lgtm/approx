@@ -4,6 +4,8 @@ import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 function ManageHotel() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -11,6 +13,7 @@ function ManageHotel() {
   const [editId, setEditId] = useState(null);
   const [preview, setPreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const queryClient = useQueryClient();
 
   const [form, setForm] = useState({
     name: "",
@@ -29,20 +32,22 @@ function ManageHotel() {
       return response.data.data || [];
     } catch (e) {
       console.log(e);
-    } 
+    }
   };
 
   useEffect(() => {
     fetchHotel();
   }, []);
 
-  
-  const { data: hotel = [], isLoading,isError,error } = useQuery({
-   queryKey: ["hotel"],
+  const {
+    data: hotel = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["hotel"],
     queryFn: fetchHotel,
- 
   });
-
 
   const handleAdd = () => {
     setIsFormOpen(true);
@@ -94,35 +99,54 @@ function ManageHotel() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append("name", form.name);
-      formData.append("city", form.city);
-      formData.append("type", form.type);
-      formData.append("price", form.price);
-      formData.append("shortdesc", form.shortdesc);
-      formData.append("desc", form.desc);
-      formData.append("status", form.status);
-      formData.append("image", selectedFile);
+  const saveHotel = async ({ form, selectedFile, isEdit, editId }) => {
+    const formData = new FormData();
 
-      if (isEdit) {
-        let response = await api.put(`/admin/hotel/update/${editId}`, formData);
-        setEditId(response.data.data);
+    formData.append("name", form.name);
+    formData.append("city", form.city);
+    formData.append("type", form.type);
+    formData.append("price", form.price);
+    formData.append("shortdesc", form.shortdesc);
+    formData.append("desc", form.desc);
+    formData.append("status", form.status);
+
+    if (selectedFile) {
+      formData.append("image", selectedFile);
+    }
+
+    if (isEdit) {
+      const response = await api.put(`/admin/hotel/update/${editId}`, formData);
+      return { data: response.data, isEdit: true };
+    } else {
+      const response = await api.post("/admin/hotel/addhotel", formData);
+      return { data: response.data, isEdit: false };
+    }
+  };
+
+  const mutation = useMutation({
+    mutationFn: saveHotel,
+
+    onSuccess: (result) => {
+      if (result.isEdit) {
         toast.success("Hotel Updated Successfully...");
       } else {
-        let response = await api.post("/admin/hotel/addhotel", formData);
-        setHotel(response.data.data);
         toast.success("Hotel Added Successfully...");
       }
 
       handleCancel();
-      fetchHotel();
-    } catch (e) {
-      console.log(e);
+     queryClient.invalidateQueries({ queryKey: ["hotel"] });
+    },
+
+    onError: (error) => {
+      console.log(error);
       toast.error("Something went wrong");
-    }
+    },
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    mutation.mutate({ form, selectedFile, isEdit, editId });
   };
 
   const handleCancel = () => {
@@ -136,7 +160,7 @@ function ManageHotel() {
       const response = await api.delete(`/admin/hotel/delete/${id}`);
       if (response.status === 200) {
         toast.success("Hotel Deleted Successfully");
-        fetchHotel();
+      queryClient.invalidateQueries({ queryKey: ["hotel"] });
       }
     } catch (e) {
       console.log(e);
@@ -285,8 +309,17 @@ function ManageHotel() {
                     </div>
                   </div>
 
-                  <button className="btn btn-success me-2">
-                    {isEdit ? "Update Hotel" : "Add Hotel"}
+                  <button
+                    className="btn btn-success me-2"
+                    disabled={mutation.isPending}
+                  >
+                    {mutation.isPending
+                      ? isEdit
+                        ? "Updating..."
+                        : "Adding..."
+                      : isEdit
+                        ? "Update Hotel"
+                        : "Add Hotel"}
                   </button>
                   <button
                     type="button"

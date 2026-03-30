@@ -3,19 +3,20 @@ import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 function ManageUser() {
- 
-
   const [isEdit, setIsEdit] = useState(false);
   const [editId, setEditId] = useState(null);
+  const queryClient = useQueryClient();
 
   const [form, setForm] = useState({
     name: "",
     email: "",
-    role:"",
+    role: "",
     status: "Active",
+    phone: "", // ✅ added
   });
 
   const fetchUsers = async () => {
@@ -27,10 +28,14 @@ function ManageUser() {
     }
   };
 
-   const { data: users = [], isLoading,isError,error } = useQuery({
-   queryKey: ["users"],
+  const {
+    data: users = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["users"],
     queryFn: fetchUsers,
- 
   });
 
   const handleEdit = (user) => {
@@ -40,8 +45,9 @@ function ManageUser() {
     setForm({
       name: user.username,
       email: user.email,
-      role:user.role,
+      role: user.role,
       status: user.status || "Active",
+      phone: user.phone || "", // ✅ added
     });
   };
 
@@ -51,33 +57,48 @@ function ManageUser() {
       [e.target.name]: e.target.value,
     });
   };
-  const handleUpdate = async (e) => {
-    e.preventDefault();
 
-    try {
-      await api.put(`/auth/update/${editId._id}`, { _id:editId,
-        name: form.username,
-        email: form.email,
-        role:form.role,
-        status: form.status,
-      });
+  const updateUser = async ({ form, editId }) => {
+    const response = await api.put(`/auth/update/${editId}`, {
+      username: form.name || "", // ✅ fixed (no null)
+      email: form.email || "",
+      role: form.role || "",
+      status: form.status || "Active",
+      phone: form.phone || "",
+    });
 
-      toast.success("User Updated Successfully");
+    return response.data;
+  };
+
+  const mutation = useMutation({
+    mutationFn: updateUser,
+
+    onSuccess: () => {
+      toast.success("User Updated Successfully...");
 
       setIsEdit(false);
       setEditId(null);
+
       setForm({
         name: "",
         email: "",
-        role:"",
-        status: "Active"
+        role: "",
+        status: "Active",
+        phone: "",
       });
 
-      fetchUsers();
-    } catch (error) {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+
+    onError: (error) => {
       console.log(error);
-      toast.error("Invalid Details...")
-    }
+      toast.error("Something went wrong");
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    mutation.mutate({ form, editId });
   };
 
   const handleCancel = () => {
@@ -86,8 +107,9 @@ function ManageUser() {
     setForm({
       name: "",
       email: "",
-      role:"",
+      role: "",
       status: "Active",
+      phone: "",
     });
   };
 
@@ -95,9 +117,8 @@ function ManageUser() {
     try {
       let response = await api.delete(`/auth/delete/${id}`);
       if (response.status === 200) {
-        
         toast.success("User Deleted Successfully");
-        fetchUsers();
+        queryClient.invalidateQueries({ queryKey: ["users"] });
       }
     } catch (e) {
       console.log(e);
@@ -106,25 +127,36 @@ function ManageUser() {
 
   return (
     <div className="page-wrapper">
-      <Header/>
+      <Header />
       <div className="page-content">
         <div className="container-fluid mt-4">
-
-          <div className="row mb-3">
-            <div className="col-12">
+          <div className="row mb-4 align-items-center">
+            <div className="col-md-6">
               <h3 className="fw-bold">
                 {isEdit ? "Edit User" : "Manage Users"}
               </h3>
             </div>
+            <div className="col-md-6 d-flex justify-content-md-end justify-content-start mt-2 mt-md-0">
+              <nav aria-label="breadcrumb">
+                <ol className="breadcrumb mb-0 small">
+                  <li className="breadcrumb-item">
+                    <a href="#" className="text-decoration-none text-muted">
+                      Dashboard
+                    </a>
+                  </li>
+                  <li className="breadcrumb-item active fw-medium text-primary">
+                    User
+                  </li>
+                </ol>
+              </nav>
+            </div>
           </div>
 
-        
           {isEdit && (
             <div className="card shadow-sm mb-4">
               <div className="card-body">
-                <form onSubmit={handleUpdate}>
+                <form onSubmit={handleSubmit}>
                   <div className="row">
-
                     <div className="col-md-6 mb-3">
                       <label className="form-label">Name</label>
                       <input
@@ -148,7 +180,7 @@ function ManageUser() {
                       />
                     </div>
 
-                     <div className="col-md-6 mb-3">
+                    <div className="col-md-6 mb-3">
                       <label className="form-label">Role</label>
                       <input
                         type="text"
@@ -157,6 +189,17 @@ function ManageUser() {
                         value={form.role}
                         onChange={handleChange}
                         required
+                      />
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Phone</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="phone"
+                        value={form.phone}
+                        onChange={handleChange}
                       />
                     </div>
 
@@ -172,11 +215,13 @@ function ManageUser() {
                         <option value="Inactive">Inactive</option>
                       </select>
                     </div>
-
                   </div>
-
-                  <button className="btn btn-primary me-2">
-                    Update User
+                  <button
+                    className="btn btn-primary me-2"
+                    type="submit"
+                    disabled={mutation.isPending}
+                  >
+                    {mutation.isPending ? "Updating..." : "Update User"}
                   </button>
                   <button
                     type="button"
@@ -190,7 +235,6 @@ function ManageUser() {
             </div>
           )}
 
-         
           <div className="card shadow-sm">
             <div className="card-body p-0">
               {isLoading ? (
@@ -204,6 +248,7 @@ function ManageUser() {
                         <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th>Phone</th>
                         <th className="text-end">Action</th>
                       </tr>
                     </thead>
@@ -215,10 +260,11 @@ function ManageUser() {
                             <td>{value.username}</td>
                             <td>{value.email}</td>
                             <td>{value.role}</td>
-                              <td className="text-end pe-3">
+                            <td>{value.phone || "-"}</td>
+                            <td className="text-end pe-3">
                               <button
                                 className="btn btn-sm btn-light me-2"
-                                 onClick={() => handleEdit(value)}
+                                onClick={() => handleEdit(value)}
                               >
                                 <i className="fa fa-edit text-info"></i>
                               </button>
@@ -233,7 +279,7 @@ function ManageUser() {
                         ))
                       ) : (
                         <tr>
-                          <td colSpan="5" className="text-center py-3">
+                          <td colSpan="6" className="text-center py-3">
                             No users found
                           </td>
                         </tr>
@@ -244,7 +290,6 @@ function ManageUser() {
               )}
             </div>
           </div>
-
         </div>
         <Footer />
       </div>

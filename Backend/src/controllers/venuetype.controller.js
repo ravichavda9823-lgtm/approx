@@ -76,7 +76,7 @@ let EditVenuetype = async (req, res) => {
     let  { _id, name } = req.body || {}; 
     console.log(_id);
 
-    let venuetype = await collection.findOne({_id: ObjectId.createFromHexString(_id)});
+    let venuetype = await collection.findOne({_id: ObjectId.createFromHexString(id)});
 
     if(!venuetype){
       return res.status(404).json({
@@ -90,7 +90,7 @@ let EditVenuetype = async (req, res) => {
     }
 
     let updateQuery = await collection.updateOne(
-      {_id: ObjectId.createFromHexString(_id)}, {$set: updatevenuetype});
+      {_id: ObjectId.createFromHexString(id)}, {$set: updatevenuetype});
 
       console.log(updateQuery);
       if(updateQuery.acknowledged){

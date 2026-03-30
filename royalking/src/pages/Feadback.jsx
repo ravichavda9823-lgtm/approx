@@ -5,6 +5,7 @@ import cookie from "js-cookie";
 import { LogoutwithoutNotification } from "../utils/Logout";
 import CheckRole from "../utils/CheckRole";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 function Feedback() {
   const [userProfile, setUserProfile] = useState({});
@@ -51,16 +52,16 @@ function Feedback() {
     setFeedback({ ...feedback, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    try {
+    const addfeedback = async (feedback) => {
       const response = await api.post("/user/feedback/addfeedback", feedback);
-      console.log(response);
+    return response.data;
+  };
 
-      if (response.data.token) {
-        cookie.set("token", response.data.token);
-      }
+   const mutation = useMutation({
+    mutationFn: addfeedback,
+
+    onSuccess: () => {
       toast.success("Feedback submitted successfully...", {
         onClose: () => {
           window.location.href = "/";
@@ -74,14 +75,21 @@ function Feedback() {
         loginId: userProfile._id,
         createdAt: new Date(),
       });
-    } catch (error) {
-      console.error(error);
-      toast.error("Invalid Details", {
+    },
+    onError: () => {
+       toast.error("Invalid Details", {
         onClose: () => {
           window.location.href = "/feedback";
         },
       });
-    }
+      return;
+    },
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+   mutation.mutate(feedback);
   };
 
   console.log(feedback);
@@ -215,8 +223,8 @@ function Feedback() {
 
                     {/* Submit */}
                     <div className="form-group col-md-12">
-                      <button type="submit" className="btn-1 w-100">
-                        Submit Feedback
+                      <button type="submit" className="btn-1 w-100" disabled={mutation.isPending} >
+                      {mutation.isPending ? "Submitting..." : "Submit Feedback"}
                       </button>
                     </div>
 

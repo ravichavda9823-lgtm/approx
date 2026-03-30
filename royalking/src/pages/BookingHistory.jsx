@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import api from "../utils/AxiosConfig";
+import { useQuery } from "@tanstack/react-query";
 
 function BookingHistory() {
-  const [bookings, setBookings] = useState([]);
-  useEffect(() => {
-    fetchBookings();
-  }, []);
+
 
   const fetchBookings = async () => {
-    // try {
+    try {
       const response = await api.get("/user/booking/");
-      console.log(response.data);
-      setBookings(response.data.data);
-    // } catch (error) {
-    //   console.log("Booking fetch error", error);
-    // }
+   
+      return response.data.data;
+    } catch (error) {
+      console.log("Booking fetch error", error);
+    }
   };
+
+ 
+
+  
+    const { data: bookings = [] } = useQuery({
+    queryKey: ["bookings"],
+    queryFn: fetchBookings
+ 
+  });
 
   return (
     <>

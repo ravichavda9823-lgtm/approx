@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import api from "../utils/AxiosConfig";
 import { Link, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 function EditVenue() {
   const venue = useLocation().state;
@@ -23,10 +24,40 @@ function EditVenue() {
     setPreview(URL.createObjectURL(file));
   };
 
+    const editvenue = async (formData) => {
+     const response = await api.put(
+        `/manager/venue/update/${venuedata._id}`,
+        formData,
+      );
+    return response.data;
+    
+  };
+
+   const mutation = useMutation({
+    mutationFn: editvenue,
+
+    onSuccess: () => {
+      toast.success("Venue updated successfully...", {
+          onClose: () => {
+            window.location.href = "/managervenue";
+          },
+        });
+    },
+    onError: () => {
+       toast.error("Updated Failed...", {
+        onClose: () => {
+          window.location.href = "/editvenue/:id";
+        },
+      });
+      return;
+    },
+  });
+
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
       const formData = new FormData();
       formData.append("name", venue.name);
       formData.append("city", venue.city);
@@ -38,26 +69,9 @@ function EditVenue() {
       formData.append("managerId", venue.managerId);
       formData.append("occasionId", venue.occasionId);
 
-      const response = await api.put(
-        `/manager/venue/update/${venuedata._id}`,
-        formData,
-      );
+      mutation.mutate(formData);
 
-      if (response.status === 200) {
-        toast.success("Venue updated successfully", {
-          onClose: () => {
-            window.location.href = "/managervenue";
-          },
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Updated Failed...", {
-        onClose: () => {
-          window.location.href = "/editvenue/:id";
-        },
-      });
-    }
+     
   };
 
   return (
@@ -219,8 +233,8 @@ function EditVenue() {
 
                   {/* SUBMIT */}
                   <div className="form-group col-md-12">
-                    <button className="btn-1 w-100" type="submit">
-                      Update Venue <span />
+                    <button className="btn-1 w-100" type="submit"  disabled={mutation.isPending}>
+                     {mutation.isPending ? "Updateing..." : "Update Venue"} <span />
                     </button>
                   </div>
                 </form>

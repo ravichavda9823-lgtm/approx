@@ -3,9 +3,11 @@ import Footer from "../common/Footer";
 import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 function ManageOccasion() {
+
   const [formDataState, setFormDataState] = useState({
     name: "",
     desc: "",
@@ -16,6 +18,7 @@ function ManageOccasion() {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [preview, setPreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const queryClient = useQueryClient();
 
   const fetchOccasions = async () => {
     try {
@@ -53,6 +56,44 @@ function ManageOccasion() {
     }
   };
 
+  const saveoccasion = async ({ formDataState, selectedFile, editId }) => {
+    const formData = new FormData();
+    formData.append("name", formDataState.name);
+    formData.append("desc", formDataState.desc);
+    formData.append("status", formDataState.status);
+
+    if (selectedFile) {
+      formData.append("image", selectedFile);
+    }
+
+    if (editId) {
+      const response = await api.put(`/admin/occasion/update/${editId}`, formData);
+      return { data: response.data, editId: true };
+    } else {
+      const response = await api.post("/admin/occasion/addoccasion", formData);
+      return { data: response.data, editId: true };
+    }
+  };
+  const mutation = useMutation({
+    mutationFn: saveoccasion,
+
+    onSuccess: (result) => {
+      if (result.editId) {
+        toast.success("Occasion Updated Successfully...");
+      } else {
+        toast.success("Occasion Added Successfully...");
+      }
+
+      handleCancel();
+      queryClient.invalidateQueries({ queryKey: ["occasionList"] });
+    },
+
+    onError: (error) => {
+      console.log(error);
+      toast.error("Something went wrong");
+    },
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -61,29 +102,7 @@ function ManageOccasion() {
       return;
     }
 
-    try {
-      const formData = new FormData();
-      formData.append("name", formDataState.name);
-      formData.append("desc", formDataState.desc);
-      formData.append("status", formDataState.status);
-
-      if (selectedFile) {
-        formData.append("image", selectedFile);
-      }
-
-      if (editId) {
-        await api.put(`/admin/occasion/update/${editId}`, formData);
-        toast.success("Occasion Updated Successfully");
-      } else {
-        await api.post("/admin/occasion/addoccasion", formData);
-        toast.success("Occasion Added Successfully");
-      }
-
-      handleCancel();
-      fetchOccasions();
-    } catch (error) {
-      console.log(error);
-    }
+    mutation.mutate({ formDataState, selectedFile, editId });
   };
 
   const handleEdit = (value) => {
@@ -104,7 +123,7 @@ function ManageOccasion() {
       const response = await api.delete(`/admin/occasion/delete/${id}`);
       if (response.status === 200) {
         toast.success("Occasion Deleted Successfully");
-        fetchOccasions();
+        queryClient.invalidateQueries({ queryKey: ["occasionList"] });
       }
     } catch (e) {
       console.log(e);
@@ -239,8 +258,17 @@ function ManageOccasion() {
               </div>
 
               <div className="card-footer bg-white border-0 p-4 pt-0">
-                <button className="btn btn-primary fw-bold me-2">
-                  {editId ? "Update Now" : "Save Occasion"}
+                <button
+                  className="btn btn-primary fw-bold me-2"
+                  disabled={mutation.isPending}
+                >
+                  {mutation.isPending
+                    ? editId
+                      ? "Updating..."
+                      : "Saving..."
+                    : editId
+                      ? "Update Now"
+                      : "Save Occasion"}
                 </button>
                 <button
                   type="button"

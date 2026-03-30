@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 function ResetPassword() {
   const { token } = useParams();
@@ -22,6 +23,33 @@ function ResetPassword() {
     }));
   }
 
+    const resetpassword = async (passwordData) => {
+    const response = await api.post(`/user/password/resetpassword/${token}`, { newPassword: passwordData.newPassword })
+    return response.data;
+  };
+
+    const mutation = useMutation({
+    mutationFn: resetpassword,
+
+    onSuccess: () => {
+       toast.success("Password reset successfully"), {
+        onClose: () => {
+          window.location.href = "/login";
+        },
+      };
+    },
+    onError: () => {
+      toast.error("Invalid or expired reset link", {
+        onClose: () => {
+          window.location.href = "resetpassword/:token";
+        },
+      });
+      return;
+    },
+  });
+
+
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -30,28 +58,8 @@ function ResetPassword() {
       return;
     }
 
-    try {
-      setLoading(true);
+    mutation.mutate(passwordData);
 
-      const response = await api.post(`/user/password/resetpassword/${token}`, { newPassword: passwordData.newPassword })
-      if (response.data.status) {
-        toast.success("Password reset successfully"), {
-        onClose: () => {
-          window.location.href = "/login";
-        },
-      };
-      }
-
-    } catch (error) {
-      toast.error("Invalid or expired reset link", {
-        onClose: () => {
-          window.location.href = "resetpassword/:token";
-        },
-      });
-    }
-     finally {
-      setLoading(false);
-    }
   }
 
   return (
@@ -127,9 +135,9 @@ function ResetPassword() {
                       <button
                         className="btn-1 w-100"
                         type="submit"
-                        
+                        disabled={mutation.isPending}
                       >
-                       Reset Password
+                       {mutation.isPending ? "Resetting Password..." : "Reset Password"}
                       </button>
                     </div>
 

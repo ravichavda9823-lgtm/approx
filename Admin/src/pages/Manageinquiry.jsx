@@ -4,10 +4,11 @@ import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 function ManageInquiry() {
 
-
+const queryClient = useQueryClient();
 
   const fetchInquiry = async () => {
     try {
@@ -30,7 +31,7 @@ function ManageInquiry() {
 
       if (response.status === 200) {
         toast.success("Inquiry Deleted Successfully");
-        fetchInquiry();
+        queryClient.invalidateQueries({ queryKey: ["inquiry"] });
       }
     } catch (e) {
       console.log(e);

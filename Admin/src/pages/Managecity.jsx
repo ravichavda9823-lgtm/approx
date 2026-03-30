@@ -4,10 +4,13 @@ import Footer from "../common/Footer";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 function ManageCity() {
   const [cityName, setCityName] = useState("");
   const [editCityId, setEditCityId] = useState(null);
+  const queryClient = useQueryClient();
 
   const fetchCities = async () => {
     try {
@@ -18,44 +21,61 @@ function ManageCity() {
     }
   };
 
-  // useEffect(() => {
-  //   fetchCities();
-  // }, []);
-
   const { data: cities = [], isLoading } = useQuery({
     queryKey: ["cities"],
     queryFn: fetchCities,
   });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const saveCity = async ({ cityName, editCityId }) => {
+    if (editCityId) {
+      const response = await api.put(`/admin/city/update/${editCityId}`, {
+        name: cityName,
+      });
 
-    try {
-      if (editCityId) {
-        await api.put(`/admin/city/update/${editCityId}`, {
-          name: cityName,
-        });
-        toast.success("City Updated Successfully");
+      return response.data;
+    } else {
+      const response = await api.post("/admin/city/addcity", {
+        name: cityName,
+      });
+      return response.data;
+    }
+  };
+
+  const mutation = useMutation({
+    mutationFn: saveCity,
+
+    onSuccess: (_, variables) => {
+      if (variables.editCityId) {
+        toast.success("City Updated Successfully...");
       } else {
-        await api.post("/admin/city/addcity", {
-          name: cityName,
-        });
-        toast.success("City Added Successfully");
+        toast.success("City Added Successfully...");
       }
 
       setCityName("");
       setEditCityId(null);
-      fetchCities();
-    } catch (err) {
+      queryClient.invalidateQueries({ queryKey: ["cities"] });
+    },
+
+    onError: (err) => {
       console.log(err);
-    }
+      toast.error("Something went wrong");
+    },
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    mutation.mutate({
+      cityName,
+      editCityId,
+    });
   };
 
   const deleteCity = async (id) => {
     try {
       await api.delete(`/admin/city/delete/${id}`);
       toast.success("City Deleted Successfully");
-      fetchCities();
+      queryClient.invalidateQueries({ queryKey: ["cities"] });
     } catch (err) {
       console.log(err);
     }
@@ -126,8 +146,13 @@ function ManageCity() {
                       className={`btn btn-lg w-100 fw-bold ${
                         editCityId ? "btn-warning" : "btn-primary"
                       }`}
+                      disabled={mutation.isPending}
                     >
-                      {editCityId ? "Update City" : "Add City"}
+                      {mutation.isPending
+                        ? "Processing..."
+                        : editCityId
+                          ? "Update City"
+                          : "Add City"}
                     </button>
                   </div>
                 </form>
@@ -175,7 +200,13 @@ function ManageCity() {
                                     className="btn btn-sm btn-light"
                                     onClick={() => deleteCity(city._id)}
                                   >
-                                    <i className="fa fa-trash text-danger"></i>
+                                    <i
+                                      className={`fa ${
+                                        deleteCity === city._id
+                                          ? "fa-spinner fa-spin text-secondary"
+                                          : "fa-trash text-danger"
+                                      }`}
+                                    ></i>
                                   </button>
                                 </td>
                               </tr>

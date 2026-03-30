@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,18 +24,21 @@ function Login() {
     }));
   }
 
-  async function handelSubmit(e) {
-    e.preventDefault();
-    setLoading(true)
-
-    try {
-      let response = await axios.post(
+  const login = async(user) =>{
+       let response = await axios.post(
         `${import.meta.env.VITE_API_URL}/auth/Signin`,
         user,
       );
-      if (response.data.token) {
-        cookie.set("token", response.data.token);
-        cookie.set("role", response.data.role);
+      return response.data;
+  }
+
+
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: (response) => {
+       if (response.token) {
+        cookie.set("token", response.token);
+        cookie.set("role", response.role);
 
         setUser({
           email: "",
@@ -43,16 +47,16 @@ function Login() {
 
         toast.success("Login Successfully.." , {onClose: ()=> {window.location.href = "/"}});
       }
-    } catch (e) {
-      setUser({
-        email: "",
-        password: "",
-      });
-
+    },
+    onError: () => {
       toast.error("Invalid Details..." , {onClose: ()=> {window.location.href = "/login"}});
-    } finally {
-      setLoading(false); // ✅ stop loading (IMPORTANT)
-    }
+    },
+  })
+
+  async function handelSubmit(e) {
+    e.preventDefault();
+   
+    mutation.mutate(user);
   }
 
   return (
@@ -151,8 +155,8 @@ function Login() {
                     </div>
 
                     <div className="form-group col-md-12">
-                      <button className="btn-1 w-100" type="submit" disabled={loading}>
-                        {loading ? "Logining in..." : "Login Now"}
+                      <button className="btn-1 w-100" type="submit" disabled={mutation.isPending}>
+                        {mutation.isPending ? "Logining in..." : "Login Now"}
                       </button>
                     </div>
 

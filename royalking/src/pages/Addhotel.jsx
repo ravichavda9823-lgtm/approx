@@ -5,6 +5,7 @@ import { LogoutwithoutNotification } from "../utils/Logout";
 import CheckRole from "../utils/CheckRole";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 function AddHotel() {
   const [userProfile, setUserProfile] = useState({});
@@ -58,54 +59,63 @@ function AddHotel() {
     }));
   };
 
+  const addhotel = async (formData) => {
+    const response = await api.post("/manager/hotel/addhotel", formData);
+    return response.data;
+  };
+
+  const mutation = useMutation({
+    mutationFn: addhotel,
+
+    onSuccess: () => {
+      (toast.success("Hotel Added Successfully...", {
+        onClose: () => {
+          window.location.href = "/managerviewhotel";
+        },
+      }),
+        setHotel({
+          name: "",
+          city: "",
+          type: "",
+          price: "",
+          image: "",
+          shortdesc: "",
+          desc: "",
+          status: "Active",
+          managerId: userProfile._id,
+        }));
+    },
+    onError: () => {
+      toast.error("Invalid Details", {
+        onClose: () => {
+          window.location.href = "/addhotel";
+        },
+      });
+      return;
+    },
+  });
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
     setPreview(URL.createObjectURL(file));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append("name", hotel.name);
-      formData.append("city", hotel.city);
-      formData.append("type", hotel.type);
-      formData.append("price", hotel.price);
-      formData.append("shortdesc", hotel.shortdesc);
-      formData.append("desc", hotel.desc);
-      formData.append("status", hotel.status);
-      formData.append("managerId", hotel.managerId);
 
-      // 🔥 important
-      formData.append("image", selectedFile);
+    const formData = new FormData();
+    formData.append("name", hotel.name);
+    formData.append("city", hotel.city);
+    formData.append("type", hotel.type);
+    formData.append("price", hotel.price);
+    formData.append("shortdesc", hotel.shortdesc);
+    formData.append("desc", hotel.desc);
+    formData.append("status", hotel.status);
+    formData.append("managerId", hotel.managerId);
+    formData.append("image", selectedFile);
 
-      const response = await api.post("/manager/hotel/addhotel", formData);
-
-      if (response.data.token) {
-        cookie.set("token", response.data.token);
-      }
-
-      toast.success("Hotel Added Successfully",  {onClose: ()=> {window.location.href = "/managerviewhotel"}});
-
-      setHotel({
-        name: "",
-        city: "",
-        type: "",
-        price: "",
-        image: "",
-        shortdesc: "",
-        desc: "",
-        status: "Active",
-        managerId: userProfile._id,
-      });
-
-    } catch (error) {
-      console.log(error);
-      toast.error("Invalid Details", {onClose: ()=> {window.location.href = "/addhotel"}});
-
-   
-    }
+    mutation.mutate(formData);
   };
 
   return (
@@ -258,8 +268,12 @@ function AddHotel() {
 
                   {/* SUBMIT */}
                   <div className="form-group col-md-12">
-                    <button className="btn-1 w-100" type="submit">
-                      Add Hotel <span />
+                    <button
+                      className="btn-1 w-100"
+                      type="submit"
+                      disabled={mutation.isPending}
+                    >
+                      {mutation.isPending ? "Adding..." : "Add Hotel"}
                     </button>
                   </div>
                 </form>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -19,13 +20,16 @@ function Contact() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      let response = await api.post("/user/inquiry/addinquiry", formData);
-      console.log(response.data);
-      setFormData(response.data.data);
-      toast.success("Inquiry submitted successfully", {
+  const addinquiry = async (formData) => {
+    const response = await api.post("/user/inquiry/addinquiry", formData);
+    return response.data;
+  };
+
+  const mutation = useMutation({
+    mutationFn: addinquiry,
+
+    onSuccess: () => {
+      toast.success("Inquiry submitted successfully...", {
         onClose: () => {
           window.location.href = "/";
         },
@@ -36,14 +40,20 @@ function Contact() {
         subject: "",
         message: "",
       });
-    } catch (e) {
-      console.log(e);
+    },
+    onError: () => {
       toast.error("Invalid Details", {
         onClose: () => {
           window.location.href = "/contact";
         },
       });
-    }
+      return;
+    },
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    mutation.mutate(formData);
   };
 
   console.log(formData);
@@ -211,8 +221,13 @@ function Contact() {
                           className="form-control"
                           type="hidden"
                         />
-                        <button className="btn-1" type="submit">
-                          Submit Now <i className="flaticon-right-arrow-1" />
+                        <button
+                          className="btn-1"
+                          type="submit"
+                          disabled={mutation.isPending}
+                        >
+                          {mutation.isPending ? "submiting..." : "Submit Now "}
+                         <i className="flaticon-right-arrow-1" />
                           <span />
                         </button>
                       </div>

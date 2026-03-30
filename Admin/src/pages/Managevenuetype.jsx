@@ -3,11 +3,13 @@ import api from "../utils/AxiosConfig";
 import Footer from "../common/Footer";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 function ManageVenueType() {
   const [venueName, setVenueName] = useState("");
   const [editVenueId, setEditVenueId] = useState(null);
+  const queryClient = useQueryClient();
 
   const fetchVenueTypes = async () => {
     try {
@@ -23,39 +25,58 @@ function ManageVenueType() {
     queryFn: fetchVenueTypes,
   });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const saveVenueType = async ({ venueName, editVenueId }) => {
+    if (editVenueId) {
+      const res = await api.put(`/admin/venuetype/update/${editVenueId}`, {
+        name: venueName,
+      });
 
-    try {
-      if (editVenueId) {
-        let response = await api.put(
-          `/admin/venuetype/update/${editVenueId._id}`,
-          { _id: editVenueId, name: venueName },
-        );
-        console.log(response.data);
-        setEditVenueId(response.data.data);
-        toast.success("Venuetype Updated Successfully...");
-      } else {
-        let response = await api.post("/admin/venuetype/addvenuetype", {
-          name: venueName,
-        });
-        setVenueName(response.data.data);
-        toast.success("Venue Added Successfully...");
-      }
-      setVenueName("");
-      setEditVenueId(null);
-      fetchVenueTypes();
-    } catch (err) {
-      console.log(err);
+      return { data: res.data, isEdit: true };
+    } else {
+      const res = await api.post("/admin/venuetype/addvenuetype", {
+        name: venueName,
+      });
+
+      return { data: res.data, isEdit: false };
     }
   };
 
+  const mutation = useMutation({
+    mutationFn: saveVenueType,
+
+    onSuccess: (result) => {
+      if (result.isEdit) {
+        toast.success("Venue Type Updated Successfully...");
+      } else {
+        toast.success("Venue Added Successfully...");
+      }
+
+      setVenueName("");
+      setEditVenueId(null);
+
+      queryClient.invalidateQueries({ queryKey: ["venuetype"] });
+    },
+
+    onError: (error) => {
+      console.log(error);
+      toast.error("Something went wrong");
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    mutation.mutate({
+      venueName,
+      editVenueId,
+    });
+  };
   const deleteVenueType = async (id) => {
     try {
       const response = await api.delete(`/admin/venuetype/delete/${id}`);
       if (response.status === 200) {
         toast.success("Venue Type Deleted...");
-        fetchVenueTypes();
+        queryClient.invalidateQueries({ queryKey: ["venuetype"] });
       }
     } catch (error) {
       console.log(error);
@@ -125,8 +146,16 @@ function ManageVenueType() {
                       className={`btn btn-lg w-100 fw-bold ${
                         editVenueId ? "btn-warning" : "btn-primary"
                       }`}
+                      type="submit"
+                      disabled={mutation.isPending}
                     >
-                      {editVenueId ? "Update" : "Add Venue Type"}
+                      {mutation.isPending
+                        ? editVenueId
+                          ? "Updating..."
+                          : "Saving..."
+                        : editVenueId
+                          ? "Update"
+                          : "Add Venue Type"}
                     </button>
                   </div>
                 </form>

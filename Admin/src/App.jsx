@@ -32,7 +32,7 @@ import ProtectPages from "./utils/ProtectedPages";
 function App() {
   return (
     <>
-      <ToastContainer  position="top-right" autoClose={2000} theme="colored" style={{zIndex: 99999}}/>
+      <ToastContainer  position="top-right" autoClose={1200} theme="colored" style={{zIndex: 99999}}/>
       <BrowserRouter>
         <Routes>
           <Route

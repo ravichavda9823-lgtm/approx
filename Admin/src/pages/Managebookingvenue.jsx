@@ -4,10 +4,12 @@ import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 function ManageVenueBooking() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isDetailView, setIsDetailView] = useState(false);
+  const queryClient = useQueryClient();
 
   const fetchBookings = async () => {
     try {
@@ -50,7 +52,7 @@ function ManageVenueBooking() {
     try {
       await api.delete(`/admin/booking/delete/${id}`);
       toast.success("Booking Deleted Successfully...");
-      fetchBookings();
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
     } catch (err) {
       console.log(err);
     }

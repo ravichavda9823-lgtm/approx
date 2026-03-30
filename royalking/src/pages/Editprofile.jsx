@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import api from "../utils/AxiosConfig";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 function EditProfile() {
 
@@ -21,31 +22,42 @@ function EditProfile() {
     }));
   }
 
-  
-  async function handelSubmit(e) {
-    e.preventDefault();
-
-    try {
-      const response = await api.put(
+    const editprofile = async (profiledata) => {
+     const response = await api.put(
         `/user/update/${profiledata._id}`,
         profiledata
       );
+    return response.data;
+  };
 
-      if (response.data.status) {
-        toast.success("Profile Updated Successfully...", {
+   const mutation = useMutation({
+    mutationFn: editprofile,
+
+    onSuccess: () => {
+       toast.success("Profile Updated Successfully...", {
         onClose: () => {
           window.location.href = "/profile";
         },
       });
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Updated failed...", {
+    },
+    onError: () => {
+     toast.error("Updated failed...", {
         onClose: () => {
           window.location.href = "/editprofile";
         },
       });
-    }
+      return;
+    },
+  });
+
+
+
+
+  
+  async function handelSubmit(e) {
+    e.preventDefault();
+
+   mutation.mutate(profiledata);
   }
 
   const user = {
@@ -108,8 +120,8 @@ function EditProfile() {
                   </div> */}
 
                   <div className="form-group">
-                    <button className="btn-1 w-100" type="submit">
-                      Update Profile
+                    <button className="btn-1 w-100" type="submit"  disabled={mutation.isPending}>
+                    {mutation.isPending ? "Updateing Profile...." : " Update Profile"}
                     </button>
                   </div>
 

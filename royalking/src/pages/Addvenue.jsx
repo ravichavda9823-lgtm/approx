@@ -5,6 +5,7 @@ import cookie from "js-cookie";
 import CheckRole from "../utils/CheckRole";
 import { LogoutwithoutNotification } from "../utils/Logout";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 function AddVenue() {
   const [userProfile, setUserProfile] = useState({});
@@ -60,6 +61,45 @@ function AddVenue() {
     FetchOccasion();
   }, []);
 
+  const addvenue = async (formData) => {
+    const response = await api.post("/manager/venue/addvenue", formData);
+    return response.data;
+  };
+
+  const mutation = useMutation({
+    mutationFn: addvenue,
+
+    onSuccess: () => {
+      toast.success("Venue Added Successfully...", {
+        onClose: () => {
+          window.location.href = "/managervenue";
+        },
+      });
+      setVenue({
+        name: "",
+        city: "",
+        type: "",
+        price: "",
+        image: "",
+        shortdesc: "",
+        desc: "",
+        occasionId: "",
+        status: "Active",
+        managerId: userProfile._id,
+      });
+    },
+    onError: () => {
+      toast.error("Invalid Details", {
+        onClose: () => {
+          window.location.href = "/addvenue";
+        },
+      });
+      return;
+    },
+  });
+
+  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setVenue((prev) => ({
@@ -77,52 +117,19 @@ function AddVenue() {
   /* SUBMIT */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append("name", venue.name);
-      formData.append("city", venue.city);
-      formData.append("type", venue.type);
-      formData.append("price", venue.price);
-      formData.append("shortdesc", venue.shortdesc);
-      formData.append("desc", venue.desc);
-      formData.append("status", venue.status);
-      formData.append("managerId", venue.managerId);
-      formData.append("occasionId", venue.occasionId);
+    const formData = new FormData();
+    formData.append("name", venue.name);
+    formData.append("city", venue.city);
+    formData.append("type", venue.type);
+    formData.append("price", venue.price);
+    formData.append("shortdesc", venue.shortdesc);
+    formData.append("desc", venue.desc);
+    formData.append("status", venue.status);
+    formData.append("managerId", venue.managerId);
+    formData.append("occasionId", venue.occasionId);
+    formData.append("image", selectedFile);
 
-      formData.append("image", selectedFile);
-
-      const response = await api.post("/manager/venue/addvenue", formData);
-
-      if (response.data.token) {
-        cookie.set("token", response.data.token);
-      }
-
-      toast.success("Venue Added Successfully", {
-        onClose: () => {
-          window.location.href = "/managervenue";
-        },
-      });
-
-      setVenue({
-        name: "",
-        city: "",
-        type: "",
-        price: "",
-        image: "",
-        shortdesc: "",
-        desc: "",
-        occasionId: "",
-        status: "Active",
-        managerId: userProfile._id,
-      });
-    } catch (e) {
-      console.log(e);
-      toast.error("Invalid Details", {
-        onClose: () => {
-          window.location.href = "/addvenue";
-        },
-      });
-    }
+    mutation.mutate(formData);
   };
 
   return (
@@ -281,8 +288,8 @@ function AddVenue() {
 
                   {/* SUBMIT */}
                   <div className="form-group col-md-12">
-                    <button className="btn-1 w-100" type="submit">
-                      Add Venue <span />
+                    <button className="btn-1 w-100" type="submit"   disabled={mutation.isPending}>
+                       {mutation.isPending ? "Adding..." : "Add Venue"} <span />
                     </button>
                   </div>
                 </form>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import api from "../utils/AxiosConfig";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 function EditHotel() {
   let hotel = useLocation().state;
@@ -26,6 +27,35 @@ function EditHotel() {
     setPreview(URL.createObjectURL(file));
   };
 
+  const edithotel = async (formData) => {
+    const response = await api.put(
+      `/manager/hotel/update/${hoteldata._id}`,
+      formData,
+    );
+    return response.data;
+  };
+
+  const mutation = useMutation({
+    mutationFn: edithotel,
+
+    onSuccess: () => {
+      toast.success("Hotel updated successfully..", {
+        onClose: () => {
+          window.location.href = "/managerviewhotel";
+        },
+      });
+    },
+
+    onError: () => {
+      toast.error("Updated Failed...", {
+        onClose: () => {
+          window.location.href = "/edithotel/:id";
+        },
+      });
+      return;
+    },
+  });
+
   async function handelSubmit(e) {
     e.preventDefault();
 
@@ -37,30 +67,9 @@ function EditHotel() {
     formData.append("price", hotel.price);
     formData.append("shortdesc", hotel.shortdesc);
     formData.append("desc", hotel.desc);
-
     formData.append("image", selectedFile);
 
-    try {
-      let response = await api.put(
-        `/manager/hotel/update/${hoteldata._id}`,
-        formData,
-      );
-      if (response.status == 200) {
-        toast.success("Hotel updated successfully.." , {
-        onClose: () => {
-          window.location.href = "/managerviewhotel";
-        },
-      });
-    
-      }
-    } catch (e) {
-      console.log(e);
-      toast.error("Updated Failed...", {
-        onClose: () => {
-          window.location.href = "/edithotel/:id";
-        },
-      })
-    }
+    mutation.mutate(formData);
   }
 
   return (
@@ -189,10 +198,8 @@ function EditHotel() {
                       type="file"
                       name="image"
                       placeholder="Hotel Image URL"
-                      
                       accept="image/*"
                       onChange={handleFileChange}
-                   
                     />
                     {Preview && (
                       <img
@@ -211,8 +218,8 @@ function EditHotel() {
 
                   {/* SUBMIT */}
                   <div className="form-group col-md-12">
-                    <button className="btn-1 w-100" type="submit">
-                      Update Hotel <span />
+                    <button className="btn-1 w-100" type="submit" disabled={mutation.isPending} >
+                      {mutation.isPending ? "Updateing..." : "Update Hotel"} <span />
                     </button>
                   </div>
                 </form>

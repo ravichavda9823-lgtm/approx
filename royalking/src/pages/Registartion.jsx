@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+
 
   let [user, setUser] = useState({
     username: "",
@@ -94,42 +95,39 @@ function Register() {
     return isvalid;
   }
 
-  async function handelSubmit(e) {
-    e.preventDefault();
-    setLoading(true);
+  const registartion = async (user) => {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/auth/Signup`,
+      user,
+    );
+    return response.data;
+  };
 
-    if (!ValidateForm()) return;
+  const mutation = useMutation({
+    mutationFn: registartion,
 
-    try {
-      const response = await axios.post(
-        "https://backend-t1tu.onrender.com/api/auth/Signup",
-        user,
-      );
-
-      if (response.data.status) {
-        toast.success("Registration Successfully...", {
+    onSuccess: () => {
+      toast.success("Registration Successfully...", {
         onClose: () => {
           window.location.href = "/login";
         },
       });
-      }
-    } catch (e) {
-      setUser({
-        username: "",
-        email: "",
-        phone: "",
-        password: "",
-        role: "",
-      });
+    },
+    onError: () => {
       toast.error("Invalid Details", {
         onClose: () => {
           window.location.href = "/registartion";
         },
       });
+      return;
+    },
+  });
 
-    } finally {
-      setLoading(false);
-    }
+  async function handelSubmit(e) {
+    e.preventDefault();
+
+    if (!ValidateForm()) return;
+    mutation.mutate(user);
   }
 
   return (
@@ -250,9 +248,9 @@ function Register() {
                       <button
                         className="btn-1 w-100"
                         type="submit"
-                        disabled={loading}
+                        disabled={mutation.isPending}
                       >
-                        {loading ? "Signing up..." : "Register Now"}
+                        {mutation.isPending ? "Signing up..." : "Register Now"}
                       </button>
                     </div>
 

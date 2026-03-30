@@ -4,57 +4,65 @@ import api from "../utils/AxiosConfig";
 import Header from "../common/Header";
 import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 function ViewFeedback() {
 
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [replyText, setReplyText] = useState("");
+  const [feedbacks, setFeedbacks] = useState([]);
+  const queryClient = useQueryClient();
 
   const fetchFeedback = async () => {
     try {
       const response = await api.get("/admin/feedback");
 
-      
-       return  (response.data.data || []).map((value) => ({
-          ...value,
-          id: value._id,
-          isVisible: value.isVisible ?? false,
-          status: value.status ?? "Pending",
-        }));
+      return (response.data.data || []).map((value) => ({
+        ...value,
+        id: value._id,
+        isVisible: value.isVisible ?? false,
+        status: value.status ?? "Pending",
+      }));
     } catch (e) {
       console.log(e);
     }
   };
 
- 
- const { data: feedbacks = [], isLoading,isError,error } = useQuery({
-   queryKey: ["feedbacks"],
+  const { data = [], isLoading, isError, error } = useQuery({
+    queryKey: ["feedbacks"],
     queryFn: fetchFeedback,
- 
   });
+
+  useEffect(() => {
+    if (data) {
+      setFeedbacks(data);
+    }
+  }, [data]);
+
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "short", day: "numeric" };
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
   const toggleVisibility = async (id) => {
+    const current = feedbacks.find((f) => f.id === id);
+    const newVisible = !current?.isVisible;
+
     setFeedbacks((prev) =>
-      prev.map((value) => {
-        if (value.id === id) {
-          const newVisible = !value.isVisible;
-          return {
-            ...value,
-            isVisible: newVisible,
-            status: newVisible ? "Published" : "Hidden",
-          };
-        }
-        return value;
-      })
+      prev.map((value) =>
+        value.id === id
+          ? {
+              ...value,
+              isVisible: newVisible,
+              status: newVisible ? "Published" : "Hidden",
+            }
+          : value
+      )
     );
 
     try {
       await api.put(`/admin/feedback/visibility/${id}`, {
-        isVisible: !feedbacks.find((f) => f.id === id)?.isVisible,
+        isVisible: newVisible,
       });
     } catch (e) {
       console.log(e);
@@ -65,7 +73,12 @@ function ViewFeedback() {
     setFeedbacks((prev) =>
       prev.map((f) =>
         f.id === selectedFeedback.id
-          ? { ...f, reply: replyText, status: "Replied", isVisible: true }
+          ? {
+              ...f,
+              reply: replyText,
+              status: "Replied",
+              isVisible: true,
+            }
           : f
       )
     );
@@ -99,8 +112,10 @@ function ViewFeedback() {
       let response = await api.delete(`/admin/delete/${id}`);
       if (response.status === 200) {
         toast.success("Feedback Deleted Successfully");
-        fetchFeedback();
+        setFeedbacks((prev) => prev.filter((f) => f.id !== id));
+        queryClient.invalidateQueries({ queryKey: ["feedbacks"] });
       }
+      
     } catch (e) {
       console.log(e);
     }
@@ -108,7 +123,7 @@ function ViewFeedback() {
 
   return (
     <div className="page-wrapper bg-light">
-      <Header/>
+      <Header />
       <div className="page-content container-fluid py-4">
 
         <div className="row mb-4 align-items-center">
@@ -136,10 +151,7 @@ function ViewFeedback() {
 
         <div className="card border-0 shadow-sm rounded-4">
 
-          <div
-            className="table-responsive"
-            style={{ overflow: "visible" }}
-          >
+          <div className="table-responsive" style={{ overflow: "visible" }}>
             <table className="table table-hover align-middle mb-0">
 
               <thead className="bg-light border-bottom small fw-bold text-uppercase text-muted">
@@ -232,9 +244,7 @@ function ViewFeedback() {
                                 ? "text-success"
                                 : "text-warning"
                             }`}
-                            onClick={() =>
-                              toggleVisibility(value.id)
-                            }
+                            onClick={() => toggleVisibility(value.id)}
                           >
                             <i
                               className={`fa ${
@@ -247,9 +257,7 @@ function ViewFeedback() {
 
                           <button
                             className="btn btn-sm btn-light"
-                            onClick={() =>
-                              FetchDeleteFeedback(value._id)
-                            }
+                            onClick={() => FetchDeleteFeedback(value.id)}
                           >
                             <i className="fa fa-trash text-danger"></i>
                           </button>
@@ -302,9 +310,7 @@ function ViewFeedback() {
                   className="form-control"
                   rows="6"
                   value={replyText}
-                  onChange={(e) =>
-                    setReplyText(e.target.value)
-                  }
+                  onChange={(e) => setReplyText(e.target.value)}
                 ></textarea>
               </div>
 
