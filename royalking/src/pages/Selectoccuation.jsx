@@ -4,9 +4,6 @@ import api from "../utils/AxiosConfig";
 import { useQuery } from "@tanstack/react-query";
 
 function SelectOccasion() {
-  // const [occasions, setOccasions] = useState([]);
-  // const [loading, setLoading] = useState(true);
-
   const fetchOccasions = async () => {
     try {
       const response = await api.get("user/occasion");
@@ -15,10 +12,6 @@ function SelectOccasion() {
       console.error("API Error:", error);
     }
   };
-
-  // useEffect(() => {
-  //   fetchOccasions();
-  // }, []);
 
   const {
     data: occasions,
