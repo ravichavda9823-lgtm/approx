@@ -3,7 +3,6 @@ import CheckToken from "./CheckToken";
 import { LogoutwithoutNotification } from "./Logout";
 
 let api = axios.create({
-    // baseURL:"https://backend-t1tu.onrender.com/api",
     baseURL:import.meta.env.VITE_API_URL
 });
 
