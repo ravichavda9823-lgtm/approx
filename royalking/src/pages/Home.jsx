@@ -324,7 +324,7 @@ function Home() {
               {isLoading ? (
                 <h4 className="text-center mt-4">Loading occasions...</h4>
               ) : (
-                occasions.map((value) => (
+                occasions?.map((value) => (
                   <div className="col-lg-4 col-md-6">
                     <div
                       className="feature-1-block text-center wow fadeInLeft"

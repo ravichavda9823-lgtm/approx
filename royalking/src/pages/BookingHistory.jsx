@@ -15,9 +15,6 @@ function BookingHistory() {
       console.log("Booking fetch error", error);
     }
   };
-
- 
-
   
     const { data: bookings = [] } = useQuery({
     queryKey: ["bookings"],

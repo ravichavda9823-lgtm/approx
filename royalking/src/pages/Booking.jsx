@@ -102,7 +102,7 @@ function Booking() {
         order_id: order_id,
         handler: async (response) => {
           try {
-            const response = await api.post("/user/booking/booking", {
+            const response = await api.post("/user/booking/eventbooking", {
               ...formData,
               totalDays,
               totalAmount,

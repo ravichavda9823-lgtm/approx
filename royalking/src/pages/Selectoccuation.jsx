@@ -62,7 +62,7 @@ function SelectOccasion() {
             ) : isError ? (
               <h4 className="text-danger text-center">Error loading data</h4>
             ) : (
-              occasions.map((value) => (
+              occasions?.map((value) => (
                 <div className="col-lg-4 col-md-6 col-12 mb_30" key={value.id}>
                   <div className="occasion-card with-shadniche ow d-flex flex-column">
                     {/* IMAGE */}

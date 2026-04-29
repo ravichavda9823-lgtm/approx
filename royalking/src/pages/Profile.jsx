@@ -19,12 +19,12 @@ function Profile() {
           LogoutwithoutNotification();
         }
       }
-    } else if (CheckRole() === "manager") {
-      try {
-        let response = await api.get("/manager/managerprofile");
-        console.log(response);
-        SetUserProfile(response.data.manager);
-      } catch (e) {
+      } else if (CheckRole() === "manager") {
+        try {
+          let response = await api.get("/manager/managerprofile");
+          console.log(response);
+          SetUserProfile(response.data.manager);
+        } catch (e) {
         if (e.response.status == 401 && e.response.status == 403) {
           LogoutwithoutNotification();
         }
